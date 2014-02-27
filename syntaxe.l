@@ -1,6 +1,5 @@
 %{
-#include<stdio.h>
-void yyerror(char *s);
+    #include "grammaire.tab.h"
 %}
 
 TYPEVARIABLE "integer"|"real"|"boolean"|"INTEGER"|"REAL"|"BOOLEAN"
@@ -100,28 +99,3 @@ SEPARATEUR [ \t]
 }
 
 %%
-
-int main(int argc, char * argv[])
-{
-	FILE * f=NULL;
-	if(argc > 1)
-	{
-		f=fopen(argv[1],"r");
-		if(f==NULL)
-		{
-			fprintf(stderr,"Impossible d'ouvrir %s\n",argv[1]);
-			return -1;
-		}
-		yyin = f;
-	}
-	yylex();			
-	if(f != NULL)
-	{
-		fclose(f);
-	}	
-}
-
-void yyerror(char *s)
-{
-	fprintf(stderr,"Erreur %s\n",s);
-}
