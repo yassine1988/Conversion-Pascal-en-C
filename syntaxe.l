@@ -13,13 +13,15 @@ WHILE "WHILE"|"while"
 LETTRE [a-zA-Z_]
 CHIFFRE [0-9]
 REAL {CHIFFRE}+(","{CHIFFRE}+)?
-MOTCLE "begin"|"end"|"BEGIN"|"END"|"PROGRAM"
+MOTCLE "begin"|"end"|"BEGIN"|"END"|"PROGRAM"|"FUNCTION"|"VAR"|"DO"
 ENTRESORTIE "WRITELN"|"writeln"|"READLN"|"readln"
 SEPARATEUR [ \t]
 
 %x COMMENTAIRE
 %%
-
+{ENTRESORTIE} {
+    printf("entresortie(%s)",yytext);
+}
 
 {IF}|{ELSE}|{THEN}|{WHILE}|{MOTCLE} {
     printf("motcle(%s)",yytext);
@@ -29,9 +31,6 @@ SEPARATEUR [ \t]
     printf("typevariable(%s)",yytext);
 }
 
-{LETTRE}({LETTRE}|{CHIFFRE})* {
-    printf("variable(%s)",yytext);
-}
 
 ";" {
 
@@ -68,6 +67,11 @@ SEPARATEUR [ \t]
 {OPERATEUR} {
     printf("operateur(%s)",yytext);
 }
+
+{LETTRE}({LETTRE}|{CHIFFRE})* {
+    printf("variable(%s)",yytext);
+}
+
 
 {SEPARATEUR}* {
 
