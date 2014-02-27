@@ -13,7 +13,7 @@ WHILE "WHILE"|"while"
 LETTRE [a-zA-Z_]
 CHIFFRE [0-9]
 REAL {CHIFFRE}+(","{CHIFFRE}+)?
-MOTCLE "begin"|"end"|"BEGIN"|"END"|"PROGRAM"|"FUNCTION"|"VAR"|"DO"
+MOTCLE "begin"|"end"|"BEGIN"|"END"|"PROGRAM"|"FUNCTION"|"VAR"|"DO"|"PROCEDURE"
 ENTRESORTIE "WRITELN"|"writeln"|"READLN"|"readln"
 SEPARATEUR [ \t]
 
