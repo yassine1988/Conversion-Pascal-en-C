@@ -1,6 +1,6 @@
 PROGRAM prog;
 
-{ function f }
+
 FUNCTION f(x:INTEGER):INTEGER;
 VAR i:INTEGER;
 BEGIN
@@ -13,7 +13,6 @@ BEGIN
     END;
 END;
 
-{ main program }
 VAR x:INTEGER;
 BEGIN
     READLN(x);

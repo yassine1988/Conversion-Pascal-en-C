@@ -5,6 +5,7 @@
 	extern FILE *yyin;
 
 %}
+%token SEP;
 %token CONDITION;
 %token CLE;
 %token FIN_LIGNE;
