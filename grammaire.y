@@ -5,6 +5,7 @@
 	extern FILE *yyin;
 
 %}
+%token SEP;
 %token CONDITION;
 %token CLE;
 %token FIN_LIGNE;
@@ -20,10 +21,10 @@
 %%
 
 /* definition d'une fonction */
-fonction: CLE expressionF exprBeginEnd {printf("fonction");};
+fonction: CLE SEP expressionF SEP exprBeginEnd {printf("fonction");};
 
 /* definition d'un progroamme */
-program: CLE MOT FIN_INSTRUCTION FIN_LIGNE {printf("programme");}
+program: CLE SEP MOT FIN_INSTRUCTION FIN_LIGNE {printf("programme");}
 
 /* definition d'un main() */
 main: expressionV exprBeginEnd {printf("programme principale");};
