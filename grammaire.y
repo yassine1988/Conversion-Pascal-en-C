@@ -85,7 +85,7 @@ prog_entete:
 	;
 	
 declarations_globales:
-	declarations_globales declarations_globale {}
+	declarations_globales declarations_globale {printf("fin fonction");}
 	|
 	;
 	
@@ -96,7 +96,7 @@ declarations_globale:
 	;
 	
 declaration_fonction:
-	FUNCTION IDENTIFIANT PARENTHESEOUVRANTE declaration_variables PARENTHESEFERMANTE DEUX_POINTS TYPE POINTVIRGULE block {}
+	FUNCTION IDENTIFIANT PARENTHESEOUVRANTE declaration_variables PARENTHESEFERMANTE DEUX_POINTS TYPE POINTVIRGULE block { }
 	;
 	
 declaration_variables:
@@ -118,7 +118,7 @@ block_declaration_variable:
 	;
 
 prog_principal:
-	block_instructions_global POINT {}
+	block_declaration_variables block_instructions_global POINT { }
 	;
 	
 block:
@@ -137,9 +137,9 @@ block_instructions:
 block_instruction:
 	expression POINTVIRGULE {}
 	|
-	instruction POINTVIRGULE {}
-	|
 	instruction {}
+	|
+	instruction POINTVIRGULE {}
 	;
 
 expression:
@@ -156,6 +156,8 @@ expression:
 	expression MOD expression {}
 	|
 	IDENTIFIANT {}
+	|
+	IDENTIFIANT PARENTHESEOUVRANTE expression PARENTHESEFERMANTE
 	;
 boolean:
 	expression INF expression {}
@@ -172,8 +174,7 @@ boolean:
 	;
 
 instruction:
-	IDENTIFIANT PARENTHESEOUVRANTE IDENTIFIANT PARENTHESEFERMANTE {}
-	|
+
 	assignation {}
 	|
 	boucle_while {}

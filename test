@@ -6,7 +6,7 @@ VAR i:INTEGER;
 BEGIN
     i := 0;
     f := 0;
-    WHILE i < xx DO
+    WHILE i < x DO
     BEGIN
 	IF i MOD 2 = 0 THEN
 	      f := f + i;
