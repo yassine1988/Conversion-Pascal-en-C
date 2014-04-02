@@ -58,7 +58,7 @@ NQUOTE [^']
 {V}{A}{R}   printf( "VAR ");
 {W}{H}{I}{L}{E}   printf( "WHILE ");
 {W}{I}{T}{H}   printf( "WITH ");
-[a-zA-Z]([a-zA-Z0-9])*  printf( "VARIABLE ");
+[a-zA-Z]([a-zA-Z0-9])*  printf( "IDENTIFIANT");
 
  ":="    printf( "ASSIGNATION ");
 '({NQUOTE}|'')+'  printf( "CHAINE_DE_CARACTERE ");
@@ -116,34 +116,14 @@ NQUOTE [^']
     }
 
 %%
-int main(int argc, char * argv[])
-{
-	FILE * f=NULL;
-	if(argc > 1)
-	{
-		f=fopen(argv[1], "r");
-		if(f==NULL)
-		{
-			fprintf(stderr, "Impossible d'ouvrir %s\n ",argv[1]);
-			return -1;
-		}
-		yyin = f;
-	}
-	yylex();
-	printf( "\nFin du programme\n ");
-	if(f != NULL)
-	{
-		fclose(f);
-	}	
-}
+
 commenteof()
 {
- fprintf (stderr,  "Fin de fichier innatendue à la ligne : %d\n ",
-  ligne_no);
- exit (1);
+	fprintf (stderr,  "Fin de fichier innatendue à la ligne : %d\n ", ligne_no);
+	exit (1);
 }
 
 yywrap ()
 {
- return (1);
+	return (1);
 }

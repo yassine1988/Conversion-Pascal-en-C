@@ -1,11 +1,66 @@
 %{
 	#include <stdio.h>
-	void yyerror(char *s);
+	void yyerror(char const *s);
 	int yylex();
 	extern FILE *yyin;
 
 %}
-%token SEP;
+
+%error-verbose
+
+%token AND;
+%token ARRAY;
+%token CASE;
+%token CONST;
+%token DIV;
+%token DO;
+%token ELSE ;
+%token END; 
+%token FOR; 
+%token FUNCTION ;
+%token IF ;
+%token MOD ;
+%token NOT ;
+%token OF ;
+%token OR ;
+%token BEGIN; 
+%token PROCEDURE ;
+%token PROGRAM; 
+%token THEN; 
+%token TO; 
+%token VAR ;
+%token WHILE ;
+%token WITH ;
+%token IDENTIFIANT ;
+%token TYPE ;
+
+%token ASSIGNATION ;
+%token CHAINE_DE_CARACTERE ;
+%token DEUX_POINTS; 
+%token VIRGULE; 
+%token NOMBRE ;
+%token POINT; 
+%token POINTPOINT ;
+%token EGALE; 
+%token SUP_EGALE ;
+%token SUP; 
+%token CROCHETOUVRANT ;
+%token INF_EGALE; 
+%token PARENTHESEOUVRANTE ;
+%token INF; 
+%token MOINS ;
+%token INEGALE ;
+%token PLUS; 
+%token CROCHETFERMANT ;
+%token NOMBREREEL; 
+%token PARENTHESEFERMANTE ;
+%token POINTVIRGULE; 
+%token SLASH; 
+%token MULTIPLIE ;
+%token PUISSANCE; 
+%token FLECHEHAUT ;
+ 
+%token SEPARATEUR;
 %token CONDITION;
 %token CLE;
 %token FIN_LIGNE;
@@ -15,56 +70,92 @@
 %token SIGNATURE;
 %token MOT;
 %token ENTRESORTIE;
+%left PLUS MOINS;
+%left MULTIPLIE DIV;
 %left '+' '-';
 %left '*' '/';
 
 %%
+programme:
+	prog_entete declarations_globales prog_principal {}
+	;
+	
+prog_entete:
+	PROGRAM IDENTIFIANT POINTVIRGULE{}
+	;
+	
+declarations_globales:
+	declarations_globales declarations_globale {}
+	|
+	;
+	
+declarations_globale:
+	declaration_fonction POINTVIRGULE {}
+	|
+	declaration_variables POINTVIRGULE {}
+	;
+	
+declaration_fonction:
+	FUNCTION IDENTIFIANT PARENTHESEOUVRANTE declaration_variables PARENTHESEFERMANTE DEUX_POINTS TYPE POINTVIRGULE block {}
+	;
+	
+declaration_variables:
+	declaration_variables declaration_variable {}
+	|
+	;
+	
+declaration_variable:
+	IDENTIFIANT DEUX_POINTS TYPE {}
+	;
+	
+block_declaration_variables:
+	block_declaration_variables block_declaration_variable {}
+	|
+	;
+	
+block_declaration_variable:
+	VAR declaration_variable POINTVIRGULE {}
+	;
 
-/* definition d'une fonction */
-fonction: CLE SEP expressionF SEP exprBeginEnd {printf("fonction");};
+prog_principal:
+	block_instructions POINT {}
+	;
+	
+block:
+	block_declaration_variables block_instructions {}
+	;
 
-/* definition d'un progroamme */
-program: CLE SEP MOT FIN_INSTRUCTION FIN_LIGNE {printf("programme");}
+block_instructions:
+	BEGIN block_instruction END {}
+	;
 
-/* definition d'un main() */
-main: expressionV exprBeginEnd {printf("programme principale");};
+block_instruction:
+	expression POINTVIRGULE {}
+	|
+	instruction POINTVIRGULE {}
+	;
 
-/* definition d'une boucle IF ... THEN ... | IF ... THEN ... ELSE ... */
-boucleIF: CONDITION expressionBoucle CLE expression {printf("boucle if sans else");}
-	| CONDITION expressionBoucle CLE expression CLE expression {printf("boucle if avec else");};
+expression:
+	NOMBRE {}
+	|
+	expression PLUS expression {}
+	|
+	expression MOINS expression {}
+	|
+	expression MULTIPLIE expression {}
+	|
+	expression DIV expression {}
+	|
+	IDENTIFIANT {}
+	;
 
-/* definitnio d'une boucle WHILE ... DO ... */
-boucleWhilE: CONDITION expressionBoucle CLE FIN_LIGNE exprBeginEnd {printf("boucle while");};
-
-/* definition d'un BEGIN ... END; | BEGIN ... END. */
-exprBeginEnd: CLE FIN_LIGNE expression CLE FIN_INSTRUCTION FIN_LIGNE {printf("begin ... end;");}
-	    | CLE FIN_LIGNE expression CLE FIN_PROGRAM FIN_LIGNE {printf("begin ... end.");};
-
-/* definition d'une expression pour une condition if ou while */
-expressionBoucle: "(" expression ")" {printf("la condition d'une boucle");};
-
-/* definition d'un expression qui suit le mot cle FUNCTION */
-expressionF: MOT "(" MOT SIGNATURE TYPEVARIABLE ")" SIGNATURE TYPEVARIABLE FIN_INSTRUCTION FIN_LIGNE expressionV {printf("l'expression après fonction");};
-
-/* definition d'un expression qui suit le mot CLE VAR */
-expressionV: CLE SIGNATURE TYPEVARIABLE FIN_INSTRUCTION FIN_LIGNE {printf("definition des variables");};
-
-/* definition d'une entre/sortie */
-exprEntreSortie: ENTRESORTIE "(" exprAppFonc ")" FIN_INSTRUCTION FIN_LIGNE {printf("entre sortie avec appel a fonction");}
-	       | ENTRESORTIE "(" MOT ")" FIN_INSTRUCTION FIN_LIGNE {printf("entre sortie sans appel a fonction");};
-
-/* definition d'un appel de fonction ex: f(x) */
-exprAppFonc: MOT "(" MOT ")" {printf("appel a une fonction");};
-
-/* definition d'un expression quelconque */
-expression: FIN_INSTRUCTION FIN_LIGNE {printf("inconnu");}
-	  | FIN_INSTRUCTION {}
-          | {};
-
+instruction:
+	IDENTIFIANT PARENTHESEOUVRANTE IDENTIFIANT PARENTHESEFERMANTE {}
+	;
 %%
 int main(int argc, char * argv[])
 {
-	FILE * f=NULL;
+	FILE * f = NULL;
 	if(argc > 1)
 	{
 		f=fopen(argv[1],"r");
@@ -83,7 +174,7 @@ int main(int argc, char * argv[])
 	}	
 }
 
-void yyerror(char *s)
+void yyerror(char const *s)
 {
 	fprintf(stderr,"Erreur %s\n",s);
 }

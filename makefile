@@ -1,14 +1,14 @@
 all:prog
-prog: pascal.tab.o lex.yy.o
+prog: grammaire.tab.o lex.yy.o
 	gcc -o $@ $^ -lfl
-pascal.tab.o: pascal.tab.c y.tab.h
-	gcc -o $@ -c pascal.tab.c
-pascal.tab.c pascal.tab.h: pascal.y
-	bison pascal.y --defines=y.tab.h
+grammaire.tab.o: grammaire.tab.c grammaire.tab.h
+	gcc -o $@ -c grammaire.tab.c
+grammaire.tab.c grammaire.tab.h: grammaire.y
+	bison -v grammaire.y --defines=grammaire.tab.h
 lex.yy.o: lex.yy.c
 	gcc -o $@ -c lex.yy.c
-lex.yy.c: pascal.l y.tab.h
-	flex pascal.l
+lex.yy.c: syntaxe.l grammaire.tab.h
+	flex syntaxe.l
 clean:
 	rm *.tab.*
 	rm *.yy.*
