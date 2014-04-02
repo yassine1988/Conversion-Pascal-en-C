@@ -1,5 +1,5 @@
 %{
-	#include <stdio.h>
+	#include "grammaire.tab.h"
 	extern FILE *yyin;
 	int ligne_no = 1;	
 %}
@@ -34,59 +34,64 @@ NQUOTE [^']
 
 %%
 
-{A}{N}{D}   printf( "AND ");
-{A}{R}{R}{A}{Y}   printf( "ARRAY ");
-{C}{A}{S}{E}   printf( "CASE ");
-{C}{O}{N}{S}{T}   printf( "CONST ");
-{D}{I}{V}   printf( "DIV ");
-{D}{O}    printf( "DO ");
-{E}{L}{S}{E}   printf( "ELSE ");
-{E}{N}{D}   printf( "END ");
-{F}{O}{R}   printf( "FOR ");
-{F}{U}{N}{C}{T}{I}{O}{N} printf( "FUNCTION ");
-{I}{F}    printf( "IF ");
-{M}{O}{D}   printf( "MOD ");
-{N}{O}{T}   printf( "NOT ");
-{O}{F}    printf( "OF ");
-{O}{R}    printf( "OR ");
-{B}{E}{G}{I}{N}   printf( "BEGIN ");
-{F}{I}{L}{E}   printf( "FILE ");
-{P}{R}{O}{C}{E}{D}{U}{R}{E} printf( "PROCEDURE ");
-{P}{R}{O}{G}{R}{A}{M}  printf( "PROGRAM ");
-{T}{H}{E}{N}   printf( "THEN ");
-{T}{O}    printf( "TO ");
-{V}{A}{R}   printf( "VAR ");
-{W}{H}{I}{L}{E}   printf( "WHILE ");
-{W}{I}{T}{H}   printf( "WITH ");
-[a-zA-Z]([a-zA-Z0-9])*  printf( "IDENTIFIANT");
+{A}{N}{D}  					{ printf("AND "); 		return(AND);		}
+{A}{R}{R}{A}{Y}  			{ printf("ARRAY "); 	return(ARRAY);		}
+{C}{A}{S}{E}  				{ printf("CASE "); 		return(CASE);		}
+{C}{O}{N}{S}{T}  			{ printf("CONST "); 	return(CONST);		}
+{D}{I}{V}   				{ printf("DIV "); 		return(DIV);		}
+{D}{O}    					{ printf("DO "); 		return(DO);			}
+{E}{L}{S}{E}   				{ printf("ELSE "); 		return(ELSE);		}
+{E}{N}{D}   				{ printf("END "); 		return(TEND);		}
+{F}{O}{R}   				{ printf("FOR "); 		return(FOR);		}
+{F}{U}{N}{C}{T}{I}{O}{N} 	{ printf("FUNCTION "); 	return(FUNCTION);	}
+{I}{F}    					{ printf("IF "); 		return(IF);			}
+{M}{O}{D}   				{ printf("MOD "); 		return(MOD);		}
+{N}{O}{T}   				{ printf("NOT "); 		return(NOT);		}
+{O}{F}    					{ printf("OF "); 		return(OF);			}
+{O}{R}    					{ printf("OR "); 		return(OR);			}
+{B}{E}{G}{I}{N}   			{ printf("BEGIN "); 	return(TBEGIN);		}
+{P}{R}{O}{C}{E}{D}{U}{R}{E} { printf("PROCEDURE "); return(PROCEDURE);	}
+{P}{R}{O}{G}{R}{A}{M}  		{ printf("PROGRAM "); 	return(PROGRAM);	}
+{T}{H}{E}{N}   				{ printf("THEN "); 		return(THEN);		}
+{T}{O}   					{ printf("TO "); 		return(TO);			}
+{V}{A}{R}   				{ printf("VAR "); 		return(VAR);		}
+{W}{H}{I}{L}{E}  			{ printf("WHILE "); 	return(WHILE);		}
+{W}{I}{T}{H}   				{ printf("WITH "); 		return(WITH);		}
 
- ":="    printf( "ASSIGNATION ");
-'({NQUOTE}|'')+'  printf( "CHAINE_DE_CARACTERE ");
- ":"    printf( "DEUX_POINTS ");
- ","    printf( "VIRGULE ");
-[0-9]+    printf( "NOMBRE ");
- "."    printf( "POINT ");
- ".."    printf( "POINTPOINT ");
- "="    printf( "EGALE ");
- ">="    printf( "SUP_EGALE ");
- ">"    printf( "SUP ");
- "["    printf( "CROCHETOUVRANT ");
- "<="    printf( "INF_EGALE ");
- "("    printf( "PARENTHESEOUVRANTE ");
- "<"    printf( "INF ");
- "-"    printf( "MOINS ");
- "<>"    printf( "INEGALE ");
- "+"    printf( "PLUS ");
- "]"    printf( "CROCHETFERMANT ");
-[0-9]+"."[0-9]+   printf( "NOMBREREEL ");
- ")"    printf( "PARENTHESEFERMANTE ");
- ";"    printf( "POINTVIRGULE ");
- "/"    printf( "SLASH ");
- "*"    printf( "MULTIPLIE ");
- "**"    printf( "PUISSANCE ");
- "->"   |
- "^"    printf( "FLECHEHAUT ");
 
+{I}{N}{T}{E}{G}{E}{R}		{ printf("INTEGER");	return(TYPE);		}
+
+
+[a-zA-Z]([a-zA-Z0-9])*  	{ printf("IDENTIFIANT");return(IDENTIFIANT);}
+
+
+
+ ":="   			{ printf( "ASSIGNATION "); 			return(ASSIGNATION);		}
+'({NQUOTE}|'')+'  	{ printf( "CHAINE_DE_CARACTERE "); 	return(CHAINE_DE_CARACTERE);}
+ ":"    			{ printf( "DEUX_POINTS "); 			return(DEUX_POINTS);		}
+ ","    			{ printf( "VIRGULE "); 				return(VIRGULE);			}
+[0-9]+  			{ printf( "NOMBRE "); 				return(NOMBRE);				}
+ "."    			{ printf( "POINT "); 				return(POINT);				}
+ ".."   			{ printf( "POINTPOINT "); 			return(POINTPOINT);			}
+ "="    			{ printf( "EGALE "); 				return(EGALE);				}
+ ">="   			{ printf( "SUP_EGALE "); 			return(SUP_EGALE);			}
+ ">"    			{ printf( "SUP "); 					return(SUP);				}
+ "["    			{ printf( "CROCHETOUVRANT "); 		return(CROCHETOUVRANT);		}
+ "<="   			{ printf( "INF_EGALE "); 			return(INF_EGALE);			}
+ "("    			{ printf( "PARENTHESEOUVRANTE "); 	return(PARENTHESEOUVRANTE);	}
+ "<"    			{ printf( "INF "); 					return(INF);				}
+ "-"    			{ printf( "MOINS "); 				return(MOINS);				}
+ "<>"   			{ printf( "INEGALE "); 				return(INEGALE);			}
+ "+"    			{ printf( "PLUS "); 				return(PLUS);				}
+ "]"    			{ printf( "CROCHETFERMANT "); 		return(CROCHETFERMANT);		}
+[0-9]+"."[0-9]+   	{ printf( "NOMBREREEL "); 			return(NOMBREREEL);			}
+ ")"    			{ printf( "PARENTHESEFERMANTE "); 	return(PARENTHESEFERMANTE);	}
+ ";"    			{ printf( "POINTVIRGULE "); 		return(POINTVIRGULE);		}
+ "/"    			{ printf( "SLASH "); 				return(SLASH);				}
+ "*"    			{ printf( "MULTIPLIE "); 			return(MULTIPLIE);			}
+ "**"    			{ printf( "PUISSANCE "); 			return(PUISSANCE);			}
+ "->" | "^" 		{ printf( "FLECHEHAUT "); 			return(FLECHEHAUT);			}
+		
  "{"    { register int c;
      while ((c = input()))
      {
@@ -106,7 +111,7 @@ NQUOTE [^']
      }
     }
 
-[ \t\f]    printf( " ");
+[ \t\f]    printf(" ");
 
 \n    { ligne_no++; printf( "\n ");}
 

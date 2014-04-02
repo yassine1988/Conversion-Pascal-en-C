@@ -15,7 +15,7 @@
 %token DIV;
 %token DO;
 %token ELSE ;
-%token END; 
+%token TEND; 
 %token FOR; 
 %token FUNCTION ;
 %token IF ;
@@ -23,7 +23,7 @@
 %token NOT ;
 %token OF ;
 %token OR ;
-%token BEGIN; 
+%token TBEGIN; 
 %token PROCEDURE ;
 %token PROGRAM; 
 %token THEN; 
@@ -71,7 +71,7 @@
 %token MOT;
 %token ENTRESORTIE;
 %left PLUS MOINS;
-%left MULTIPLIE DIV;
+%left MULTIPLIE DIV MOD;
 %left '+' '-';
 %left '*' '/';
 
@@ -118,21 +118,28 @@ block_declaration_variable:
 	;
 
 prog_principal:
-	block_instructions POINT {}
+	block_instructions_global POINT {}
 	;
 	
 block:
-	block_declaration_variables block_instructions {}
+	block_declaration_variables block_instructions_global {}
+	;
+
+block_instructions_global:
+	TBEGIN block_instructions TEND {}
 	;
 
 block_instructions:
-	BEGIN block_instruction END {}
+	block_instructions block_instruction {}
+	|
 	;
 
 block_instruction:
 	expression POINTVIRGULE {}
 	|
 	instruction POINTVIRGULE {}
+	|
+	instruction {}
 	;
 
 expression:
@@ -146,12 +153,58 @@ expression:
 	|
 	expression DIV expression {}
 	|
+	expression MOD expression {}
+	|
 	IDENTIFIANT {}
+	;
+boolean:
+	expression INF expression {}
+	|
+	expression INF_EGALE expression {}
+	|
+	expression SUP expression {}
+	|
+	expression SUP_EGALE expression {}
+	|
+	expression EGALE expression {}
+	|
+	expression INEGALE expression {}
 	;
 
 instruction:
 	IDENTIFIANT PARENTHESEOUVRANTE IDENTIFIANT PARENTHESEFERMANTE {}
+	|
+	assignation {}
+	|
+	boucle_while {}
+	|
+	condition_if {}
 	;
+
+assignation:
+	IDENTIFIANT ASSIGNATION expression {}
+	;
+	
+boucle_while:
+	WHILE boolean DO block_instructions_global POINTVIRGULE {}
+	;
+
+condition_if:
+	IF boolean THEN condition_if_instruction {}
+	;
+	
+condition_if_instruction:
+	block_instructions_global condition_if_instruction_else {}
+	|
+	instruction {}
+	;
+
+condition_if_instruction_else:
+	POINTVIRGULE {}
+	|
+	ELSE block_instructions_global {};
+	;
+	
 %%
 int main(int argc, char * argv[])
 {

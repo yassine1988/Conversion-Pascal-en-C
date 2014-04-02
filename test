@@ -1,21 +1,21 @@
 PROGRAM prog;
 
 { function f }
-FUNCTION fz (xx:INTEGER) :INTEGER;
-VAR ii:INTEGER;
+FUNCTION f (xx:INTEGER) :INTEGER;
+VAR i:INTEGER;
 BEGIN
-    ii := 0;
-    fz := 0;
-    WHILE ii < xx DO
+    i := 0;
+    f := 0;
+    WHILE i < xx DO
     BEGIN
-	IF ii MOD 2 = 0 THEN
-	      fz := fz + ii;
+	IF i MOD 2 = 0 THEN
+	      f := f + i;
     END;
 END;
 
 { main program }
-VAR xx:INTEGER;
+VAR x:INTEGER;
 BEGIN
-    READLN(xx);
-    WRITELN(fz(xx));
+    READLN(x);
+    WRITELN(f(x));
 END.
