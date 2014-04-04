@@ -363,13 +363,15 @@ condition_if:
 condition_if_instruction:
 	block_instructions_global condition_if_instruction_else {}
 	|
-	instruction {}
+	instruction condition_if_instruction_else {}
 	;
 
 condition_if_instruction_else:
 	POINTVIRGULE {}
 	|
-	ELSE block_instructions_global {};
+	POINTVIRGULE ELSE block_instructions_global {}
+	|
+	POINTVIRGULE ELSE instruction  {}
 	;
 	
 %%

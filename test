@@ -33,11 +33,17 @@ END;
 
 PROCEDURE toto();
 begin
+	f();
+	if (n1 > n2) then
+		m:=n1;
+	else
+		m:=n2;
 end;
 
 { main program }
 VAR x:INTEGER;
 BEGIN
+	toto;
     READLN(x);
     WRITELN(f(x));
 END.
