@@ -55,12 +55,26 @@ NQUOTE [^']
 {T}{H}{E}{N}   				{ printf("THEN "); 		return(THEN);		}
 {T}{O}   					{ printf("TO "); 		return(TO);			}
 {V}{A}{R}   				{ printf("VAR "); 		return(VAR);		}
+{W}{R}{I}{T}{E}{L}{N}  		{ printf("WRITELN "); 	return(WRITELN);	}
+{W}{R}{I}{T}{E}		  		{ printf("WRITE "); 	return(WRITE);		}
+{R}{E}{A}{D}{L}{N}			{ printf("READLN ");	return(READLN);		}
 {W}{H}{I}{L}{E}  			{ printf("WHILE "); 	return(WHILE);		}
 {W}{I}{T}{H}   				{ printf("WITH "); 		return(WITH);		}
+{C}{L}{R}{S}{C}{R}			{ printf("CLRSCR ");	return(CLRSCR);		}
+{G}{O}{T}{O}{X}{Y}			{ printf("GOTOXY ");	return(CLRSCR);		}
+{T}{E}{X}{T}{C}{O}{L}{O}{R}	{ printf("TEXTCOLOR ");	return(TEXTCOLOR);	}
+{T}{E}{X}{T}{B}{A}{C}{K}{G}{R}{O}{U}{N}{D}	{ printf("TEXTBACKGROUND "); return(TEXTBACKGROUND);}
+{R}{A}{N}{D}{O}{M}{I}{Z}{E}	{ printf("RANDOMIZE ");	return(RANDOMIZE);	}
+{R}{A}{N}{D}{O}{M}			{ printf("RANDOM");		return(RANDOM);		}
+{A}{B}{S}					{ printf("ABS "); 		return(TABS);		}
+{S}{Q}{R}{T}				{ printf("SQRT ");		return(TSQRT);		}
+{S}{Q}{R}					{ printf("SQR");		return(TSQR);		}
+{I}{N}{T}					{ printf("INT");		return(TINT);		}
 
-
+{S}{T}{R}{I}{N}{G}			{ printf("STRING");		return(TYPE);		}
 {I}{N}{T}{E}{G}{E}{R}		{ printf("INTEGER");	return(TYPE);		}
-
+{T}{R}{U}{E}				{ printf("TRUE");		return(TTRUE);		}
+{F}{A}{L}{S}{E}				{ printf("FALSE");		return(TFALSE);		}
 
 [a-zA-Z]([a-zA-Z0-9])*  	{ printf("IDENTIFIANT");return(IDENTIFIANT);}
 

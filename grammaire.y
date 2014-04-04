@@ -33,6 +33,8 @@
 %token WITH ;
 %token IDENTIFIANT ;
 %token TYPE ;
+%token TFALSE;
+%token TTRUE;
 
 %token ASSIGNATION ;
 %token CHAINE_DE_CARACTERE ;
@@ -59,6 +61,19 @@
 %token MULTIPLIE ;
 %token PUISSANCE; 
 %token FLECHEHAUT ;
+%token WRITE;
+%token WRITELN;
+%token READLN;
+%token CLRSCR;
+%token GOTOXY;
+%token TEXTCOLOR;
+%token TEXTBACKGROUND;
+%token RANDOMIZE;
+%token RANDOM;
+%token TABS;
+%token TSQRT;
+%token TSQR;
+%token TINT;
  
 %token SEPARATEUR;
 %token CONDITION;
@@ -71,9 +86,8 @@
 %token MOT;
 %token ENTRESORTIE;
 %left PLUS MOINS;
-%left MULTIPLIE DIV MOD;
-%left '+' '-';
-%left '*' '/';
+%left MULTIPLIE SLASH DIV MOD AND OR;
+%right PARENTHESEOUVRANTE;
 
 %%
 programme:
@@ -85,7 +99,7 @@ prog_entete:
 	;
 	
 declarations_globales:
-	declarations_globales declarations_globale {printf("fin fonction");}
+	declarations_globales declarations_globale {}
 	|
 	;
 	
@@ -96,16 +110,28 @@ declarations_globale:
 	;
 	
 declaration_fonction:
-	FUNCTION IDENTIFIANT PARENTHESEOUVRANTE declaration_variables PARENTHESEFERMANTE DEUX_POINTS TYPE POINTVIRGULE block { }
+	FUNCTION IDENTIFIANT PARENTHESEOUVRANTE declaration_variables_fonction PARENTHESEFERMANTE DEUX_POINTS TYPE POINTVIRGULE block { }
+	;
+	
+declaration_variables_fonction:
+	declaration_variable {}
+	|
+	declaration_variables_fonction POINTVIRGULE declaration_variable {}
 	;
 	
 declaration_variables:
-	declaration_variables declaration_variable {}
+	declaration_variable {}
 	|
 	;
 	
 declaration_variable:
-	IDENTIFIANT DEUX_POINTS TYPE {}
+	suite_identifiants DEUX_POINTS TYPE {}
+	;
+
+suite_identifiants:
+	suite_identifiants VIRGULE IDENTIFIANT {}
+	|
+	IDENTIFIANT
 	;
 	
 block_declaration_variables:
@@ -114,7 +140,15 @@ block_declaration_variables:
 	;
 	
 block_declaration_variable:
-	VAR declaration_variable POINTVIRGULE {}
+	VAR block_declaration_variable_suite {}
+	|
+	CONST block_declaration_variable_suite {}
+	;
+
+block_declaration_variable_suite:
+	declaration_variable POINTVIRGULE {}
+	|
+	declaration_variable POINTVIRGULE block_declaration_variable_suite {}
 	;
 
 prog_principal:
@@ -135,29 +169,35 @@ block_instructions:
 	;
 
 block_instruction:
-	expression POINTVIRGULE {}
-	|
 	instruction {}
 	|
 	instruction POINTVIRGULE {}
 	;
 
 expression:
-	NOMBRE {}
-	|
 	expression PLUS expression {}
 	|
 	expression MOINS expression {}
 	|
 	expression MULTIPLIE expression {}
 	|
+	expression SLASH expression {}
+	|
 	expression DIV expression {}
 	|
 	expression MOD expression {}
 	|
+	PARENTHESEOUVRANTE expression PARENTHESEFERMANTE {}
+	|
 	IDENTIFIANT {}
 	|
-	IDENTIFIANT PARENTHESEOUVRANTE expression PARENTHESEFERMANTE
+	NOMBRE {}
+	|
+	NOMBREREEL {}
+	|
+	MOINS expression {}
+	|
+	appel_fonction {}
 	;
 boolean:
 	expression INF expression {}
@@ -171,19 +211,88 @@ boolean:
 	expression EGALE expression {}
 	|
 	expression INEGALE expression {}
+	|
+	boolean AND boolean {}
+	|
+	boolean OR boolean {}
+	|
+	PARENTHESEOUVRANTE boolean PARENTHESEFERMANTE
+	|
+	TTRUE {}
+	|
+	TFALSE {}
 	;
 
 instruction:
-
 	assignation {}
 	|
 	boucle_while {}
 	|
 	condition_if {}
+	|
+	appel_fonction {}
+	;
+
+appel_fonction:
+	identifiant_fonction PARENTHESEOUVRANTE variables_fonction PARENTHESEFERMANTE
+	|
+	WRITE PARENTHESEOUVRANTE variables_fonction PARENTHESEFERMANTE
+	|
+	WRITELN PARENTHESEOUVRANTE variables_fonction PARENTHESEFERMANTE
+	|
+	READLN PARENTHESEOUVRANTE IDENTIFIANT PARENTHESEFERMANTE
+	|
+	CLRSCR
+	|
+	GOTOXY PARENTHESEOUVRANTE expression VIRGULE expression PARENTHESEFERMANTE
+	|
+	fonction_un_param_expression PARENTHESEOUVRANTE expression PARENTHESEFERMANTE
+	|
+	RANDOMIZE
+	;
+	
+fonction_un_param_expression :
+	TEXTCOLOR
+	|
+	TEXTBACKGROUND
+	|
+	RANDOM
+	|
+	TABS
+	|
+	TSQR
+	|
+	TSQRT
+	|
+	TINT
+	;
+
+identifiant_fonction:
+	IDENTIFIANT {}
+	;
+	
+variables_fonction:
+	variables_fonction VIRGULE variable_fonction {}
+	|
+	variable_fonction {}
+	|
+	{}
+	;
+	
+variable_fonction:
+	expression {}
+	|
+	boolean {}
+	|
+	CHAINE_DE_CARACTERE {}
 	;
 
 assignation:
 	IDENTIFIANT ASSIGNATION expression {}
+	|
+	IDENTIFIANT ASSIGNATION CHAINE_DE_CARACTERE {}
+	|
+	IDENTIFIANT ASSIGNATION boolean {}
 	;
 	
 boucle_while:

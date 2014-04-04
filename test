@@ -1,11 +1,18 @@
 PROGRAM prog;
 
 { function f }
-FUNCTION f (xx:INTEGER) :INTEGER;
-VAR i:INTEGER;
+FUNCTION f (x,y:INTEGER;test:STRING) :INTEGER;
+VAR i,ii:INTEGER;toto:STRING;
+VAR test:STRING;
+CONST truc:INTEGER;
 BEGIN
     i := 0;
     f := 0;
+    f:= 3+(5*9.3)-(-f(3));
+    te := 'tttt';
+    tee := f(5);
+    bool := false;
+    write('toto');
     WHILE i < x DO
     BEGIN
 	IF i MOD 2 = 0 THEN
