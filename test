@@ -22,6 +22,7 @@ BEGIN
     
     for i:=1 to 10 do
 		writeln(toto);
+	
     
     WHILE i < x DO
     BEGIN
@@ -29,6 +30,10 @@ BEGIN
 	      f := f + i;
     END;
 END;
+
+PROCEDURE toto();
+begin
+end;
 
 { main program }
 VAR x:INTEGER;

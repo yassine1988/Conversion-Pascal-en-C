@@ -123,9 +123,9 @@ declaration_procedure:
 	;
 	
 declaration_variables_fonction:
-	declaration_variable {}
+	declaration_variables {}
 	|
-	declaration_variables_fonction POINTVIRGULE declaration_variable {}
+	declaration_variables_fonction POINTVIRGULE declaration_variables {}
 	;
 	
 declaration_variables:
@@ -189,7 +189,7 @@ bloc_instruction_multi:
 	|
 	;
 block_instruction:
-	instruction POINTVIRGULE { printf("fin instruction");}
+	instruction POINTVIRGULE { }
 	;
 
 expression:

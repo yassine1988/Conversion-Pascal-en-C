@@ -77,7 +77,7 @@ NQUOTE [^']
 {T}{R}{U}{E}				{ printf("TRUE ");		return(TTRUE);		}
 {F}{A}{L}{S}{E}				{ printf("FALSE ");		return(TFALSE);		}
 
-[a-zA-Z]([a-zA-Z0-9])*  	{ printf("IDENTIFIANT");return(IDENTIFIANT);}
+[a-zA-Z]([a-zA-Z0-9])*  	{ printf("IDENTIFIANT ");return(IDENTIFIANT);}
 
 
 
