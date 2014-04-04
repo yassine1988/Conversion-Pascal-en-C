@@ -113,7 +113,7 @@ declarations_globale:
 	;
 	
 declaration_fonction:
-	FUNCTION IDENTIFIANT PARENTHESEOUVRANTE declaration_variables_fonction PARENTHESEFERMANTE DEUX_POINTS TYPE POINTVIRGULE block { }
+	FUNCTION identifiant_fonction PARENTHESEOUVRANTE declaration_variables_fonction PARENTHESEFERMANTE DEUX_POINTS TYPE POINTVIRGULE block { }
 	;
 	
 declaration_variables_fonction:
@@ -128,7 +128,13 @@ declaration_variables:
 	;
 	
 declaration_variable:
-	suite_identifiants DEUX_POINTS TYPE {}
+	suite_identifiants DEUX_POINTS type_variable {}
+	;
+
+type_variable:
+	TYPE
+	|
+	ARRAY CROCHETOUVRANT expression POINTPOINT expression CROCHETFERMANT OF TYPE
 	;
 
 suite_identifiants:
@@ -192,7 +198,7 @@ expression:
 	|
 	PARENTHESEOUVRANTE expression PARENTHESEFERMANTE {}
 	|
-	IDENTIFIANT {}
+	variable {}
 	|
 	NOMBRE {}
 	|
@@ -201,6 +207,12 @@ expression:
 	MOINS expression {}
 	|
 	appel_fonction {}
+	;
+	
+variable:
+	IDENTIFIANT {}
+	|
+	IDENTIFIANT CROCHETOUVRANT expression CROCHETFERMANT {}
 	;
 boolean:
 	expression INF expression {}
@@ -247,7 +259,7 @@ appel_fonction:
 	|
 	WRITELN PARENTHESEOUVRANTE variables_fonction PARENTHESEFERMANTE
 	|
-	READLN PARENTHESEOUVRANTE IDENTIFIANT PARENTHESEFERMANTE
+	READLN PARENTHESEOUVRANTE variable PARENTHESEFERMANTE
 	|
 	CLRSCR
 	|
@@ -295,11 +307,15 @@ variable_fonction:
 	;
 
 assignation:
-	IDENTIFIANT ASSIGNATION expression {}
+	variable ASSIGNATION assignation_element {}
+	;
+
+assignation_element:
+	expression
 	|
-	IDENTIFIANT ASSIGNATION CHAINE_DE_CARACTERE {}
+	CHAINE_DE_CARACTERE
 	|
-	IDENTIFIANT ASSIGNATION boolean {}
+	boolean
 	;
 	
 boucle_while:
