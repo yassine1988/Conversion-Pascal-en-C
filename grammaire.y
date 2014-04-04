@@ -179,14 +179,17 @@ block_instructions_global:
 	;
 
 block_instructions:
-	block_instructions block_instruction {}
+	bloc_instruction_multi
 	|
+	instruction {}
 	;
 
-block_instruction:
-	instruction {}
+bloc_instruction_multi:
+	block_instruction bloc_instruction_multi {}
 	|
-	instruction POINTVIRGULE {}
+	;
+block_instruction:
+	instruction POINTVIRGULE { printf("fin instruction");}
 	;
 
 expression:
@@ -334,19 +337,19 @@ assignation_element:
 	;
 	
 boucle_while:
-	WHILE boolean DO block_instructions_global POINTVIRGULE {}
+	WHILE boolean DO block_instructions_global {}
 	|
-	WHILE NOT PARENTHESEOUVRANTE boolean PARENTHESEFERMANTE DO block_instructions_global POINTVIRGULE {}
+	WHILE NOT PARENTHESEOUVRANTE boolean PARENTHESEFERMANTE DO block_instructions_global {}
 	;
 
 boucle_for:
-	FOR assignation TO expression DO block_instructions_global POINTVIRGULE {}
+	FOR assignation TO expression DO block_instructions_global {}
 	|
-	FOR assignation DOWNTO expression DO block_instructions_global POINTVIRGULE {}
+	FOR assignation DOWNTO expression DO block_instructions_global {}
 	;
 
 boucle_repeat_until:
-	REPEAT block_instructions_global UNTIL boolean POINTVIRGULE {}
+	REPEAT block_instructions_global UNTIL boolean {}
 	;
 
 condition_if:

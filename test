@@ -2,8 +2,7 @@ PROGRAM prog;
 
 { function f }
 FUNCTION f (x,y:INTEGER;test:STRING) :INTEGER;
-VAR i,ii:INTEGER;toto:STRING;
-VAR test:STRING;
+VAR i,ii:INTEGER;toto:STRING;names:ARRAY[1..10] OF INTEGER;
 CONST truc:INTEGER;
 BEGIN
     i := 0;
@@ -12,7 +11,15 @@ BEGIN
     te := 'tttt';
     tee := f(5);
     bool := false;
+    names[1] := 3;
     write('toto');
+    
+    for i:= 1 to 10 do
+    begin
+		writeln('toto');
+		readln(marks[i]);
+    end;
+    
     WHILE i < x DO
     BEGIN
 	IF i MOD 2 = 0 THEN
