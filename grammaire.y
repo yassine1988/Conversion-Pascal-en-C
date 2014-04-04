@@ -28,6 +28,7 @@
 %token PROGRAM; 
 %token THEN; 
 %token TO; 
+%token DOWNTO;
 %token VAR ;
 %token WHILE ;
 %token WITH ;
@@ -74,6 +75,8 @@
 %token TSQRT;
 %token TSQR;
 %token TINT;
+%token REPEAT;
+%token UNTIL;
  
 %token SEPARATEUR;
 %token CONDITION;
@@ -228,6 +231,10 @@ instruction:
 	|
 	boucle_while {}
 	|
+	boucle_for {} 
+	|
+	boucle_repeat_until {}
+	|
 	condition_if {}
 	|
 	appel_fonction {}
@@ -297,6 +304,18 @@ assignation:
 	
 boucle_while:
 	WHILE boolean DO block_instructions_global POINTVIRGULE {}
+	|
+	WHILE NOT PARENTHESEOUVRANTE boolean PARENTHESEFERMANTE DO block_instructions_global POINTVIRGULE {}
+	;
+
+boucle_for:
+	FOR assignation TO expression DO block_instructions_global POINTVIRGULE {}
+	|
+	FOR assignation DOWNTO expression DO block_instructions_global POINTVIRGULE {}
+	;
+
+boucle_repeat_until:
+	REPEAT block_instructions_global UNTIL boolean POINTVIRGULE {}
 	;
 
 condition_if:

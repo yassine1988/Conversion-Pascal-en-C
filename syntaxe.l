@@ -54,6 +54,7 @@ NQUOTE [^']
 {P}{R}{O}{G}{R}{A}{M}  		{ printf("PROGRAM "); 	return(PROGRAM);	}
 {T}{H}{E}{N}   				{ printf("THEN "); 		return(THEN);		}
 {T}{O}   					{ printf("TO "); 		return(TO);			}
+{D}{O}{W}{N}{T}{O}			{ printf("DOWNTO ");	return(DOWNTO);		}
 {V}{A}{R}   				{ printf("VAR "); 		return(VAR);		}
 {W}{R}{I}{T}{E}{L}{N}  		{ printf("WRITELN "); 	return(WRITELN);	}
 {W}{R}{I}{T}{E}		  		{ printf("WRITE "); 	return(WRITE);		}
