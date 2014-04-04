@@ -20,6 +20,9 @@ BEGIN
 		readln(marks[i]);
     end;
     
+    for i:=1 to 10 do
+		writeln(toto);
+    
     WHILE i < x DO
     BEGIN
 	IF i MOD 2 = 0 THEN

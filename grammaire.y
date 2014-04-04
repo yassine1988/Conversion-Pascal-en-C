@@ -345,7 +345,11 @@ boucle_while:
 boucle_for:
 	FOR assignation TO expression DO block_instructions_global {}
 	|
+	FOR assignation TO expression DO instruction {}
+	|
 	FOR assignation DOWNTO expression DO block_instructions_global {}
+	|
+	FOR assignation DOWNTO expression DO instruction {}
 	;
 
 boucle_repeat_until:
