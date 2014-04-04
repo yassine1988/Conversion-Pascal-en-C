@@ -110,10 +110,16 @@ declarations_globale:
 	declaration_fonction POINTVIRGULE {}
 	|
 	declaration_variables POINTVIRGULE {}
+	|
+	declaration_procedure POINTVIRGULE {}
 	;
 	
 declaration_fonction:
 	FUNCTION identifiant_fonction PARENTHESEOUVRANTE declaration_variables_fonction PARENTHESEFERMANTE DEUX_POINTS TYPE POINTVIRGULE block { }
+	;
+
+declaration_procedure:
+	PROCEDURE identifiant_procedure PARENTHESEOUVRANTE declaration_variables_fonction PARENTHESEFERMANTE POINTVIRGULE block { }
 	;
 	
 declaration_variables_fonction:
@@ -250,6 +256,12 @@ instruction:
 	condition_if {}
 	|
 	appel_fonction {}
+	|
+	appel_procedure {}
+	;
+	
+appel_procedure:
+	identifiant_procedure
 	;
 
 appel_fonction:
@@ -287,6 +299,9 @@ fonction_un_param_expression :
 	;
 
 identifiant_fonction:
+	IDENTIFIANT {}
+	;
+identifiant_procedure:
 	IDENTIFIANT {}
 	;
 	
