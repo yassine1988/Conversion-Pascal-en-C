@@ -3,106 +3,111 @@
 	void yyerror(char const *s);
 	int yylex();
 	extern FILE *yyin;
-
+	int affichage_grammaire = 1;
 %}
+%union 
+{
+	int type_integer;
+	char * type_string;
+};
 
 %error-verbose
 
-%token AND;
-%token ARRAY;
-%token CASE;
-%token CONST;
-%token DIV;
-%token DO;
-%token ELSE ;
-%token TEND; 
-%token FOR; 
-%token FUNCTION ;
-%token IF ;
-%token MOD ;
-%token NOT ;
-%token OF ;
-%token OR ;
-%token TBEGIN; 
-%token PROCEDURE ;
-%token PROGRAM; 
-%token THEN; 
-%token TO; 
-%token DOWNTO;
-%token VAR ;
-%token WHILE ;
-%token WITH ;
-%token IDENTIFIANT ;
-%token TYPE ;
-%token TFALSE;
-%token TTRUE;
+%token<type_string> AND;
+%token<type_string> ARRAY;
+%token<type_string> CASE;
+%token<type_string> CONST;
+%token<type_string> DIV;
+%token<type_string> DO;
+%token<type_string> ELSE ;
+%token<type_string> TEND; 
+%token<type_string> FOR; 
+%token<type_string> FUNCTION ;
+%token<type_string> IF ;
+%token<type_string> MOD ;
+%token<type_string> NOT ;
+%token<type_string> OF ;
+%token<type_string> OR ;
+%token<type_string> TBEGIN; 
+%token<type_string> PROCEDURE ;
+%token<type_string> PROGRAM; 
+%token<type_string> THEN; 
+%token<type_string> TO; 
+%token<type_string> DOWNTO;
+%token<type_string> VAR ;
+%token<type_string> WHILE ;
+%token<type_string> WITH ;
+%token<type_string> IDENTIFIANT ;
+%token<type_string> TYPE ;
+%token<type_string> TFALSE;
+%token<type_string> TTRUE;
 
-%token ASSIGNATION ;
-%token CHAINE_DE_CARACTERE ;
-%token DEUX_POINTS; 
-%token VIRGULE; 
-%token NOMBRE ;
-%token POINT; 
-%token POINTPOINT ;
-%token EGALE; 
-%token SUP_EGALE ;
-%token SUP; 
-%token CROCHETOUVRANT ;
-%token INF_EGALE; 
-%token PARENTHESEOUVRANTE ;
-%token INF; 
-%token MOINS ;
-%token INEGALE ;
-%token PLUS; 
-%token CROCHETFERMANT ;
-%token NOMBREREEL; 
-%token PARENTHESEFERMANTE ;
-%token POINTVIRGULE; 
-%token SLASH; 
-%token MULTIPLIE ;
-%token PUISSANCE; 
-%token FLECHEHAUT ;
-%token WRITE;
-%token WRITELN;
-%token READLN;
-%token CLRSCR;
-%token GOTOXY;
-%token TEXTCOLOR;
-%token TEXTBACKGROUND;
-%token RANDOMIZE;
-%token RANDOM;
-%token TABS;
-%token TSQRT;
-%token TSQR;
-%token TINT;
-%token REPEAT;
-%token UNTIL;
+%token<type_string> ASSIGNATION ;
+%token<type_string> CHAINE_DE_CARACTERE ;
+%token<type_string> DEUX_POINTS; 
+%token<type_string> VIRGULE; 
+%token<type_string> NOMBRE ;
+%token<type_string> POINT; 
+%token<type_string> POINTPOINT ;
+%token<type_string> EGALE; 
+%token<type_string> SUP_EGALE ;
+%token<type_string> SUP; 
+%token<type_string> CROCHETOUVRANT ;
+%token<type_string> INF_EGALE; 
+%token<type_string> PARENTHESEOUVRANTE ;
+%token<type_string> INF; 
+%token<type_string> MOINS ;
+%token<type_string> INEGALE ;
+%token<type_string> PLUS; 
+%token<type_string> CROCHETFERMANT ;
+%token<type_string> NOMBREREEL; 
+%token<type_string> PARENTHESEFERMANTE ;
+%token<type_string> POINTVIRGULE; 
+%token<type_string> SLASH; 
+%token<type_string> MULTIPLIE ;
+%token<type_string> PUISSANCE; 
+%token<type_string> FLECHEHAUT ;
+%token<type_string> WRITE;
+%token<type_string> WRITELN;
+%token<type_string> READLN;
+%token<type_string> CLRSCR;
+%token<type_string> GOTOXY;
+%token<type_string> TEXTCOLOR;
+%token<type_string> TEXTBACKGROUND;
+%token<type_string> RANDOMIZE;
+%token<type_string> RANDOM;
+%token<type_string> TABS;
+%token<type_string> TSQRT;
+%token<type_string> TSQR;
+%token<type_string> TINT;
+%token<type_string> REPEAT;
+%token<type_string> UNTIL;
  
-%token SEPARATEUR;
-%token CONDITION;
-%token CLE;
-%token FIN_LIGNE;
-%token FIN_INSTRUCTION;
-%token FIN_PROGRAM;
-%token TYPEVARIABLE;
-%token SIGNATURE;
-%token MOT;
-%token ENTRESORTIE;
+%token<type_string> SEPARATEUR;
+%token<type_string> CONDITION;
+%token<type_string> CLE;
+%token<type_string> FIN_LIGNE;
+%token<type_string> FIN_INSTRUCTION;
+%token<type_string> FIN_PROGRAM;
+%token<type_string> TYPEVARIABLE;
+%token<type_string> SIGNATURE;
+%token<type_string> MOT;
+%token<type_string> ENTRESORTIE;
 %left PLUS MOINS;
 %left MULTIPLIE SLASH DIV MOD AND OR;
 %right PARENTHESEOUVRANTE;
 
 %%
 programme:
-	prog_entete declarations_globales prog_principal {}
+	prog_entete declarations_globales prog_principal { if(affichage_grammaire) printf("Fin d'analyse\n"); }
 	;
 	
 prog_entete:
-	PROGRAM IDENTIFIANT POINTVIRGULE{}
+	PROGRAM IDENTIFIANT POINTVIRGULE{ if(affichage_grammaire) printf("Fin de déclaration entete (%s %s %s)\n",$1,$2,$3); }
 	;
 	
 declarations_globales:
-	declarations_globales declarations_globale {}
+	declarations_globales declarations_globale { }
 	|
 	;
 	
@@ -209,9 +214,9 @@ expression:
 	|
 	variable {}
 	|
-	NOMBRE {}
+	NOMBRE { if(affichage_grammaire) printf("Fin de déclaration nombre (%s)\n",$1); }
 	|
-	NOMBREREEL {}
+	NOMBREREEL { if(affichage_grammaire) printf("Fin de déclaration nombrereel (%s)\n",$1); }
 	|
 	MOINS expression {}
 	|
@@ -398,5 +403,5 @@ int main(int argc, char * argv[])
 
 void yyerror(char const *s)
 {
-	fprintf(stderr,"Erreur %s\n",s);
+	fprintf(stderr,"Erreur %s à la ligne ...\n",s);
 }
