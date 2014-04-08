@@ -26,8 +26,8 @@ BEGIN
     
     WHILE i < x DO
     BEGIN
-	IF i MOD 2 = 0 THEN
-	      f := f + i;
+		IF i MOD 2 = 0 THEN
+			f := f + i;
     END;
 END;
 
