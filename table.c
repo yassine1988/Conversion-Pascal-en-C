@@ -1,9 +1,16 @@
 #include <stdlib.h>
- 
+
+typedef enum TypeVariable TypeVariable;
+enum TypeVariable
+{
+    INT, REEL, CHAR, ARRAY
+};
+
 typedef struct element element;
 struct element
 {
     char * valeur;
+	TypeVariable type_variable;
     struct element *nxt;
 };
  
