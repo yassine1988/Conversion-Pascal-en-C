@@ -97,6 +97,10 @@
 %left MULTIPLIE SLASH DIV MOD AND OR;
 %right PARENTHESEOUVRANTE;
 
+
+%type <type_string> expression;
+%type <type_string> variable;
+
 %%
 programme:
 	prog_entete declarations_globales prog_principal { if(affichage_grammaire) printf("Fin d'analyse\n"); }
@@ -151,7 +155,7 @@ type_variable:
 suite_identifiants:
 	suite_identifiants VIRGULE IDENTIFIANT {}
 	|
-	IDENTIFIANT
+	IDENTIFIANT { if(affichage_grammaire) printf("Fin de reconnaissance IDENTIFIANT (%s)\n",$1);}
 	;
 	
 block_declaration_variables:
@@ -198,25 +202,25 @@ block_instruction:
 	;
 
 expression:
-	expression PLUS expression {}
+	expression PLUS expression { if(affichage_grammaire) printf("Fin de reconnaissance variable (%s PLUS %s)\n",$1,$3);  }
 	|
-	expression MOINS expression {}
+	expression MOINS expression { if(affichage_grammaire) printf("Fin de reconnaissance variable (%s)\n",$1);  }
 	|
-	expression MULTIPLIE expression {}
+	expression MULTIPLIE expression { if(affichage_grammaire) printf("Fin de reconnaissance variable (%s)\n",$1); }
 	|
-	expression SLASH expression {}
+	expression SLASH expression { if(affichage_grammaire) printf("Fin de reconnaissance variable (%s)\n",$1);  }
 	|
-	expression DIV expression {}
+	expression DIV expression { if(affichage_grammaire) printf("Fin de reconnaissance variable (%s)\n",$1);  }
 	|
-	expression MOD expression {}
+	expression MOD expression { if(affichage_grammaire) printf("Fin de reconnaissance variable (%s)\n",$1);  }
 	|
 	PARENTHESEOUVRANTE expression PARENTHESEFERMANTE {}
 	|
-	variable {}
+	variable { if(affichage_grammaire) printf("Fin de reconnaissance variable (%s)\n",$1); }
 	|
-	NOMBRE { if(affichage_grammaire) printf("Fin de déclaration nombre (%s)\n",$1); }
+	NOMBRE { if(affichage_grammaire) printf("Fin de reconnaissance nombre (%s)\n",$1); }
 	|
-	NOMBREREEL { if(affichage_grammaire) printf("Fin de déclaration nombrereel (%s)\n",$1); }
+	NOMBREREEL { if(affichage_grammaire) printf("Fin de reconnaissance nombrereel (%s)\n",$1); }
 	|
 	MOINS expression {}
 	|
@@ -224,7 +228,7 @@ expression:
 	;
 	
 variable:
-	IDENTIFIANT {}
+	IDENTIFIANT { if(affichage_grammaire) printf("Fin de reconnaissance IDENTIFIANT (%s)\n",$1); }
 	|
 	IDENTIFIANT CROCHETOUVRANT expression CROCHETFERMANT {}
 	;

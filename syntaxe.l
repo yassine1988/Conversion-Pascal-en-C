@@ -73,12 +73,12 @@ NQUOTE [^']
 {S}{Q}{R}					{ if(affichage) printf("SQR ");		return(TSQR);		}
 {I}{N}{T}					{ if(affichage) printf("INT ");		return(TINT);		}
 
-{S}{T}{R}{I}{N}{G}			{ if(affichage) printf("STRING ");		return(TYPE);		}
-{I}{N}{T}{E}{G}{E}{R}		{ if(affichage) printf("INTEGER ");	return(TYPE);		}
+{S}{T}{R}{I}{N}{G}			{ if(affichage) printf("STRING ");	char *copie = malloc(sizeof(copie)); strcpy(copie,yytext); yylval.type_string = copie; return(TYPE);		}
+{I}{N}{T}{E}{G}{E}{R}		{ if(affichage) printf("INTEGER ");	char *copie = malloc(sizeof(copie)); strcpy(copie,yytext); yylval.type_string = copie; return(TYPE);			}
 {T}{R}{U}{E}				{ if(affichage) printf("TRUE ");		return(TTRUE);		}
 {F}{A}{L}{S}{E}				{ if(affichage) printf("FALSE ");		return(TFALSE);		}
 
-[a-zA-Z]([a-zA-Z0-9])*  	{ if(affichage) printf("IDENTIFIANT ");return(IDENTIFIANT);}
+[a-zA-Z]([a-zA-Z0-9])*  	{ if(affichage) printf("IDENTIFIANT "); char *copie = malloc(sizeof(copie)); strcpy(copie,yytext); yylval.type_string = copie; return(IDENTIFIANT);}
 
 
 
