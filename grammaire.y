@@ -5,7 +5,7 @@
 	void yyerror(char const *s);
 	int yylex();
 	extern FILE *yyin;
-	int affichage_grammaire = 1;
+	int affichage_grammaire = 0;
 	
 	char * concatener_chaine(char * chaine1,char * chaine2, char * separateur) {
 		char * ntest= malloc((strlen(separateur)+strlen(chaine2)) * sizeof(char));;
@@ -132,45 +132,134 @@
 %type <type_string> identifiant_procedure;
 %type <type_string> block_instructions_global;
 %type <type_string> instruction;
+%type <type_string> bloc_instruction_multi;
+%type <type_string> block_instruction;
+%type <type_string> block_instructions;
+%type <type_string> prog_principal;
+%type <type_string> block;
+%type <type_string> block_declaration_variables;
+%type <type_string> declaration_variables;
+%type <type_string> declaration_variables_fonction;
+%type <type_string> declaration_procedure;
+%type <type_string> declaration_fonction;
+%type <type_string> declarations_globale;
+%type <type_string> declarations_globales;
+%type <type_string> prog_entete;
+%type <type_string> programme;
 %%
 programme:
-	prog_entete declarations_globales prog_principal { if(affichage_grammaire) printf("Fin d'analyse\n"); }
+	prog_entete declarations_globales prog_principal 
+		{ 
+			concatener_chaine($2,$3," ");
+			concatener_chaine($1,$2," ");
+			if(affichage_grammaire) printf("Fin de reconnaissance programme (%s)\n",$1); 
+			$$=$1;
+			printf("%s",$$);
+		}
 	;
 	
 prog_entete:
-	PROGRAM IDENTIFIANT POINTVIRGULE{ if(affichage_grammaire) printf("Fin de déclaration entete (%s %s %s)\n",$1,$2,$3); }
+	PROGRAM IDENTIFIANT POINTVIRGULE 
+		{ 
+			concatener_chaine($2,$3," ");
+			concatener_chaine($1,$2," ");
+			if(affichage_grammaire) printf("Fin de reconnaissance prog_entete (%s)\n",$1); 
+			$$=$1;
+		}
 	;
 	
 declarations_globales:
-	declarations_globales declarations_globale { }
+	declarations_globales declarations_globale
+		{ 
+			concatener_chaine($1,$2," ");
+			if(affichage_grammaire) printf("Fin de reconnaissance declarations_globales (%s)\n",$1); 
+			$$=$1;
+		}
 	|
+		{
+			$$=malloc(sizeof(char));
+		}
 	;
 	
 declarations_globale:
-	declaration_fonction POINTVIRGULE {}
+	declaration_fonction POINTVIRGULE 
+		{ 
+			concatener_chaine($1,$2," ");
+			if(affichage_grammaire) printf("Fin de reconnaissance declarations_globale (%s)\n",$1); 
+			$$=$1;
+		}
 	|
-	declaration_variables POINTVIRGULE {}
+	declaration_variables POINTVIRGULE 
+		{ 
+			concatener_chaine($1,$2," ");
+			if(affichage_grammaire) printf("Fin de reconnaissance declarations_globale (%s)\n",$1); 
+			$$=$1;
+		}
 	|
-	declaration_procedure POINTVIRGULE {}
+	declaration_procedure POINTVIRGULE 
+		{ 
+			concatener_chaine($1,$2," ");
+			if(affichage_grammaire) printf("Fin de reconnaissance declaration_fonction (%s)\n",$1); 
+			$$=$1;
+		}
 	;
 	
 declaration_fonction:
-	FUNCTION identifiant_fonction PARENTHESEOUVRANTE declaration_variables_fonction PARENTHESEFERMANTE DEUX_POINTS TYPE POINTVIRGULE block { }
+	FUNCTION identifiant_fonction PARENTHESEOUVRANTE declaration_variables_fonction PARENTHESEFERMANTE DEUX_POINTS TYPE POINTVIRGULE block 
+		{ 
+			concatener_chaine($8,$9," ");
+			concatener_chaine($7,$8," ");
+			concatener_chaine($6,$7," ");
+			concatener_chaine($5,$6," ");
+			concatener_chaine($4,$5," ");
+			concatener_chaine($3,$4," ");
+			concatener_chaine($2,$3," ");
+			concatener_chaine($1,$2," ");
+			if(affichage_grammaire) printf("Fin de reconnaissance declaration_fonction (%s)\n",$1); 
+			$$=$1;
+		}
 	;
 
 declaration_procedure:
-	PROCEDURE identifiant_procedure PARENTHESEOUVRANTE declaration_variables_fonction PARENTHESEFERMANTE POINTVIRGULE block { }
+	PROCEDURE identifiant_procedure PARENTHESEOUVRANTE declaration_variables_fonction PARENTHESEFERMANTE POINTVIRGULE block
+		{ 
+			concatener_chaine($6,$7," ");
+			concatener_chaine($5,$6," ");
+			concatener_chaine($4,$5," ");
+			concatener_chaine($3,$4," ");
+			concatener_chaine($2,$3," ");
+			concatener_chaine($1,$2," ");
+			if(affichage_grammaire) printf("Fin de reconnaissance declaration_procedure (%s)\n",$1); 
+			$$=$1;
+		}
 	;
 	
 declaration_variables_fonction:
-	declaration_variables {}
+	declaration_variables
+		{ 
+			if(affichage_grammaire) printf("Fin de reconnaissance declaration_variables_fonction (%s)\n",$1); 
+			$$=$1;
+		}
 	|
-	declaration_variables_fonction POINTVIRGULE declaration_variables {}
+	declaration_variables_fonction POINTVIRGULE declaration_variables 
+		{ 
+			concatener_chaine($2,$3," ");
+			concatener_chaine($1,$2," ");
+			if(affichage_grammaire) printf("Fin de reconnaissance declaration_variables_fonction (%s)\n",$1); 
+			$$=$1;
+		}
 	;
 	
 declaration_variables:
-	declaration_variable {}
+	declaration_variable 
+		{ 
+			if(affichage_grammaire) printf("Fin de reconnaissance declaration_variables (%s)\n",$1); 
+			$$=$1;
+		}
 	|
+		{
+			$$=malloc(sizeof(char));
+		}
 	;
 	
 declaration_variable:
@@ -212,20 +301,39 @@ suite_identifiants:
 	;
 	
 block_declaration_variables:
-	block_declaration_variables block_declaration_variable {}
+	block_declaration_variables block_declaration_variable 
+		{ 
+			concatener_chaine($1,$2," ");
+			if(affichage_grammaire) printf("Fin de reconnaissance block_instructions_global (%s)\n",$1); 
+			$$=$1;
+		}
 	|
+		{ $$=malloc(sizeof(char)); }
 	;
 	
 block_declaration_variable:
 	VAR block_declaration_variable_suite 
-		{ if(affichage_grammaire) printf("Fin de reconnaissance block_declaration_variable (%s %s)\n",$1,$2); }
+		{ 
+			concatener_chaine($1,$2," ");
+			if(affichage_grammaire) printf("Fin de reconnaissance block_declaration_variable (%s)\n",$1); 
+			$$=$1;
+		}
 	|
 	CONST block_declaration_variable_suite 
-		{ if(affichage_grammaire) printf("Fin de reconnaissance block_declaration_variable (%s %s)\n",$1,$2); }
+		{ 
+			concatener_chaine($1,$2," ");
+			if(affichage_grammaire) printf("Fin de reconnaissance block_declaration_variable (%s)\n",$1); 
+			$$=$1;
+		}
 	;
 
 block_declaration_variable_suite:
-	declaration_variable POINTVIRGULE { $$=$1;}
+	declaration_variable POINTVIRGULE 
+		{ 
+			concatener_chaine($1,$2," ");
+			if(affichage_grammaire) printf("Fin de reconnaissance block_declaration_variable_suite (%s)\n",$1); 
+			$$=$1;
+		}
 	|
 	declaration_variable POINTVIRGULE block_declaration_variable_suite 
 		{	
@@ -237,29 +345,65 @@ block_declaration_variable_suite:
 	;
 
 prog_principal:
-	block_declaration_variables block_instructions_global POINT { }
+	block_declaration_variables block_instructions_global POINT 
+		{ 
+			concatener_chaine($2,$3," ");
+			concatener_chaine($1,$2," ");
+			if(affichage_grammaire) printf("Fin de reconnaissance block_instructions_global (%s)\n",$1); 
+			$$=$1;
+		}
 	;
 	
 block:
-	block_declaration_variables block_instructions_global {}
+	block_declaration_variables block_instructions_global 
+		{ 
+			concatener_chaine($1,$2," ");
+			if(affichage_grammaire) printf("Fin de reconnaissance block_instructions_global (%s)\n",$1); 
+			$$=$1;
+		}
 	;
 
 block_instructions_global:
-	TBEGIN block_instructions TEND {}
+	TBEGIN block_instructions TEND 
+		{ 
+			concatener_chaine($2,$3," ");
+			concatener_chaine($1,$2," ");
+			if(affichage_grammaire) printf("Fin de reconnaissance block_instructions_global (%s)\n",$1); 
+			$$=$1;
+		}
 	;
 
 block_instructions:
 	bloc_instruction_multi
+		{ 
+			if(affichage_grammaire) printf("Fin de reconnaissance block_instructions (%s)\n",$1); 
+			$$=$1;
+		}
 	|
-	instruction {}
+	instruction 
+		{ 
+			if(affichage_grammaire) printf("Fin de reconnaissance block_instructions (%s)\n",$1); 
+			$$=$1;
+		}
 	;
 
 bloc_instruction_multi:
-	block_instruction bloc_instruction_multi {}
+	block_instruction bloc_instruction_multi 
+		{ 
+			concatener_chaine($1,$2," ");
+			if(affichage_grammaire) printf("Fin de reconnaissance bloc_instruction_multi (%s)\n",$1); 
+			$$=$1;
+		}
 	|
+	{ $$=malloc(sizeof(char)); }
 	;
 block_instruction:
-	instruction POINTVIRGULE { }
+	instruction POINTVIRGULE 
+		{ 
+			concatener_chaine($1,$2," ");
+			if(affichage_grammaire) printf("Fin de reconnaissance block_instruction (%s)\n",$1); 
+			$$=$1;
+		}
 	;
 
 expression:
@@ -434,37 +578,37 @@ boolean:
 	;
 
 instruction:
-	assignation {}
+	assignation 
 		{
 			if(affichage_grammaire) printf("Fin de reconnaissance instruction (%s)\n",$1); 
 		}
 	|
-	boucle_while {}
+	boucle_while 
 		{
 			if(affichage_grammaire) printf("Fin de reconnaissance instruction (%s)\n",$1); 
 		}
 	|
-	boucle_for {} 
+	boucle_for 
 		{
 			if(affichage_grammaire) printf("Fin de reconnaissance instruction (%s)\n",$1); 
 		}
 	|
-	boucle_repeat_until {}
+	boucle_repeat_until 
 		{
 			if(affichage_grammaire) printf("Fin de reconnaissance instruction (%s)\n",$1); 
 		}
 	|
-	condition_if {}
+	condition_if 
 		{
 			if(affichage_grammaire) printf("Fin de reconnaissance instruction (%s)\n",$1); 
 		}
 	|
-	appel_fonction {}
+	appel_fonction 
 		{
 			if(affichage_grammaire) printf("Fin de reconnaissance instruction (%s)\n",$1); 
 		}
 	|
-	appel_procedure {}
+	appel_procedure 
 		{
 			if(affichage_grammaire) printf("Fin de reconnaissance instruction (%s)\n",$1); 
 		}
@@ -609,7 +753,7 @@ variables_fonction:
 			if(affichage_grammaire) printf("Fin de reconnaissance variables_fonction (%s)\n",$1); 
 		}
 	|
-	{}
+	{ malloc(sizeof(char));}
 	;
 	
 variable_fonction:
