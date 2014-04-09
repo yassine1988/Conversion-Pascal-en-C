@@ -73,12 +73,24 @@ NQUOTE [^']
 {S}{Q}{R}					{ if(affichage) printf("SQR ");		return(TSQR);		}
 {I}{N}{T}					{ if(affichage) printf("INT ");		return(TINT);		}
 
-{S}{T}{R}{I}{N}{G}			{ if(affichage) printf("STRING ");	char *copie = malloc(sizeof(copie)); strcpy(copie,yytext); yylval.type_string = copie; return(TYPE);		}
-{I}{N}{T}{E}{G}{E}{R}		{ if(affichage) printf("INTEGER ");	char *copie = malloc(sizeof(copie)); strcpy(copie,yytext); yylval.type_string = copie; return(TYPE);			}
+{S}{T}{R}{I}{N}{G}			{ 	if(affichage) printf("STRING ");	
+								char *copie = malloc(sizeof(copie)); 
+								strcpy(copie,yytext); 
+								yylval.type_string = copie; 
+								return(TYPE);		
+							}
+{I}{N}{T}{E}{G}{E}{R}		{ 	if(affichage) printf("INTEGER ");	
+								char *copie = malloc(sizeof(copie)); 
+								strcpy(copie,yytext); yylval.type_string = copie; 
+								return(TYPE);			}
 {T}{R}{U}{E}				{ if(affichage) printf("TRUE ");		return(TTRUE);		}
 {F}{A}{L}{S}{E}				{ if(affichage) printf("FALSE ");		return(TFALSE);		}
 
-[a-zA-Z]([a-zA-Z0-9])*  	{ if(affichage) printf("IDENTIFIANT "); char *copie = malloc(sizeof(copie)); strcpy(copie,yytext); yylval.type_string = copie; return(IDENTIFIANT);}
+[a-zA-Z]([a-zA-Z0-9])*  	{ 	if(affichage) printf("IDENTIFIANT "); 
+								char *copie = malloc(sizeof(copie)); 
+								strcpy(copie,yytext); 
+								yylval.type_string = copie; 
+								return(IDENTIFIANT);}
 
 
 
@@ -86,7 +98,11 @@ NQUOTE [^']
 '({NQUOTE}|'')+'  	{ if(affichage) printf( "CHAINE_DE_CARACTERE "); 	return(CHAINE_DE_CARACTERE);}
  ":"    			{ if(affichage) printf( "DEUX_POINTS "); 			return(DEUX_POINTS);		}
  ","    			{ if(affichage) printf( "VIRGULE "); 				return(VIRGULE);			}
-[0-9]+  			{ if(affichage) printf( "NOMBRE "); 			yylval.type_string = yytext;	return(NOMBRE);				}
+[0-9]+  			{ 	if(affichage) printf( "NOMBRE "); 			
+						char *copie = malloc(sizeof(copie)); 
+						strcpy(copie,yytext); 
+						yylval.type_string = copie; 
+						return(NOMBRE);				}
  "."    			{ if(affichage) printf( "POINT "); 				return(POINT);				}
  ".."   			{ if(affichage) printf( "POINTPOINT "); 			return(POINTPOINT);			}
  "="    			{ if(affichage) printf( "EGALE "); 				return(EGALE);				}
@@ -100,7 +116,11 @@ NQUOTE [^']
  "<>"   			{ if(affichage) printf( "INEGALE "); 				return(INEGALE);			}
  "+"    			{ if(affichage) printf( "PLUS "); 				return(PLUS);				}
  "]"    			{ if(affichage) printf( "CROCHETFERMANT "); 		return(CROCHETFERMANT);		}
-[0-9]+"."[0-9]+   	{ if(affichage) printf( "NOMBREREEL "); 		yylval.type_string = yytext;	return(NOMBREREEL);			}
+[0-9]+"."[0-9]+   	{ if(affichage) printf( "NOMBREREEL "); 		
+						char *copie = malloc(sizeof(copie)); 
+						strcpy(copie,yytext); 
+						yylval.type_string = copie; 	
+						return(NOMBREREEL);			}
  ")"    			{ if(affichage) printf( "PARENTHESEFERMANTE "); 	return(PARENTHESEFERMANTE);	}
  ";"    			{ if(affichage) printf( "POINTVIRGULE "); 		return(POINTVIRGULE);		}
  "/"    			{ if(affichage) printf( "SLASH "); 				return(SLASH);				}

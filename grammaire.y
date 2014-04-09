@@ -1,5 +1,6 @@
 %{
 	#include <stdio.h>
+	#include <string.h>
 	void yyerror(char const *s);
 	int yylex();
 	extern FILE *yyin;
@@ -100,7 +101,9 @@
 
 %type <type_string> expression;
 %type <type_string> variable;
-
+%type <type_string> assignation;
+%type <type_string> assignation_element;
+%type <type_string> boolean;
 %%
 programme:
 	prog_entete declarations_globales prog_principal { if(affichage_grammaire) printf("Fin d'analyse\n"); }
@@ -202,19 +205,19 @@ block_instruction:
 	;
 
 expression:
-	expression PLUS expression { if(affichage_grammaire) printf("Fin de reconnaissance variable (%s PLUS %s)\n",$1,$3);  }
+	expression PLUS expression { if(affichage_grammaire) printf("Fin de reconnaissance expression (%s PLUS %s)\n",$1,$3);  }
 	|
-	expression MOINS expression { if(affichage_grammaire) printf("Fin de reconnaissance variable (%s)\n",$1);  }
+	expression MOINS expression { if(affichage_grammaire) printf("Fin de reconnaissance expression (%s MOIN %s)\n",$1,$3);  }
 	|
-	expression MULTIPLIE expression { if(affichage_grammaire) printf("Fin de reconnaissance variable (%s)\n",$1); }
+	expression MULTIPLIE expression { if(affichage_grammaire) printf("Fin de reconnaissance expression (%s * %s)\n",$1,$3); }
 	|
-	expression SLASH expression { if(affichage_grammaire) printf("Fin de reconnaissance variable (%s)\n",$1);  }
+	expression SLASH expression { if(affichage_grammaire) printf("Fin de reconnaissance expression (%s SLASH %s)\n",$1,$3);  }
 	|
-	expression DIV expression { if(affichage_grammaire) printf("Fin de reconnaissance variable (%s)\n",$1);  }
+	expression DIV expression { if(affichage_grammaire) printf("Fin de reconnaissance expression (%s DIV %s)\n",$1,$3); }
 	|
-	expression MOD expression { if(affichage_grammaire) printf("Fin de reconnaissance variable (%s)\n",$1);  }
+	expression MOD expression { if(affichage_grammaire) printf("Fin de reconnaissance expression (%s MOD %s)\n",$1,$3); }
 	|
-	PARENTHESEOUVRANTE expression PARENTHESEFERMANTE {}
+	PARENTHESEOUVRANTE expression PARENTHESEFERMANTE { if(affichage_grammaire) printf("Fin de reconnaissance expression ((%s))\n",$2);  }
 	|
 	variable { if(affichage_grammaire) printf("Fin de reconnaissance variable (%s)\n",$1); }
 	|
@@ -222,11 +225,11 @@ expression:
 	|
 	NOMBREREEL { if(affichage_grammaire) printf("Fin de reconnaissance nombrereel (%s)\n",$1); }
 	|
-	MOINS expression {}
+	MOINS expression { if(affichage_grammaire) printf("Fin de reconnaissance expression (MOINS %s)\n",$2);  }
 	|
 	appel_fonction {}
 	;
-	
+
 variable:
 	IDENTIFIANT { if(affichage_grammaire) printf("Fin de reconnaissance IDENTIFIANT (%s)\n",$1); }
 	|
@@ -334,7 +337,7 @@ variable_fonction:
 	;
 
 assignation:
-	variable ASSIGNATION assignation_element {}
+	variable ASSIGNATION assignation_element { if(affichage_grammaire) printf("Fin de reconnaissance assignation (%s ASSIGNATION %s)\n",$1,$3); }
 	;
 
 assignation_element:
