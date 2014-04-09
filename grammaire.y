@@ -1,10 +1,18 @@
 %{
 	#include <stdio.h>
 	#include <string.h>
+	#include <stdlib.h>
 	void yyerror(char const *s);
 	int yylex();
 	extern FILE *yyin;
 	int affichage_grammaire = 1;
+	
+	char * concatener_chaine(char * chaine1,char * chaine2, char * separateur) {
+		char * ntest= malloc((strlen(separateur)+strlen(chaine2)) * sizeof(char));;
+		strcat(ntest,separateur);
+		strcat(ntest,chaine2);
+		strcat(chaine1,ntest);
+	}
 %}
 %union 
 {
@@ -104,6 +112,16 @@
 %type <type_string> assignation;
 %type <type_string> assignation_element;
 %type <type_string> boolean;
+%type <type_string> block_declaration_variable;
+%type <type_string> block_declaration_variable_suite;
+%type <type_string> declaration_variable;
+%type <type_string> suite_identifiants;
+%type <type_string> type_variable;
+%type <type_string> appel_fonction;
+%type <type_string> identifiant_fonction;
+%type <type_string> variables_fonction;
+%type <type_string> variable_fonction;
+%type <type_string> fonction_un_param_expression;
 %%
 programme:
 	prog_entete declarations_globales prog_principal { if(affichage_grammaire) printf("Fin d'analyse\n"); }
@@ -146,17 +164,39 @@ declaration_variables:
 	;
 	
 declaration_variable:
-	suite_identifiants DEUX_POINTS type_variable {}
+	suite_identifiants DEUX_POINTS type_variable 
+		{ 
+			if(affichage_grammaire) printf("Fin de reconnaissance declaration_variable (%s : %s)\n",$1,$3);
+			concatener_chaine($1,$3," : ");
+			$$=$1;
+		}
 	;
 
 type_variable:
-	TYPE
+	TYPE { if(affichage_grammaire) printf("Fin de reconnaissance TYPE (%s)\n",$1); }
 	|
-	ARRAY CROCHETOUVRANT expression POINTPOINT expression CROCHETFERMANT OF TYPE
+	ARRAY CROCHETOUVRANT expression POINTPOINT expression CROCHETFERMANT OF TYPE 
+		{
+			concatener_chaine($7,$8," ");
+			concatener_chaine($6,$7," ");
+			concatener_chaine($5,$6," ");
+			concatener_chaine($4,$5," ");
+			concatener_chaine($3,$4," ");
+			concatener_chaine($2,$3," ");
+			concatener_chaine($1,$2," ");
+			if(affichage_grammaire) printf("Fin de reconnaissance ARRAY (%s)\n",$1);
+			$$=$1;
+		}
 	;
 
 suite_identifiants:
-	suite_identifiants VIRGULE IDENTIFIANT {}
+	suite_identifiants VIRGULE IDENTIFIANT 
+		{ 	
+			concatener_chaine($2,$3," ");
+			concatener_chaine($1,$2," ");
+			if(affichage_grammaire) printf("Fin de reconnaissance suite_identifiants (%s)\n",$1);
+			$$=$1;
+		}
 	|
 	IDENTIFIANT { if(affichage_grammaire) printf("Fin de reconnaissance IDENTIFIANT (%s)\n",$1);}
 	;
@@ -167,15 +207,23 @@ block_declaration_variables:
 	;
 	
 block_declaration_variable:
-	VAR block_declaration_variable_suite {}
+	VAR block_declaration_variable_suite 
+		{ if(affichage_grammaire) printf("Fin de reconnaissance block_declaration_variable (%s %s)\n",$1,$2); }
 	|
-	CONST block_declaration_variable_suite {}
+	CONST block_declaration_variable_suite 
+		{ if(affichage_grammaire) printf("Fin de reconnaissance block_declaration_variable (%s %s)\n",$1,$2); }
 	;
 
 block_declaration_variable_suite:
-	declaration_variable POINTVIRGULE {}
+	declaration_variable POINTVIRGULE { $$=$1;}
 	|
-	declaration_variable POINTVIRGULE block_declaration_variable_suite {}
+	declaration_variable POINTVIRGULE block_declaration_variable_suite 
+		{	
+			concatener_chaine($2,$3," ");
+			concatener_chaine($1,$2," ");
+			if(affichage_grammaire) printf("Fin de reconnaissance block_declaration_variable_suite (%s)\n",$1);
+			$$=$1;
+		}
 	;
 
 prog_principal:
@@ -205,19 +253,61 @@ block_instruction:
 	;
 
 expression:
-	expression PLUS expression { if(affichage_grammaire) printf("Fin de reconnaissance expression (%s PLUS %s)\n",$1,$3);  }
+	expression PLUS expression 
+		{ 
+			concatener_chaine($2,$3," ");
+			concatener_chaine($1,$2," ");
+			if(affichage_grammaire) printf("Fin de reconnaissance expression (%s)\n",$1); 
+			$$=$1;
+		}
 	|
-	expression MOINS expression { if(affichage_grammaire) printf("Fin de reconnaissance expression (%s MOIN %s)\n",$1,$3);  }
+	expression MOINS expression 
+		{ 
+			concatener_chaine($2,$3," ");
+			concatener_chaine($1,$2," ");
+			if(affichage_grammaire) printf("Fin de reconnaissance expression (%s)\n",$1); 
+			$$=$1;
+		}
 	|
-	expression MULTIPLIE expression { if(affichage_grammaire) printf("Fin de reconnaissance expression (%s * %s)\n",$1,$3); }
+	expression MULTIPLIE expression 
+		{ 
+			concatener_chaine($2,$3," ");
+			concatener_chaine($1,$2," ");
+			if(affichage_grammaire) printf("Fin de reconnaissance expression (%s)\n",$1); 
+			$$=$1;
+		}
 	|
-	expression SLASH expression { if(affichage_grammaire) printf("Fin de reconnaissance expression (%s SLASH %s)\n",$1,$3);  }
+	expression SLASH expression
+		{ 
+			concatener_chaine($2,$3," ");
+			concatener_chaine($1,$2," ");
+			if(affichage_grammaire) printf("Fin de reconnaissance expression (%s)\n",$1); 
+			$$=$1;
+		}
 	|
-	expression DIV expression { if(affichage_grammaire) printf("Fin de reconnaissance expression (%s DIV %s)\n",$1,$3); }
+	expression DIV expression 
+		{ 
+			concatener_chaine($2,$3," ");
+			concatener_chaine($1,$2," ");
+			if(affichage_grammaire) printf("Fin de reconnaissance expression (%s)\n",$1); 
+			$$=$1;
+		}
 	|
-	expression MOD expression { if(affichage_grammaire) printf("Fin de reconnaissance expression (%s MOD %s)\n",$1,$3); }
+	expression MOD expression 
+		{ 
+			concatener_chaine($2,$3," ");
+			concatener_chaine($1,$2," ");
+			if(affichage_grammaire) printf("Fin de reconnaissance expression (%s)\n",$1); 
+			$$=$1;
+		}
 	|
-	PARENTHESEOUVRANTE expression PARENTHESEFERMANTE { if(affichage_grammaire) printf("Fin de reconnaissance expression ((%s))\n",$2);  }
+	PARENTHESEOUVRANTE expression PARENTHESEFERMANTE 
+		{ 
+			concatener_chaine($2,$3," ");
+			concatener_chaine($1,$2," ");
+			if(affichage_grammaire) printf("Fin de reconnaissance expression (%s)\n",$1); 
+			$$=$1;
+		}
 	|
 	variable { if(affichage_grammaire) printf("Fin de reconnaissance variable (%s)\n",$1); }
 	|
@@ -225,7 +315,12 @@ expression:
 	|
 	NOMBREREEL { if(affichage_grammaire) printf("Fin de reconnaissance nombrereel (%s)\n",$1); }
 	|
-	MOINS expression { if(affichage_grammaire) printf("Fin de reconnaissance expression (MOINS %s)\n",$2);  }
+	MOINS expression 
+		{ 
+			concatener_chaine($1,$2," ");
+			if(affichage_grammaire) printf("Fin de reconnaissance expression (%s)\n",$1); 
+			$$=$1;
+		}
 	|
 	appel_fonction {}
 	;
@@ -236,27 +331,89 @@ variable:
 	IDENTIFIANT CROCHETOUVRANT expression CROCHETFERMANT {}
 	;
 boolean:
-	expression INF expression {}
+	expression INF expression 
+		{ 
+			concatener_chaine($2,$3," ");
+			concatener_chaine($1,$2," ");
+			if(affichage_grammaire) printf("Fin de reconnaissance boolean (%s)\n",$1); 
+			$$=$1;
+		}
 	|
-	expression INF_EGALE expression {}
+	expression INF_EGALE expression 
+		{ 
+			concatener_chaine($2,$3," ");
+			concatener_chaine($1,$2," ");
+			if(affichage_grammaire) printf("Fin de reconnaissance boolean (%s)\n",$1); 
+			$$=$1;
+		}
 	|
-	expression SUP expression {}
+	expression SUP expression 
+		{ 
+			concatener_chaine($2,$3," ");
+			concatener_chaine($1,$2," ");
+			if(affichage_grammaire) printf("Fin de reconnaissance boolean (%s)\n",$1); 
+			$$=$1;
+		}
 	|
-	expression SUP_EGALE expression {}
+	expression SUP_EGALE expression 
+		{ 
+			concatener_chaine($2,$3," ");
+			concatener_chaine($1,$2," ");
+			if(affichage_grammaire) printf("Fin de reconnaissance boolean (%s)\n",$1); 
+			$$=$1;
+		}
 	|
-	expression EGALE expression {}
+	expression EGALE expression 
+		{ 
+			concatener_chaine($2,$3," ");
+			concatener_chaine($1,$2," ");
+			if(affichage_grammaire) printf("Fin de reconnaissance boolean (%s)\n",$1); 
+			$$=$1;
+		}
 	|
-	expression INEGALE expression {}
+	expression INEGALE expression 
+		{ 
+			concatener_chaine($2,$3," ");
+			concatener_chaine($1,$2," ");
+			if(affichage_grammaire) printf("Fin de reconnaissance boolean (%s)\n",$1); 
+			$$=$1;
+		}
 	|
-	boolean AND boolean {}
+	boolean AND boolean 
+		{ 
+			concatener_chaine($2,$3," ");
+			concatener_chaine($1,$2," ");
+			if(affichage_grammaire) printf("Fin de reconnaissance boolean (%s)\n",$1); 
+			$$=$1;
+		}
 	|
-	boolean OR boolean {}
+	boolean OR boolean 
+		{ 
+			concatener_chaine($2,$3," ");
+			concatener_chaine($1,$2," ");
+			if(affichage_grammaire) printf("Fin de reconnaissance boolean (%s)\n",$1); 
+			$$=$1;
+		}
 	|
 	PARENTHESEOUVRANTE boolean PARENTHESEFERMANTE
+		{ 
+			concatener_chaine($2,$3," ");
+			concatener_chaine($1,$2," ");
+			if(affichage_grammaire) printf("Fin de reconnaissance boolean (%s)\n",$1); 
+			$$=$1;
+		}
 	|
-	TTRUE {}
+	TTRUE 
+		{ 
+			if(affichage_grammaire) printf("Fin de reconnaissance boolean (%s)\n",$1); 
+			$$=$1;
+		}
 	|
-	TFALSE {}
+	TFALSE 
+		{ 
+			if(affichage_grammaire) printf("Fin de reconnaissance boolean (%s)\n",$1); 
+			$$=$1;
+		}
 	;
 
 instruction:
@@ -281,18 +438,53 @@ appel_procedure:
 
 appel_fonction:
 	identifiant_fonction PARENTHESEOUVRANTE variables_fonction PARENTHESEFERMANTE
+		{ 
+			concatener_chaine($3,$4," ");
+			concatener_chaine($2,$3," ");
+			concatener_chaine($1,$2," ");
+			if(affichage_grammaire) printf("Fin de reconnaissance appel_fonction (%s)\n",$1); 
+			$$=$1;
+		}
 	|
 	WRITE PARENTHESEOUVRANTE variables_fonction PARENTHESEFERMANTE
+		{ 
+			concatener_chaine($3,$4," ");
+			concatener_chaine($2,$3," ");
+			concatener_chaine($1,$2," ");
+			if(affichage_grammaire) printf("Fin de reconnaissance appel_fonction (%s)\n",$1); 
+			$$=$1;
+		}
 	|
 	WRITELN PARENTHESEOUVRANTE variables_fonction PARENTHESEFERMANTE
+		{ 
+			concatener_chaine($3,$4," ");
+			concatener_chaine($2,$3," ");
+			concatener_chaine($1,$2," ");
+			if(affichage_grammaire) printf("Fin de reconnaissance appel_fonction (%s)\n",$1); 
+			$$=$1;
+		}
 	|
 	READLN PARENTHESEOUVRANTE variable PARENTHESEFERMANTE
+		{ 
+			concatener_chaine($3,$4," ");
+			concatener_chaine($2,$3," ");
+			concatener_chaine($1,$2," ");
+			if(affichage_grammaire) printf("Fin de reconnaissance appel_fonction (%s)\n",$1); 
+			$$=$1;
+		}
 	|
 	CLRSCR
 	|
 	GOTOXY PARENTHESEOUVRANTE expression VIRGULE expression PARENTHESEFERMANTE
 	|
 	fonction_un_param_expression PARENTHESEOUVRANTE expression PARENTHESEFERMANTE
+		{ 
+			concatener_chaine($2,$4," ");
+			concatener_chaine($2,$3," ");
+			concatener_chaine($1,$2," ");
+			if(affichage_grammaire) printf("Fin de reconnaissance appel_fonction (%s)\n",$1); 
+			$$=$1;
+		}
 	|
 	RANDOMIZE
 	;
@@ -321,7 +513,13 @@ identifiant_procedure:
 	;
 	
 variables_fonction:
-	variables_fonction VIRGULE variable_fonction {}
+	variables_fonction VIRGULE variable_fonction 
+		{ 
+			concatener_chaine($2,$3," ");
+			concatener_chaine($1,$2," ");
+			if(affichage_grammaire) printf("Fin de reconnaissance variables_fonction (%s)\n",$1); 
+			$$=$1;
+		}
 	|
 	variable_fonction {}
 	|
@@ -337,7 +535,13 @@ variable_fonction:
 	;
 
 assignation:
-	variable ASSIGNATION assignation_element { if(affichage_grammaire) printf("Fin de reconnaissance assignation (%s ASSIGNATION %s)\n",$1,$3); }
+	variable ASSIGNATION assignation_element
+		{ 
+			concatener_chaine($2,$3," ");
+			concatener_chaine($1,$2," ");
+			if(affichage_grammaire) printf("Fin de reconnaissance assignation (%s)\n",$1); 
+			$$=$1;
+		}
 	;
 
 assignation_element:

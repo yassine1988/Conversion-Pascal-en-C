@@ -3,6 +3,13 @@
 	extern FILE *yyin;
 	int ligne_no = 1;
 	int affichage = 0;
+	
+	char * copier_chaine(char * chaine_a_copier) 
+	{
+		char *copie = malloc(sizeof(chaine_a_copier)); 
+		strcpy(copie,chaine_a_copier); 
+		return copie;
+	}
 %}
 
 A [aA]
@@ -35,98 +42,93 @@ NQUOTE [^']
 
 %%
 
-{A}{N}{D}  					{ if(affichage)	printf("AND "); 		return(AND);		}
-{A}{R}{R}{A}{Y}  			{ if(affichage)	printf("ARRAY "); 	return(ARRAY);		}
-{C}{A}{S}{E}  				{ if(affichage)	printf("CASE "); 		return(CASE);		}
-{C}{O}{N}{S}{T}  			{ if(affichage)	printf("CONST "); 	return(CONST);		}
-{D}{I}{V}   				{ if(affichage)	printf("DIV "); 		return(DIV);		}
-{D}{O}    					{ if(affichage)	printf("DO "); 		return(DO);			}
-{E}{L}{S}{E}   				{ if(affichage)	printf("ELSE "); 		return(ELSE);		}
-{E}{N}{D}   				{ if(affichage)	printf("END "); 		return(TEND);		}
-{F}{O}{R}   				{ if(affichage)	printf("FOR "); 		return(FOR);		}
-{F}{U}{N}{C}{T}{I}{O}{N} 	{ if(affichage)	printf("FUNCTION "); 	return(FUNCTION);	}
-{I}{F}    					{ if(affichage)	printf("IF "); 		return(IF);			}
-{M}{O}{D}   				{ if(affichage)	printf("MOD "); 		return(MOD);		}
-{N}{O}{T}   				{ if(affichage)	printf("NOT "); 		return(NOT);		}
-{O}{F}    					{ if(affichage)	printf("OF "); 		return(OF);			}
-{O}{R}    					{ if(affichage)	printf("OR "); 		return(OR);			}
-{B}{E}{G}{I}{N}   			{ if(affichage)	printf("BEGIN "); 	return(TBEGIN);		}
-{P}{R}{O}{C}{E}{D}{U}{R}{E} { if(affichage)	printf("PROCEDURE "); return(PROCEDURE);	}
-{P}{R}{O}{G}{R}{A}{M}  		{ if(affichage)	printf("PROGRAM "); 	return(PROGRAM);	}
-{T}{H}{E}{N}   				{ if(affichage)	printf("THEN "); 		return(THEN);		}
-{T}{O}   					{ if(affichage)	printf("TO "); 		return(TO);			}
-{D}{O}{W}{N}{T}{O}			{ if(affichage) printf("DOWNTO ");	return(DOWNTO);		}
-{V}{A}{R}   				{ if(affichage) printf("VAR "); 		return(VAR);		}
-{W}{R}{I}{T}{E}{L}{N}  		{ if(affichage) printf("WRITELN "); 	return(WRITELN);	}
-{W}{R}{I}{T}{E}		  		{ if(affichage) printf("WRITE "); 	return(WRITE);		}
-{R}{E}{A}{D}{L}{N}			{ if(affichage) printf("READLN ");	return(READLN);		}
-{W}{H}{I}{L}{E}  			{ if(affichage) printf("WHILE "); 	return(WHILE);		}
-{W}{I}{T}{H}   				{ if(affichage) printf("WITH "); 		return(WITH);		}
-{C}{L}{R}{S}{C}{R}			{ if(affichage) printf("CLRSCR ");	return(CLRSCR);		}
-{G}{O}{T}{O}{X}{Y}			{ if(affichage) printf("GOTOXY ");	return(CLRSCR);		}
-{T}{E}{X}{T}{C}{O}{L}{O}{R}	{ if(affichage) printf("TEXTCOLOR ");	return(TEXTCOLOR);	}
-{T}{E}{X}{T}{B}{A}{C}{K}{G}{R}{O}{U}{N}{D}	{ if(affichage) printf("TEXTBACKGROUND "); return(TEXTBACKGROUND);}
-{R}{A}{N}{D}{O}{M}{I}{Z}{E}	{ if(affichage) printf("RANDOMIZE ");	return(RANDOMIZE);	}
-{R}{A}{N}{D}{O}{M}			{ if(affichage) printf("RANDOM ");		return(RANDOM);		}
-{A}{B}{S}					{ if(affichage) printf("ABS "); 		return(TABS);		}
-{S}{Q}{R}{T}				{ if(affichage) printf("SQRT ");		return(TSQRT);		}
-{S}{Q}{R}					{ if(affichage) printf("SQR ");		return(TSQR);		}
-{I}{N}{T}					{ if(affichage) printf("INT ");		return(TINT);		}
+{A}{N}{D}  					{ if(affichage)	printf("AND "); 	yylval.type_string = copier_chaine(yytext); 	return(AND);		}
+{A}{R}{R}{A}{Y}  			{ if(affichage)	printf("ARRAY "); 	yylval.type_string = copier_chaine(yytext);  return(ARRAY);		}
+{C}{A}{S}{E}  				{ if(affichage)	printf("CASE "); 	yylval.type_string = copier_chaine(yytext); 	return(CASE);		}
+{C}{O}{N}{S}{T}  			{ if(affichage)	printf("CONST "); 	yylval.type_string = copier_chaine(yytext);  return(CONST);		}
+{D}{I}{V}   				{ if(affichage)	printf("DIV "); 	yylval.type_string = copier_chaine(yytext); 	return(DIV);		}
+{D}{O}    					{ if(affichage)	printf("DO "); 		yylval.type_string = copier_chaine(yytext); return(DO);			}
+{E}{L}{S}{E}   				{ if(affichage)	printf("ELSE "); 	yylval.type_string = copier_chaine(yytext); 	return(ELSE);		}
+{E}{N}{D}   				{ if(affichage)	printf("END "); 	yylval.type_string = copier_chaine(yytext); 	return(TEND);		}
+{F}{O}{R}   				{ if(affichage)	printf("FOR "); 	yylval.type_string = copier_chaine(yytext); 	return(FOR);		}
+{F}{U}{N}{C}{T}{I}{O}{N} 	{ if(affichage)	printf("FUNCTION "); yylval.type_string = copier_chaine(yytext); 	return(FUNCTION);	}
+{I}{F}    					{ if(affichage)	printf("IF "); 		yylval.type_string = copier_chaine(yytext); return(IF);			}
+{M}{O}{D}   				{ if(affichage)	printf("MOD "); 	yylval.type_string = copier_chaine(yytext); 	return(MOD);		}
+{N}{O}{T}   				{ if(affichage)	printf("NOT "); 	yylval.type_string = copier_chaine(yytext); 	return(NOT);		}
+{O}{F}    					{ if(affichage)	printf("OF "); 		yylval.type_string = copier_chaine(yytext); return(OF);			}
+{O}{R}    					{ if(affichage)	printf("OR "); 		yylval.type_string = copier_chaine(yytext); return(OR);			}
+{B}{E}{G}{I}{N}   			{ if(affichage)	printf("BEGIN "); 	yylval.type_string = copier_chaine(yytext); return(TBEGIN);		}
+{P}{R}{O}{C}{E}{D}{U}{R}{E} { if(affichage)	printf("PROCEDURE ");yylval.type_string = copier_chaine(yytext);  return(PROCEDURE);	}
+{P}{R}{O}{G}{R}{A}{M}  		{ if(affichage)	printf("PROGRAM "); yylval.type_string = copier_chaine(yytext); 	return(PROGRAM);	}
+{T}{H}{E}{N}   				{ if(affichage)	printf("THEN "); 	yylval.type_string = copier_chaine(yytext); 	return(THEN);		}
+{T}{O}   					{ if(affichage)	printf("TO "); 		yylval.type_string = copier_chaine(yytext); return(TO);			}
+{D}{O}{W}{N}{T}{O}			{ if(affichage) printf("DOWNTO ");	yylval.type_string = copier_chaine(yytext); return(DOWNTO);		}
+{V}{A}{R}   				{ if(affichage) printf("VAR "); 	yylval.type_string = copier_chaine(yytext); 	return(VAR);		}
+{W}{R}{I}{T}{E}{L}{N}  		{ if(affichage) printf("WRITELN "); yylval.type_string = copier_chaine(yytext); 	return(WRITELN);	}
+{W}{R}{I}{T}{E}		  		{ if(affichage) printf("WRITE "); 	yylval.type_string = copier_chaine(yytext); return(WRITE);		}
+{R}{E}{A}{D}{L}{N}			{ if(affichage) printf("READLN ");	yylval.type_string = copier_chaine(yytext); return(READLN);		}
+{W}{H}{I}{L}{E}  			{ if(affichage) printf("WHILE "); 	yylval.type_string = copier_chaine(yytext); return(WHILE);		}
+{W}{I}{T}{H}   				{ if(affichage) printf("WITH "); 	yylval.type_string = copier_chaine(yytext); 	return(WITH);		}
+{C}{L}{R}{S}{C}{R}			{ if(affichage) printf("CLRSCR ");	yylval.type_string = copier_chaine(yytext); return(CLRSCR);		}
+{G}{O}{T}{O}{X}{Y}			{ if(affichage) printf("GOTOXY ");	yylval.type_string = copier_chaine(yytext); return(CLRSCR);		}
+{T}{E}{X}{T}{C}{O}{L}{O}{R}	{ if(affichage) printf("TEXTCOLOR ");	yylval.type_string = copier_chaine(yytext); return(TEXTCOLOR);	}
+{T}{E}{X}{T}{B}{A}{C}{K}{G}{R}{O}{U}{N}{D}	{ if(affichage) printf("TEXTBACKGROUND "); yylval.type_string = copier_chaine(yytext); return(TEXTBACKGROUND);}
+{R}{A}{N}{D}{O}{M}{I}{Z}{E}	{ if(affichage) printf("RANDOMIZE ");	yylval.type_string = copier_chaine(yytext); return(RANDOMIZE);	}
+{R}{A}{N}{D}{O}{M}			{ if(affichage) printf("RANDOM ");		yylval.type_string = copier_chaine(yytext); return(RANDOM);		}
+{A}{B}{S}					{ if(affichage) printf("ABS "); 		yylval.type_string = copier_chaine(yytext); return(TABS);		}
+{S}{Q}{R}{T}				{ if(affichage) printf("SQRT ");		yylval.type_string = copier_chaine(yytext); return(TSQRT);		}
+{S}{Q}{R}					{ if(affichage) printf("SQR ");		yylval.type_string = copier_chaine(yytext); return(TSQR);		}
+{I}{N}{T}					{ if(affichage) printf("INT ");		yylval.type_string = copier_chaine(yytext); return(TINT);		}
 
 {S}{T}{R}{I}{N}{G}			{ 	if(affichage) printf("STRING ");	
-								char *copie = malloc(sizeof(copie)); 
-								strcpy(copie,yytext); 
-								yylval.type_string = copie; 
+								yylval.type_string = copier_chaine(yytext); 
 								return(TYPE);		
 							}
 {I}{N}{T}{E}{G}{E}{R}		{ 	if(affichage) printf("INTEGER ");	
-								char *copie = malloc(sizeof(copie)); 
-								strcpy(copie,yytext); yylval.type_string = copie; 
-								return(TYPE);			}
+								yylval.type_string = copier_chaine(yytext);  
+								return(TYPE);			
+							}
 {T}{R}{U}{E}				{ if(affichage) printf("TRUE ");		return(TTRUE);		}
 {F}{A}{L}{S}{E}				{ if(affichage) printf("FALSE ");		return(TFALSE);		}
 
 [a-zA-Z]([a-zA-Z0-9])*  	{ 	if(affichage) printf("IDENTIFIANT "); 
-								char *copie = malloc(sizeof(copie)); 
-								strcpy(copie,yytext); 
-								yylval.type_string = copie; 
-								return(IDENTIFIANT);}
+								yylval.type_string = copier_chaine(yytext); 
+								return(IDENTIFIANT);
+							}
 
 
 
- ":="   			{ if(affichage) printf( "ASSIGNATION "); 			return(ASSIGNATION);		}
-'({NQUOTE}|'')+'  	{ if(affichage) printf( "CHAINE_DE_CARACTERE "); 	return(CHAINE_DE_CARACTERE);}
- ":"    			{ if(affichage) printf( "DEUX_POINTS "); 			return(DEUX_POINTS);		}
- ","    			{ if(affichage) printf( "VIRGULE "); 				return(VIRGULE);			}
+ ":="   			{ if(affichage) printf( "ASSIGNATION "); 			yylval.type_string = copier_chaine(yytext); return(ASSIGNATION);		}
+'({NQUOTE}|'')+'  	{ if(affichage) printf( "CHAINE_DE_CARACTERE "); 	yylval.type_string = copier_chaine(yytext); return(CHAINE_DE_CARACTERE);}
+ ":"    			{ if(affichage) printf( "DEUX_POINTS "); 			yylval.type_string = copier_chaine(yytext); return(DEUX_POINTS);		}
+ ","    			{ if(affichage) printf( "VIRGULE "); 				yylval.type_string = copier_chaine(yytext); return(VIRGULE);			}
 [0-9]+  			{ 	if(affichage) printf( "NOMBRE "); 			
-						char *copie = malloc(sizeof(copie)); 
-						strcpy(copie,yytext); 
-						yylval.type_string = copie; 
-						return(NOMBRE);				}
- "."    			{ if(affichage) printf( "POINT "); 				return(POINT);				}
- ".."   			{ if(affichage) printf( "POINTPOINT "); 			return(POINTPOINT);			}
- "="    			{ if(affichage) printf( "EGALE "); 				return(EGALE);				}
- ">="   			{ if(affichage) printf( "SUP_EGALE "); 			return(SUP_EGALE);			}
- ">"    			{ if(affichage) printf( "SUP "); 					return(SUP);				}
- "["    			{ if(affichage) printf( "CROCHETOUVRANT "); 		return(CROCHETOUVRANT);		}
- "<="   			{ if(affichage) printf( "INF_EGALE "); 			return(INF_EGALE);			}
- "("    			{ if(affichage) printf( "PARENTHESEOUVRANTE "); 	return(PARENTHESEOUVRANTE);	}
- "<"    			{ if(affichage) printf( "INF "); 					return(INF);				}
- "-"    			{ if(affichage) printf( "MOINS "); 				return(MOINS);				}
- "<>"   			{ if(affichage) printf( "INEGALE "); 				return(INEGALE);			}
- "+"    			{ if(affichage) printf( "PLUS "); 				return(PLUS);				}
- "]"    			{ if(affichage) printf( "CROCHETFERMANT "); 		return(CROCHETFERMANT);		}
-[0-9]+"."[0-9]+   	{ if(affichage) printf( "NOMBREREEL "); 		
-						char *copie = malloc(sizeof(copie)); 
-						strcpy(copie,yytext); 
-						yylval.type_string = copie; 	
-						return(NOMBREREEL);			}
- ")"    			{ if(affichage) printf( "PARENTHESEFERMANTE "); 	return(PARENTHESEFERMANTE);	}
- ";"    			{ if(affichage) printf( "POINTVIRGULE "); 		return(POINTVIRGULE);		}
- "/"    			{ if(affichage) printf( "SLASH "); 				return(SLASH);				}
- "*"    			{ if(affichage) printf( "MULTIPLIE "); 			return(MULTIPLIE);			}
- "**"    			{ if(affichage) printf( "PUISSANCE "); 			return(PUISSANCE);			}
- "->" | "^" 		{ if(affichage) printf( "FLECHEHAUT "); 			return(FLECHEHAUT);			}
+						yylval.type_string = copier_chaine(yytext); 
+						return(NOMBRE);
+					}
+ "."    			{ if(affichage) printf( "POINT "); 				yylval.type_string = copier_chaine(yytext); return(POINT);				}
+ ".."   			{ if(affichage) printf( "POINTPOINT "); 		yylval.type_string = copier_chaine(yytext); 	return(POINTPOINT);			}
+ "="    			{ if(affichage) printf( "EGALE "); 				yylval.type_string = copier_chaine(yytext); return(EGALE);				}
+ ">="   			{ if(affichage) printf( "SUP_EGALE "); 			yylval.type_string = copier_chaine(yytext); return(SUP_EGALE);			}
+ ">"    			{ if(affichage) printf( "SUP "); 				yylval.type_string = copier_chaine(yytext); 	return(SUP);				}
+ "["    			{ if(affichage) printf( "CROCHETOUVRANT "); 	yylval.type_string = copier_chaine(yytext); 	return(CROCHETOUVRANT);		}
+ "<="   			{ if(affichage) printf( "INF_EGALE "); 			yylval.type_string = copier_chaine(yytext); return(INF_EGALE);			}
+ "("    			{ if(affichage) printf( "PARENTHESEOUVRANTE "); yylval.type_string = copier_chaine(yytext); 	return(PARENTHESEOUVRANTE);	}
+ "<"    			{ if(affichage) printf( "INF "); 				yylval.type_string = copier_chaine(yytext); 	return(INF);				}
+ "-"    			{ if(affichage) printf( "MOINS "); 				yylval.type_string = copier_chaine(yytext); return(MOINS);				}
+ "<>"   			{ if(affichage) printf( "INEGALE "); 			yylval.type_string = copier_chaine(yytext); 	return(INEGALE);			}
+ "+"    			{ if(affichage) printf( "PLUS "); 				yylval.type_string = copier_chaine(yytext); return(PLUS);				}
+ "]"    			{ if(affichage) printf( "CROCHETFERMANT "); 	yylval.type_string = copier_chaine(yytext); 	return(CROCHETFERMANT);		}
+[0-9]+"."[0-9]+   	{ 	if(affichage) printf( "NOMBREREEL "); 		
+						yylval.type_string = copier_chaine(yytext);  	
+						return(NOMBREREEL);			
+					}
+ ")"    			{ if(affichage) printf( "PARENTHESEFERMANTE "); yylval.type_string = copier_chaine(yytext); 	return(PARENTHESEFERMANTE);	}
+ ";"    			{ if(affichage) printf( "POINTVIRGULE "); 		yylval.type_string = copier_chaine(yytext); return(POINTVIRGULE);		}
+ "/"    			{ if(affichage) printf( "SLASH "); 				yylval.type_string = copier_chaine(yytext); return(SLASH);				}
+ "*"    			{ if(affichage) printf( "MULTIPLIE "); 			yylval.type_string = copier_chaine(yytext); return(MULTIPLIE);			}
+ "**"    			{ if(affichage) printf( "PUISSANCE "); 			yylval.type_string = copier_chaine(yytext); return(PUISSANCE);			}
+ "->" | "^" 		{ if(affichage) printf( "FLECHEHAUT "); 		yylval.type_string = copier_chaine(yytext); 	return(FLECHEHAUT);			}
 		
  "{"    { register int c;
      while ((c = input()))
