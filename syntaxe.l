@@ -88,8 +88,8 @@ NQUOTE [^']
 								yylval.type_string = copier_chaine(yytext);  
 								return(TYPE);			
 							}
-{T}{R}{U}{E}				{ if(affichage) printf("TRUE ");		return(TTRUE);		}
-{F}{A}{L}{S}{E}				{ if(affichage) printf("FALSE ");		return(TFALSE);		}
+{T}{R}{U}{E}				{ if(affichage) printf("TRUE ");	yylval.type_string = copier_chaine(yytext);	return(TTRUE);		}
+{F}{A}{L}{S}{E}				{ if(affichage) printf("FALSE ");	yylval.type_string = copier_chaine(yytext);	return(TFALSE);		}
 
 [a-zA-Z]([a-zA-Z0-9])*  	{ 	if(affichage) printf("IDENTIFIANT "); 
 								yylval.type_string = copier_chaine(yytext); 
@@ -109,7 +109,7 @@ NQUOTE [^']
  "."    			{ if(affichage) printf( "POINT "); 				yylval.type_string = copier_chaine(yytext); return(POINT);				}
  ".."   			{ if(affichage) printf( "POINTPOINT "); 		yylval.type_string = copier_chaine(yytext); 	return(POINTPOINT);			}
  "="    			{ if(affichage) printf( "EGALE "); 				yylval.type_string = copier_chaine(yytext); return(EGALE);				}
- ">="   			{ if(affichage) printf( "SUP_EGALE "); 			yylval.type_string = copier_chaine(yytext); return(SUP_EGALE);			}
+ ">="   ;			{ if(affichage) printf( "SUP_EGALE "); 			yylval.type_string = copier_chaine(yytext); return(SUP_EGALE);			}
  ">"    			{ if(affichage) printf( "SUP "); 				yylval.type_string = copier_chaine(yytext); 	return(SUP);				}
  "["    			{ if(affichage) printf( "CROCHETOUVRANT "); 	yylval.type_string = copier_chaine(yytext); 	return(CROCHETOUVRANT);		}
  "<="   			{ if(affichage) printf( "INF_EGALE "); 			yylval.type_string = copier_chaine(yytext); return(INF_EGALE);			}
@@ -149,9 +149,18 @@ NQUOTE [^']
      }
     }
 
-[ \t\f]    { if(affichage) printf(" "); };
+[ \t\f] { 
+		if(affichage) printf(" "); 
+		yylval.type_string = copier_chaine(yytext);
+		//return ESPACE;
+	};
 
-\n    { ligne_no++; if(affichage) printf( "\n ");}
+\n    { 
+		ligne_no++; 
+		if(affichage) printf( "\n ");
+		yylval.type_string = copier_chaine(yytext);
+		//return LIGNE;
+	}
 
 .    { fprintf (stderr,"'%c' (0%o): mauvais caratère à la ligne %d\n ",yytext[0], yytext[0], ligne_no); }
 
