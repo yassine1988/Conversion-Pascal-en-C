@@ -6,6 +6,7 @@
 	int yylex();
 	extern FILE *yyin;
 	int affichage_grammaire = 1;
+	int affichage_traduction = 0;
 	
 	char * concatener_chaine(char * chaine1,char * chaine2, char * separateur) {
 		char * ntest= malloc((strlen(separateur)+strlen(chaine2)+strlen(chaine1)+1)*sizeof(char));
@@ -152,7 +153,15 @@
 programme:
 	prog_entete declarations_globales prog_principal 
 		{ 
-			$1=concatener_chaine($1,$2,$3);
+			if(affichage_traduction)
+			{
+				$1=concatener_chaine($1,$2,$3);
+			}
+			else
+			{
+				$2=concatener_chaine($2,$2," ");
+				$1=concatener_chaine($1,$2," ");
+			}
 			if(affichage_grammaire) printf("Fin de reconnaissance programme (%s)\n",$1); 
 			$$=$1;
 			printf("\n\n%s",$$);
@@ -162,17 +171,30 @@ programme:
 prog_entete:
 	PROGRAM IDENTIFIANT POINTVIRGULE 
 		{ 
-			//$2=concatener_chaine($2,$3," ");
-			//$1=concatener_chaine($1,$2," ");
+			if(affichage_traduction)
+			{
+				$1="int main() ";
+				
+			}
+			else
+			{
+				$2=concatener_chaine($2,$3," ");
+				$1=concatener_chaine($1,$2," ");
+			}
+				
+
 			if(affichage_grammaire) printf("Fin de reconnaissance prog_entete (%s)\n",$1); 
-			$$="int main() ";
+			$$=$1;
 		}
 	;
 	
 declarations_globales:
 	declarations_globale declarations_globales
 		{ 
-			$1=concatener_chaine($1,$2," ");
+			if(affichage_traduction)
+				$1=concatener_chaine($1,$2," ");
+			else
+				$1=concatener_chaine($1,$2," ");
 			if(affichage_grammaire) printf("Fin de reconnaissance declarations_globales (%s)\n",$1); 
 			$$=$1;
 		}
@@ -186,21 +208,30 @@ declarations_globales:
 declarations_globale:
 	declaration_fonction POINTVIRGULE 
 		{ 
-			$1=concatener_chaine($1,$2," ");
+			if(affichage_traduction)
+				$1=concatener_chaine($1,$2," ");
+			else
+				$1=concatener_chaine($1,$2," ");
 			if(affichage_grammaire) printf("Fin de reconnaissance declarations_globale (%s)\n",$1); 
 			$$=$1;
 		}
 	|
 	declaration_variables POINTVIRGULE 
 		{ 
-			$1=concatener_chaine($1,$2," ");
+			if(affichage_traduction)
+				$1=concatener_chaine($1,$2," ");
+			else
+				$1=concatener_chaine($1,$2," ");
 			if(affichage_grammaire) printf("Fin de reconnaissance declarations_globale (%s)\n",$1); 
 			$$=$1;
 		}
 	|
 	declaration_procedure POINTVIRGULE 
 		{ 
-			$1=concatener_chaine($1,$2," ");
+			if(affichage_traduction)
+				$1=concatener_chaine($1,$2," ");
+			else
+				$1=concatener_chaine($1,$2," ");
 			if(affichage_grammaire) printf("Fin de reconnaissance declarations_globale (%s)\n",$1); 
 			$$=$1;
 		}
@@ -209,14 +240,29 @@ declarations_globale:
 declaration_fonction:
 	FUNCTION identifiant_fonction PARENTHESEOUVRANTE declaration_variables_fonction PARENTHESEFERMANTE DEUX_POINTS TYPE POINTVIRGULE block 
 		{ 
-			$8=concatener_chaine($8,$9," ");
-			$7=concatener_chaine($7,$8," ");
-			$6=concatener_chaine($6,$7," ");
-			$5=concatener_chaine($5,$6," ");
-			$4=concatener_chaine($4,$5," ");
-			$3=concatener_chaine($3,$4," ");
-			$2=concatener_chaine($2,$3," ");
-			$1=concatener_chaine($1,$2," ");
+			if(affichage_traduction)
+			{
+				$8=concatener_chaine($8,$9," ");
+				$7=concatener_chaine($7,$8," ");
+				$6=concatener_chaine($6,$7," ");
+				$5=concatener_chaine($5,$6," ");
+				$4=concatener_chaine($4,$5," ");
+				$3=concatener_chaine($3,$4," ");
+				$2=concatener_chaine($2,$3," ");
+				$1=concatener_chaine($1,$2," ");
+			}
+			else
+			{
+				$8=concatener_chaine($8,$9," ");
+				$7=concatener_chaine($7,$8," ");
+				$6=concatener_chaine($6,$7," ");
+				$5=concatener_chaine($5,$6," ");
+				$4=concatener_chaine($4,$5," ");
+				$3=concatener_chaine($3,$4," ");
+				$2=concatener_chaine($2,$3," ");
+				$1=concatener_chaine($1,$2," ");
+			}
+			
 			if(affichage_grammaire) printf("Fin de reconnaissance declaration_fonction (%s)\n",$1); 
 			$$=$1;
 		}
@@ -225,18 +271,24 @@ declaration_fonction:
 declaration_procedure:
 	PROCEDURE identifiant_procedure PARENTHESEOUVRANTE declaration_variables_fonction PARENTHESEFERMANTE POINTVIRGULE block
 		{ 
-			$6=concatener_chaine($6,$7," ");
-			$5=concatener_chaine($5,$6," ");
-			if($4!=" ") 
+			if(affichage_traduction)
 			{
+				$6=concatener_chaine($6,$7," ");
+				$5=concatener_chaine($5,$6," ");
 				$4=concatener_chaine($4,$5," ");
 				$3=concatener_chaine($3,$4," ");
-			}else
-			{
-				$3=concatener_chaine($3,$5," ");
+				$2=concatener_chaine($2,$3," ");
+				$1=concatener_chaine($1,$2," ");
 			}
-			$2=concatener_chaine($2,$3," ");
-			$1=concatener_chaine($1,$2," ");
+			else
+			{
+				$6=concatener_chaine($6,$7," ");
+				$5=concatener_chaine($5,$6," ");
+				$4=concatener_chaine($4,$5," ");
+				$3=concatener_chaine($3,$4," ");
+				$2=concatener_chaine($2,$3," ");
+				$1=concatener_chaine($1,$2," ");
+			}
 			
 			if(affichage_grammaire) printf("Fin de reconnaissance declaration_procedure (%s)\n",$1); 
 			$$=$1;
@@ -252,8 +304,17 @@ declaration_variables_fonction:
 	|
 	declaration_variables_fonction POINTVIRGULE declaration_variables 
 		{ 
-			$2=concatener_chaine($2,$3," ");
-			$3=concatener_chaine($1,$2," ");
+			if(affichage_traduction)
+			{
+				$2=concatener_chaine($2,$3," ");
+				$1=concatener_chaine($1,$2," ");
+			}
+			else
+			{
+				$2=concatener_chaine($2,$3," ");
+				$1=concatener_chaine($1,$2," ");
+			}
+			
 			if(affichage_grammaire) printf("Fin de reconnaissance declaration_variables_fonction (%s)\n",$1); 
 			$$=$1;
 		}
@@ -275,8 +336,16 @@ declaration_variables:
 declaration_variable:
 	suite_identifiants DEUX_POINTS type_variable 
 		{ 
-			$2=concatener_chaine($2,$3," ");
-			$1=concatener_chaine($1,$2," ");
+			if(affichage_traduction)
+			{
+				$2=concatener_chaine($2,$3," ");
+				$1=concatener_chaine($1,$2," ");
+			}
+			else
+			{
+				$2=concatener_chaine($2,$3," ");
+				$1=concatener_chaine($1,$2," ");
+			}
 			if(affichage_grammaire) printf("Fin de reconnaissance declaration_variable (%s)\n",$1);
 			$$=$1;
 		}
@@ -291,13 +360,27 @@ type_variable:
 	|
 	ARRAY CROCHETOUVRANT expression POINTPOINT expression CROCHETFERMANT OF TYPE 
 		{
-			$7=concatener_chaine($7,$8," ");
-			$6=concatener_chaine($6,$7," ");
-			$5=concatener_chaine($5,$6," ");
-			$4=concatener_chaine($4,$5," ");
-			$3=concatener_chaine($3,$4," ");
-			$2=concatener_chaine($2,$3," ");
-			$1=concatener_chaine($1,$2," ");
+			if(affichage_traduction)
+			{
+				$7=concatener_chaine($7,$8," ");
+				$6=concatener_chaine($6,$7," ");
+				$5=concatener_chaine($5,$6," ");
+				$4=concatener_chaine($4,$5," ");
+				$3=concatener_chaine($3,$4," ");
+				$2=concatener_chaine($2,$3," ");
+				$1=concatener_chaine($1,$2," ");
+			}
+			else
+			{
+				$7=concatener_chaine($7,$8," ");
+				$6=concatener_chaine($6,$7," ");
+				$5=concatener_chaine($5,$6," ");
+				$4=concatener_chaine($4,$5," ");
+				$3=concatener_chaine($3,$4," ");
+				$2=concatener_chaine($2,$3," ");
+				$1=concatener_chaine($1,$2," ");
+			}
+
 			if(affichage_grammaire) printf("Fin de reconnaissance ARRAY (%s)\n",$1);
 			$$=$1;
 		}
@@ -306,8 +389,16 @@ type_variable:
 suite_identifiants:
 	suite_identifiants VIRGULE IDENTIFIANT 
 		{ 	
-			$2=concatener_chaine($2,$3," ");
-			$1=concatener_chaine($1,$2," ");
+			if(affichage_traduction)
+			{
+				$2=concatener_chaine($2,$3," ");
+				$1=concatener_chaine($1,$2," ");
+			}
+			else
+			{
+				$2=concatener_chaine($2,$3," ");
+				$1=concatener_chaine($1,$2," ");
+			}
 			if(affichage_grammaire) printf("Fin de reconnaissance suite_identifiants (%s)\n",$1);
 			$$=$1;
 		}
@@ -322,7 +413,11 @@ suite_identifiants:
 block_declaration_variables:
 	block_declaration_variable block_declaration_variables 
 		{ 
-			if($2!=" ")
+			if(affichage_traduction)
+			{
+				$1=concatener_chaine($1,$2," ");
+			}
+			else
 			{
 				$1=concatener_chaine($1,$2," ");
 			}
@@ -340,14 +435,28 @@ block_declaration_variables:
 block_declaration_variable:
 	VAR block_declaration_variable_suite 
 		{ 
-			$1=concatener_chaine($1,$2," ");
+			if(affichage_traduction)
+			{
+				$1=concatener_chaine($1,$2," ");
+			}
+			else
+			{
+				$1=concatener_chaine($1,$2," ");
+			}
 			if(affichage_grammaire) printf("Fin de reconnaissance block_declaration_variable (%s)\n",$1); 
 			$$=$1;
 		}
 	|
 	CONST block_declaration_variable_suite 
 		{ 
-			$1=concatener_chaine("#define ",$2," ");
+			if(affichage_traduction)
+			{
+				$1=concatener_chaine("#define ",$2," ");
+			}
+			else
+			{
+				$1=concatener_chaine($1,$2," ");
+			}
 			if(affichage_grammaire) printf("Fin de reconnaissance block_declaration_variable (%s)\n",$1); 
 			$$=$1;
 		}
@@ -356,15 +465,31 @@ block_declaration_variable:
 block_declaration_variable_suite:
 	declaration_variable POINTVIRGULE 
 		{ 
-			$1=concatener_chaine($1,$2," ");
+			if(affichage_traduction)
+			{
+				$1=concatener_chaine($1,$2," ");
+			}
+			else
+			{
+				$1=concatener_chaine($1,$2," ");
+			}
 			if(affichage_grammaire) printf("Fin de reconnaissance block_declaration_variable_suite (%s)\n",$1); 
 			$$=$1;
 		}
 	|
 	declaration_variable POINTVIRGULE block_declaration_variable_suite 
 		{	
-			$2=concatener_chaine($2,$3," ");
-			$1=concatener_chaine($1,$2," ");
+			if(affichage_traduction)
+			{
+				$2=concatener_chaine($2,$3," ");
+				$1=concatener_chaine($1,$2," ");
+			}
+			else
+			{
+				$2=concatener_chaine($2,$3," ");
+				$1=concatener_chaine($1,$2," ");
+			}
+			
 			if(affichage_grammaire) printf("Fin de reconnaissance block_declaration_variable_suite (%s)\n",$1);
 			$$=$1;
 		}
@@ -373,10 +498,18 @@ block_declaration_variable_suite:
 prog_principal:
 	block_declaration_variables block_instructions_global POINT 
 		{ 
-			//$2=concatener_chaine($2,$3," ");
-			$1=concatener_chaine("{ ",$1," ");
-			$1=concatener_chaine($1,$2," ");
-			$1=concatener_chaine($1,"}"," ");
+			if(affichage_traduction)
+			{
+				//$2=concatener_chaine($2,$3," ");
+				$1=concatener_chaine("{ ",$1," ");
+				$1=concatener_chaine($1,$2," ");
+				$1=concatener_chaine($1,"}"," ");
+			}
+			else
+			{
+				$2=concatener_chaine($2,$3," ");
+				$1=concatener_chaine($1,$2," ");
+			}
 
 			if(affichage_grammaire) printf("Fin de reconnaissance prog_principal (%s)\n",$1); 
 			$$=$1;
@@ -386,9 +519,17 @@ prog_principal:
 block:
 	block_declaration_variables block_instructions_global 
 		{ 
-			$1=concatener_chaine("{ ",$1," ");
-			$1=concatener_chaine($1,$2," ");
-			$1=concatener_chaine($1,"}"," ");
+			if(affichage_traduction)
+			{
+				$1=concatener_chaine("{ ",$1," ");
+				$1=concatener_chaine($1,$2," ");
+				$1=concatener_chaine($1,"}"," ");
+			}
+			else
+			{
+				$1=concatener_chaine($1,$2," ");
+			}
+			
 			if(affichage_grammaire) printf("Fin de reconnaissance block (%s)\n",$1); 
 			$$=$1;
 		}
@@ -397,8 +538,17 @@ block:
 block_instructions_global:
 	TBEGIN block_instructions TEND 
 		{ 
-			$2=concatener_chaine($2,""," ");
-			$1=concatener_chaine("",$2," ");
+			if(affichage_traduction)
+			{
+				$2=concatener_chaine($2,""," ");
+				$1=concatener_chaine("",$2," ");
+			}
+			else
+			{
+				$2=concatener_chaine($2,$3," ");
+				$1=concatener_chaine($1,$2," ");
+			}
+			
 			if(affichage_grammaire) printf("Fin de reconnaissance block_instructions_global (%s)\n",$1); 
 			$$=$1;
 		}
@@ -421,7 +571,15 @@ block_instructions:
 bloc_instruction_multi:
 	block_instruction bloc_instruction_multi 
 		{ 
-			$1=concatener_chaine($1,$2," ");
+			if(affichage_traduction)
+			{
+				$1=concatener_chaine($1,$2," ");
+			}
+			else
+			{
+				$1=concatener_chaine($1,$2," ");
+			}
+			
 			if(affichage_grammaire) printf("Fin de reconnaissance bloc_instruction_multi (%s)\n",$1); 
 			$$=$1;
 		}
@@ -434,7 +592,14 @@ bloc_instruction_multi:
 block_instruction:
 	instruction POINTVIRGULE 
 		{ 
-			$1=concatener_chaine($1,$2," ");
+			if(affichage_traduction)
+			{
+				$1=concatener_chaine($1,$2," ");
+			}
+			else
+			{
+				$1=concatener_chaine($1,$2," ");
+			}
 			if(affichage_grammaire) printf("Fin de reconnaissance block_instruction (%s)\n",$1); 
 			$$=$1;
 		}
@@ -443,56 +608,112 @@ block_instruction:
 expression:
 	expression PLUS expression 
 		{ 
-			$2=concatener_chaine($2,$3," ");
-			$1=concatener_chaine($1,$2," ");
+			if(affichage_traduction)
+			{
+				$2=concatener_chaine($2,$3," ");
+				$1=concatener_chaine($1,$2," ");
+			}
+			else
+			{
+				$2=concatener_chaine($2,$3," ");
+				$1=concatener_chaine($1,$2," ");
+			}
 			if(affichage_grammaire) printf("Fin de reconnaissance expression (%s)\n",$1); 
 			$$=$1;
 		}
 	|
 	expression MOINS expression 
 		{ 
-			$2=concatener_chaine($2,$3," ");
-			$1=concatener_chaine($1,$2," ");
+			if(affichage_traduction)
+			{
+				$2=concatener_chaine($2,$3," ");
+				$1=concatener_chaine($1,$2," ");
+			}
+			else
+			{
+				$2=concatener_chaine($2,$3," ");
+				$1=concatener_chaine($1,$2," ");
+			}
 			if(affichage_grammaire) printf("Fin de reconnaissance expression (%s)\n",$1); 
 			$$=$1;
 		}
 	|
 	expression MULTIPLIE expression 
 		{ 
-			$2=concatener_chaine($2,$3," ");
-			$1=concatener_chaine($1,$2," ");
+			if(affichage_traduction)
+			{
+				$2=concatener_chaine($2,$3," ");
+				$1=concatener_chaine($1,$2," ");
+			}
+			else
+			{
+				$2=concatener_chaine($2,$3," ");
+				$1=concatener_chaine($1,$2," ");
+			}
 			if(affichage_grammaire) printf("Fin de reconnaissance expression (%s)\n",$1); 
 			$$=$1;
 		}
 	|
 	expression SLASH expression
 		{ 
-			$2=concatener_chaine($2,$3," ");
-			$1=concatener_chaine($1,$2," ");
+			if(affichage_traduction)
+			{
+				$2=concatener_chaine($2,$3," ");
+				$1=concatener_chaine($1,$2," ");
+			}
+			else
+			{
+				$2=concatener_chaine($2,$3," ");
+				$1=concatener_chaine($1,$2," ");
+			}
 			if(affichage_grammaire) printf("Fin de reconnaissance expression (%s)\n",$1); 
 			$$=$1;
 		}
 	|
 	expression DIV expression 
 		{ 
-			$2=concatener_chaine($2,$3," ");
-			$1=concatener_chaine($1,$2," ");
+			if(affichage_traduction)
+			{
+				$2=concatener_chaine($2,$3," ");
+				$1=concatener_chaine($1,$2," ");
+			}
+			else
+			{
+				$2=concatener_chaine($2,$3," ");
+				$1=concatener_chaine($1,$2," ");
+			}
 			if(affichage_grammaire) printf("Fin de reconnaissance expression (%s)\n",$1); 
 			$$=$1;
 		}
 	|
 	expression MOD expression 
 		{ 
-			$2=concatener_chaine($2,$3," ");
-			$1=concatener_chaine($1,$2," ");
+			if(affichage_traduction)
+			{
+				$2=concatener_chaine($2,$3," ");
+				$1=concatener_chaine($1,$2," ");
+			}
+			else
+			{
+				$2=concatener_chaine($2,$3," ");
+				$1=concatener_chaine($1,$2," ");
+			}
 			if(affichage_grammaire) printf("Fin de reconnaissance expression (%s)\n",$1); 
 			$$=$1;
 		}
 	|
 	PARENTHESEOUVRANTE expression PARENTHESEFERMANTE 
 		{ 
-			$2=concatener_chaine($2,$3," ");
-			$1=concatener_chaine($1,$2," ");
+			if(affichage_traduction)
+			{
+				$2=concatener_chaine($2,$3," ");
+				$1=concatener_chaine($1,$2," ");
+			}
+			else
+			{
+				$2=concatener_chaine($2,$3," ");
+				$1=concatener_chaine($1,$2," ");
+			}
 			if(affichage_grammaire) printf("Fin de reconnaissance expression (%s)\n",$1); 
 			$$=$1;
 		}
@@ -517,7 +738,14 @@ expression:
 	|
 	MOINS expression 
 		{ 
-			concatener_chaine($1,$2," ");
+			if(affichage_traduction)
+			{
+				$1=concatener_chaine($1,$2," ");
+			}
+			else
+			{
+				$1=concatener_chaine($1,$2," ");
+			}
 			if(affichage_grammaire) printf("Fin de reconnaissance expression (%s)\n",$1); 
 			$$=$1;
 		}
@@ -538,9 +766,19 @@ variable:
 	|
 	IDENTIFIANT CROCHETOUVRANT expression CROCHETFERMANT 
 		{ 
-			$3=concatener_chaine($3,$4," ");
-			$2=concatener_chaine($2,$3," ");
-			$1=concatener_chaine($1,$2," ");
+			if(affichage_traduction)
+			{
+				$3=concatener_chaine($3,$4," ");
+				$2=concatener_chaine($2,$3," ");
+				$1=concatener_chaine($1,$2," ");
+			}
+			else
+			{
+				$3=concatener_chaine($3,$4," ");
+				$2=concatener_chaine($2,$3," ");
+				$1=concatener_chaine($1,$2," ");
+			}
+
 			if(affichage_grammaire) printf("Fin de reconnaissance boolean (%s)\n",$1); 
 			$$=$1;
 		}
@@ -548,72 +786,144 @@ variable:
 boolean:
 	expression INF expression 
 		{ 
-			$2=concatener_chaine($2,$3," ");
-			$1=concatener_chaine($1,$2," ");
+			if(affichage_traduction)
+			{
+				$2=concatener_chaine($2,$3," ");
+				$1=concatener_chaine($1,$2," ");
+			}
+			else
+			{
+				$2=concatener_chaine($2,$3," ");
+				$1=concatener_chaine($1,$2," ");
+			}
 			if(affichage_grammaire) printf("Fin de reconnaissance boolean (%s)\n",$1); 
 			$$=$1;
 		}
 	|
 	expression INF_EGALE expression 
 		{ 
-			$2=concatener_chaine($2,$3," ");
-			$1=concatener_chaine($1,$2," ");
+			if(affichage_traduction)
+			{
+				$2=concatener_chaine($2,$3," ");
+				$1=concatener_chaine($1,$2," ");
+			}
+			else
+			{
+				$2=concatener_chaine($2,$3," ");
+				$1=concatener_chaine($1,$2," ");
+			}
 			if(affichage_grammaire) printf("Fin de reconnaissance boolean (%s)\n",$1); 
 			$$=$1;
 		}
 	|
 	expression SUP expression 
 		{ 
-			$2=concatener_chaine($2,$3," ");
-			$1=concatener_chaine($1,$2," ");
+			if(affichage_traduction)
+			{
+				$2=concatener_chaine($2,$3," ");
+				$1=concatener_chaine($1,$2," ");
+			}
+			else
+			{
+				$2=concatener_chaine($2,$3," ");
+				$1=concatener_chaine($1,$2," ");
+			}
 			if(affichage_grammaire) printf("Fin de reconnaissance boolean (%s)\n",$1); 
 			$$=$1;
 		}
 	|
 	expression SUP_EGALE expression 
 		{ 
-			$2=concatener_chaine($2,$3," ");
-			$1=concatener_chaine($1,$2," ");
+			if(affichage_traduction)
+			{
+				$2=concatener_chaine($2,$3," ");
+				$1=concatener_chaine($1,$2," ");
+			}
+			else
+			{
+				$2=concatener_chaine($2,$3," ");
+				$1=concatener_chaine($1,$2," ");
+			}
 			if(affichage_grammaire) printf("Fin de reconnaissance boolean (%s)\n",$1); 
 			$$=$1;
 		}
 	|
 	expression EGALE expression 
 		{ 
-			$2=concatener_chaine($2,$3," ");
-			$1=concatener_chaine($1,$2," ");
+			if(affichage_traduction)
+			{
+				$2=concatener_chaine($2,$3," ");
+				$1=concatener_chaine($1,$2," ");
+			}
+			else
+			{
+				$2=concatener_chaine($2,$3," ");
+				$1=concatener_chaine($1,$2," ");
+			}
 			if(affichage_grammaire) printf("Fin de reconnaissance boolean (%s)\n",$1); 
 			$$=$1;
 		}
 	|
 	expression INEGALE expression 
 		{ 
-			$2=concatener_chaine($2,$3," ");
-			$1=concatener_chaine($1,$2," ");
+			if(affichage_traduction)
+			{
+				$2=concatener_chaine($2,$3," ");
+				$1=concatener_chaine($1,$2," ");
+			}
+			else
+			{
+				$2=concatener_chaine($2,$3," ");
+				$1=concatener_chaine($1,$2," ");
+			}
 			if(affichage_grammaire) printf("Fin de reconnaissance boolean (%s)\n",$1); 
 			$$=$1;
 		}
 	|
 	boolean AND boolean 
 		{ 
-			$2=concatener_chaine($2,$3," ");
-			$1=concatener_chaine($1,$2," ");
+			if(affichage_traduction)
+			{
+				$2=concatener_chaine($2,$3," ");
+				$1=concatener_chaine($1,$2," ");
+			}
+			else
+			{
+				$2=concatener_chaine($2,$3," ");
+				$1=concatener_chaine($1,$2," ");
+			}
 			if(affichage_grammaire) printf("Fin de reconnaissance boolean (%s)\n",$1); 
 			$$=$1;
 		}
 	|
 	boolean OR boolean 
 		{ 
-			$2=concatener_chaine($2,$3," ");
-			$1=concatener_chaine($1,$2," ");
+			if(affichage_traduction)
+			{
+				$2=concatener_chaine($2,$3," ");
+				$1=concatener_chaine($1,$2," ");
+			}
+			else
+			{
+				$2=concatener_chaine($2,$3," ");
+				$1=concatener_chaine($1,$2," ");
+			}
 			if(affichage_grammaire) printf("Fin de reconnaissance boolean (%s)\n",$1); 
 			$$=$1;
 		}
 	|
 	PARENTHESEOUVRANTE boolean PARENTHESEFERMANTE
 		{ 
-			$2=concatener_chaine($2,$3," ");
-			$1=concatener_chaine($1,$2," ");
+			if(affichage_traduction)
+			{
+				$2=concatener_chaine($2,$3," ");
+				$1=concatener_chaine($1,$2," ");
+			}
+			else
+			{
+				$2=concatener_chaine($2,$3," ");
+				$1=concatener_chaine($1,$2," ");
+			}
 			if(affichage_grammaire) printf("Fin de reconnaissance boolean (%s)\n",$1); 
 			$$=$1;
 		}
@@ -686,50 +996,72 @@ appel_procedure:
 appel_fonction:
 	identifiant_fonction PARENTHESEOUVRANTE variables_fonction PARENTHESEFERMANTE
 		{ 
-			$3=concatener_chaine($3,$4," ");
-			$2=concatener_chaine($2,$3," ");
-			$1=concatener_chaine($1,$2," ");
+			if(affichage_traduction)
+			{
+				$3=concatener_chaine($3,$4," ");
+				$2=concatener_chaine($2,$3," ");
+				$1=concatener_chaine($1,$2," ");
+			}
+			else
+			{
+				$3=concatener_chaine($3,$4," ");
+				$2=concatener_chaine($2,$3," ");
+				$1=concatener_chaine($1,$2," ");
+			}
 			if(affichage_grammaire) printf("Fin de reconnaissance appel_fonction (%s)\n",$1); 
 			$$=$1;
 		}
 	|
 	WRITE PARENTHESEOUVRANTE variables_fonction PARENTHESEFERMANTE
 		{ 
-			if($3!=" ")
+			if(affichage_traduction)
 			{
 				$3=concatener_chaine($3,$4," ");
 				$2=concatener_chaine($2,$3," ");
+				$1=concatener_chaine($1,$2," ");
 			}
 			else
 			{
-				$2=concatener_chaine($2,$4," ");
+				$3=concatener_chaine($3,$4," ");
+				$2=concatener_chaine($2,$3," ");
+				$1=concatener_chaine($1,$2," ");
 			}
-			$1=concatener_chaine($1,$2," ");
 			if(affichage_grammaire) printf("Fin de reconnaissance appel_fonction (%s)\n",$1); 
 			$$=$1;
 		}
 	|
 	WRITELN PARENTHESEOUVRANTE variables_fonction PARENTHESEFERMANTE
 		{ 
-			if($3!=" ")
+			if(affichage_traduction)
 			{
 				$3=concatener_chaine($3,$4," ");
 				$2=concatener_chaine($2,$3," ");
+				$1=concatener_chaine($1,$2," ");
 			}
 			else
 			{
-				$2=concatener_chaine($2,$4," ");
+				$3=concatener_chaine($3,$4," ");
+				$2=concatener_chaine($2,$3," ");
+				$1=concatener_chaine($1,$2," ");
 			}
-			$1=concatener_chaine($1,$2," ");
 			if(affichage_grammaire) printf("Fin de reconnaissance appel_fonction (%s)\n",$1); 
 			$$=$1;
 		}
 	|
 	READLN PARENTHESEOUVRANTE variable PARENTHESEFERMANTE
 		{ 
-			$3=concatener_chaine($3,$4," ");
-			$2=concatener_chaine($2,$3," ");
-			$1=concatener_chaine($1,$2," ");
+			if(affichage_traduction)
+			{
+				$3=concatener_chaine($3,$4," ");
+				$2=concatener_chaine($2,$3," ");
+				$1=concatener_chaine($1,$2," ");
+			}
+			else
+			{
+				$3=concatener_chaine($3,$4," ");
+				$2=concatener_chaine($2,$3," ");
+				$1=concatener_chaine($1,$2," ");
+			}
 			if(affichage_grammaire) printf("Fin de reconnaissance appel_fonction (%s)\n",$1); 
 			$$=$1;
 		}
@@ -742,20 +1074,41 @@ appel_fonction:
 	|
 	GOTOXY PARENTHESEOUVRANTE expression VIRGULE expression PARENTHESEFERMANTE
 		{ 
-			$5=concatener_chaine($5,$6," ");
-			$4=concatener_chaine($4,$5," ");
-			$3=concatener_chaine($3,$4," ");
-			$2=concatener_chaine($2,$3," ");
-			$1=concatener_chaine($1,$2," ");
+			if(affichage_traduction)
+			{
+				$5=concatener_chaine($5,$6," ");
+				$4=concatener_chaine($4,$5," ");
+				$3=concatener_chaine($3,$4," ");
+				$2=concatener_chaine($2,$3," ");
+				$1=concatener_chaine($1,$2," ");
+			}
+			else
+			{
+				$5=concatener_chaine($5,$6," ");
+				$4=concatener_chaine($4,$5," ");
+				$3=concatener_chaine($3,$4," ");
+				$2=concatener_chaine($2,$3," ");
+				$1=concatener_chaine($1,$2," ");
+			}
 			if(affichage_grammaire) printf("Fin de reconnaissance appel_fonction (%s)\n",$1); 
 			$$=$1;
 		}
 	|
 	fonction_un_param_expression PARENTHESEOUVRANTE expression PARENTHESEFERMANTE
 		{ 
-			$3=concatener_chaine($3,$4," ");
-			$2=concatener_chaine($2,$3," ");
-			$1=concatener_chaine($1,$2," ");
+			if(affichage_traduction)
+			{
+				$3=concatener_chaine($3,$4," ");
+				$2=concatener_chaine($2,$3," ");
+				$1=concatener_chaine($1,$2," ");
+			}
+			else
+			{
+				$3=concatener_chaine($3,$4," ");
+				$2=concatener_chaine($2,$3," ");
+				$1=concatener_chaine($1,$2," ");
+			}
+			
 			if(affichage_grammaire) printf("Fin de reconnaissance appel_fonction (%s)\n",$1); 
 			$$=$1;
 		}
@@ -829,8 +1182,16 @@ identifiant_procedure:
 variables_fonction:
 	variable_fonction VIRGULE variables_fonction 
 		{ 
-			$2=concatener_chaine($2,$3," ");
-			$1=concatener_chaine($1,$2," ");
+			if(affichage_traduction)
+			{
+				$2=concatener_chaine($2,$3," ");
+				$1=concatener_chaine($1,$2," ");
+			}
+			else
+			{
+				$2=concatener_chaine($2,$3," ");
+				$1=concatener_chaine($1,$2," ");
+			}
 			if(affichage_grammaire) printf("Fin de reconnaissance variables_fonction (%s)\n",$1); 
 			$$=$1;
 		}
@@ -870,8 +1231,16 @@ variable_fonction:
 assignation:
 	variable ASSIGNATION assignation_element
 		{ 
-			$2=concatener_chaine("=",$3," ");
-			$1=concatener_chaine($1,$2," ");
+			if(affichage_traduction)
+			{
+				$2=concatener_chaine("=",$3," ");
+				$1=concatener_chaine($1,$2," ");
+			}
+			else
+			{
+				$2=concatener_chaine($2,$3," ");
+				$1=concatener_chaine($1,$2," ");
+			}
 			if(affichage_grammaire) printf("Fin de reconnaissance assignation (%s)\n",$1); 
 			$$=$1;
 		}
@@ -900,23 +1269,46 @@ assignation_element:
 boucle_while:
 	WHILE boolean DO block_instructions_global 
 		{ 
-			$4=concatener_chaine($4,"}"," ");
-			$4=concatener_chaine("{",$4," ");
-			$2=concatener_chaine($2,")"," ");
-			$2=concatener_chaine("(",$2," ");
-			$1=concatener_chaine($1,$2," ");
+			if(affichage_traduction)
+			{
+				$4=concatener_chaine($4,"}"," ");
+				$4=concatener_chaine("{",$4," ");
+				$2=concatener_chaine($2,")"," ");
+				$2=concatener_chaine("(",$2," ");
+				$1=concatener_chaine($1,$2," ");
+			}
+			else
+			{
+				$3=concatener_chaine($3,$4," ");
+				$2=concatener_chaine($2,$3," ");
+				$1=concatener_chaine($1,$2," ");
+			}
+			
 			if(affichage_grammaire) printf("Fin de reconnaissance boucle_while (%s)\n",$1); 
 			$$=$1;
 		}
 	|
 	WHILE NOT PARENTHESEOUVRANTE boolean PARENTHESEFERMANTE DO block_instructions_global 
 		{ 
-			$6=concatener_chaine($6,$7," ");
-			$5=concatener_chaine($5,$6," ");
-			$4=concatener_chaine($4,$5," ");
-			$3=concatener_chaine($3,$4," ");
-			$2=concatener_chaine($2,$3," ");
-			$1=concatener_chaine($1,$2," ");
+			if(affichage_traduction)
+			{
+				$6=concatener_chaine($6,$7," ");
+				$5=concatener_chaine($5,$6," ");
+				$4=concatener_chaine($4,$5," ");
+				$3=concatener_chaine($3,$4," ");
+				$2=concatener_chaine($2,$3," ");
+				$1=concatener_chaine($1,$2," ");
+			}
+			else
+			{
+				$6=concatener_chaine($6,$7," ");
+				$5=concatener_chaine($5,$6," ");
+				$4=concatener_chaine($4,$5," ");
+				$3=concatener_chaine($3,$4," ");
+				$2=concatener_chaine($2,$3," ");
+				$1=concatener_chaine($1,$2," ");
+			}
+			
 			if(affichage_grammaire) printf("Fin de reconnaissance boucle_while (%s)\n",$1); 
 			$$=$1;
 		}
@@ -925,44 +1317,88 @@ boucle_while:
 boucle_for:
 	FOR assignation TO expression DO block_instructions_global 
 		{ 
-			$5=concatener_chaine($5,$6," ");
-			$4=concatener_chaine($4,$5," ");
-			$3=concatener_chaine($3,$4," ");
-			$2=concatener_chaine($2,$3," ");
-			$1=concatener_chaine($1,$2," ");
+			if(affichage_traduction)
+			{
+				$5=concatener_chaine($5,$6," ");
+				$4=concatener_chaine($4,$5," ");
+				$3=concatener_chaine($3,$4," ");
+				$2=concatener_chaine($2,$3," ");
+				$1=concatener_chaine($1,$2," ");
+			}
+			else
+			{
+				$5=concatener_chaine($5,$6," ");
+				$4=concatener_chaine($4,$5," ");
+				$3=concatener_chaine($3,$4," ");
+				$2=concatener_chaine($2,$3," ");
+				$1=concatener_chaine($1,$2," ");
+			}
 			if(affichage_grammaire) printf("Fin de reconnaissance boucle_for (%s)\n",$1); 
 			$$=$1;
 		}
 	|
 	FOR assignation TO expression DO instruction 
 		{ 
-			$5=concatener_chaine($5,$6," ");
-			$4=concatener_chaine($4,$5," ");
-			$3=concatener_chaine($3,$4," ");
-			$2=concatener_chaine($2,$3," ");
-			$1=concatener_chaine($1,$2," ");
+			if(affichage_traduction)
+			{
+				$5=concatener_chaine($5,$6," ");
+				$4=concatener_chaine($4,$5," ");
+				$3=concatener_chaine($3,$4," ");
+				$2=concatener_chaine($2,$3," ");
+				$1=concatener_chaine($1,$2," ");
+			}
+			else
+			{
+				$5=concatener_chaine($5,$6," ");
+				$4=concatener_chaine($4,$5," ");
+				$3=concatener_chaine($3,$4," ");
+				$2=concatener_chaine($2,$3," ");
+				$1=concatener_chaine($1,$2," ");
+			}
 			if(affichage_grammaire) printf("Fin de reconnaissance boucle_for (%s)\n",$1); 
 			$$=$1;
 		}
 	|
 	FOR assignation DOWNTO expression DO block_instructions_global 
 		{ 
-			$5=concatener_chaine($5,$6," ");
-			$4=concatener_chaine($4,$5," ");
-			$3=concatener_chaine($3,$4," ");
-			$2=concatener_chaine($2,$3," ");
-			$1=concatener_chaine($1,$2," ");
+			if(affichage_traduction)
+			{
+				$5=concatener_chaine($5,$6," ");
+				$4=concatener_chaine($4,$5," ");
+				$3=concatener_chaine($3,$4," ");
+				$2=concatener_chaine($2,$3," ");
+				$1=concatener_chaine($1,$2," ");
+			}
+			else
+			{
+				$5=concatener_chaine($5,$6," ");
+				$4=concatener_chaine($4,$5," ");
+				$3=concatener_chaine($3,$4," ");
+				$2=concatener_chaine($2,$3," ");
+				$1=concatener_chaine($1,$2," ");
+			}
 			if(affichage_grammaire) printf("Fin de reconnaissance boucle_for (%s)\n",$1); 
 			$$=$1;
 		}
 	|
 	FOR assignation DOWNTO expression DO instruction 
 		{ 
-			$5=concatener_chaine($5,$6," ");
-			$4=concatener_chaine($4,$5," ");
-			$3=concatener_chaine($3,$4," ");
-			$2=concatener_chaine($2,$3," ");
-			$1=concatener_chaine($1,$2," ");
+			if(affichage_traduction)
+			{
+				$5=concatener_chaine($5,$6," ");
+				$4=concatener_chaine($4,$5," ");
+				$3=concatener_chaine($3,$4," ");
+				$2=concatener_chaine($2,$3," ");
+				$1=concatener_chaine($1,$2," ");
+			}
+			else
+			{
+				$5=concatener_chaine($5,$6," ");
+				$4=concatener_chaine($4,$5," ");
+				$3=concatener_chaine($3,$4," ");
+				$2=concatener_chaine($2,$3," ");
+				$1=concatener_chaine($1,$2," ");
+			}
 			if(affichage_grammaire) printf("Fin de reconnaissance boucle_for (%s)\n",$1); 
 			$$=$1;
 		}
@@ -971,9 +1407,18 @@ boucle_for:
 boucle_repeat_until:
 	REPEAT block_instructions_global UNTIL boolean 
 		{ 
-			$3=concatener_chaine($3,$4," ");
-			$2=concatener_chaine($2,$3," ");
-			$1=concatener_chaine($1,$2," ");
+			if(affichage_traduction)
+			{
+				$3=concatener_chaine($3,$4," ");
+				$2=concatener_chaine($2,$3," ");
+				$1=concatener_chaine($1,$2," ");
+			}
+			else
+			{
+				$3=concatener_chaine($3,$4," ");
+				$2=concatener_chaine($2,$3," ");
+				$1=concatener_chaine($1,$2," ");
+			}
 			if(affichage_grammaire) printf("Fin de reconnaissance boucle_repeat_until (%s)\n",$1); 
 			$$=$1;
 		}
@@ -982,9 +1427,18 @@ boucle_repeat_until:
 condition_if:
 	IF boolean THEN condition_if_instruction 
 		{ 
-			$3=concatener_chaine($3,$4," ");
-			$2=concatener_chaine($2,$3," ");
-			$1=concatener_chaine($1,$2," ");
+			if(affichage_traduction)
+			{
+				$2=concatener_chaine($2,$4," ");
+				$1=concatener_chaine($1,$2," ");
+			}
+			else
+			{
+				$3=concatener_chaine($3,$4," ");
+				$2=concatener_chaine($2,$3," ");
+				$1=concatener_chaine($1,$2," ");
+			}
+			
 			if(affichage_grammaire) printf("Fin de reconnaissance condition_if (%s)\n",$1); 
 			$$=$1;
 		}
@@ -993,38 +1447,76 @@ condition_if:
 condition_if_instruction:
 	block_instructions_global condition_if_instruction_else 
 		{ 
-			$1=concatener_chaine($1,$2," ");
+			if(affichage_traduction)
+			{
+				$1=concatener_chaine("{",$1," ");
+				$1=concatener_chaine($1,"}"," ");
+				if(!strcmp($2,";"))
+				{
+					$1=concatener_chaine($1,$2," ");
+				}
+			}
+			else
+			{
+				$1=concatener_chaine($1,$2," ");
+			}
+			
 			if(affichage_grammaire) printf("Fin de condition_if_instruction condition_if (%s)\n",$1); 
 			$$=$1;
 		}
 	|
 	instruction condition_if_instruction_else 
 		{ 
-			$1=concatener_chaine($1,$2," ");
+			if(affichage_traduction)
+			{
+				$1=concatener_chaine($1,$2," ");
+			}
+			else
+			{
+				$1=concatener_chaine($1,$2," ");
+			}
+			
 			if(affichage_grammaire) printf("Fin de condition_if_instruction condition_if (%s)\n",$1); 
 			$$=$1;
 		}
 	;
 
 condition_if_instruction_else:
-	POINTVIRGULE 
+	POINTVIRGULE
 		{ 
-			if(affichage_grammaire) printf("Fin de condition_if_instruction condition_if (%s)\n",$1); 
-			$$=$1;
+			if(affichage_grammaire) printf("Fin de condition_if_instruction condition_if (VIDE)\n"); 
+			$$="";
 		}
 	|
 	POINTVIRGULE ELSE block_instructions_global 
 		{ 
-			$2=concatener_chaine($2,$3," ");
-			$1=concatener_chaine($1,$2," ");
+			if(affichage_traduction)
+			{
+				$3=concatener_chaine("; {",$3," ");
+				$3=concatener_chaine($3,"}"," ");
+				$1=concatener_chaine($2,$3," ");
+			}
+			else
+			{
+				$1=concatener_chaine($1,$2," ");
+			}
+			
 			if(affichage_grammaire) printf("Fin de condition_if_instruction condition_if (%s)\n",$1); 
 			$$=$1;
 		}
 	|
 	POINTVIRGULE ELSE instruction  
 		{ 
-			$2=concatener_chaine($2,$3," ");
-			$1=concatener_chaine($1,$2," ");
+			if(affichage_traduction)
+			{
+				$3=concatener_chaine("; {",$3," ");
+				$3=concatener_chaine($3,"}"," ");
+				$1=concatener_chaine($2,$3," ");
+			}
+			else
+			{
+				$1=concatener_chaine($1,$2," ");
+			}
 			if(affichage_grammaire) printf("Fin de condition_if_instruction condition_if (%s)\n",$1); 
 			$$=$1;
 		}
