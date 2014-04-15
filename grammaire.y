@@ -135,7 +135,6 @@
 %type <type_string> identifiant_procedure;
 %type <type_string> block_instructions_global;
 %type <type_string> instruction;
-%type <type_string> bloc_instruction_multi;
 %type <type_string> block_instruction;
 %type <type_string> block_instructions;
 %type <type_string> prog_principal;
@@ -149,6 +148,8 @@
 %type <type_string> declarations_globales;
 %type <type_string> prog_entete;
 %type <type_string> programme;
+%type <type_string> condition_if_instruction_else_suite;
+%type <type_string> condition_if_instruction_else_debut;
 %%
 programme:
 	prog_entete declarations_globales prog_principal 
@@ -555,21 +556,7 @@ block_instructions_global:
 	;
 
 block_instructions:
-	bloc_instruction_multi
-		{ 
-			if(affichage_grammaire) printf("Fin de reconnaissance block_instructions (%s)\n",$1); 
-			$$=$1;
-		}
-	|
-	instruction 
-		{ 
-			if(affichage_grammaire) printf("Fin de reconnaissance block_instructions (%s)\n",$1); 
-			$$=$1;
-		}
-	;
-
-bloc_instruction_multi:
-	block_instruction bloc_instruction_multi 
+	block_instructions block_instruction
 		{ 
 			if(affichage_traduction)
 			{
@@ -580,17 +567,17 @@ bloc_instruction_multi:
 				$1=concatener_chaine($1,$2," ");
 			}
 			
-			if(affichage_grammaire) printf("Fin de reconnaissance bloc_instruction_multi (%s)\n",$1); 
+			if(affichage_grammaire) printf("Fin de reconnaissance block_instructions (%s)\n",$1); 
 			$$=$1;
 		}
 	|
 		{ 
-			if(affichage_grammaire) printf("Fin de reconnaissance bloc_instruction_multi (VIDE)\n"); 
+			if(affichage_grammaire) printf("Fin de reconnaissance block_instructions (VIDE)\n"); 
 			$$=" ";
 		}
 	;
 block_instruction:
-	instruction POINTVIRGULE 
+	instruction POINTVIRGULE
 		{ 
 			if(affichage_traduction)
 			{
@@ -942,7 +929,7 @@ boolean:
 	;
 
 instruction:
-	assignation 
+	assignation
 		{
 			if(affichage_grammaire) printf("Fin de reconnaissance instruction (%s)\n",$1); 
 			$$=$1;
@@ -954,7 +941,7 @@ instruction:
 			$$=$1;
 		}
 	|
-	boucle_for 
+	boucle_for
 		{
 			if(affichage_grammaire) printf("Fin de reconnaissance instruction (%s)\n",$1);
 			$$=$1;
@@ -972,13 +959,13 @@ instruction:
 			$$=$1;
 		}
 	|
-	appel_fonction 
+	appel_fonction
 		{
 			if(affichage_grammaire) printf("Fin de reconnaissance instruction (%s)\n",$1); 
 			$$=$1;
 		}
 	|
-	appel_procedure 
+	appel_procedure
 		{
 			if(affichage_grammaire) printf("Fin de reconnaissance instruction (%s)\n",$1); 
 			$$=$1;
@@ -1229,7 +1216,7 @@ variable_fonction:
 	;
 
 assignation:
-	variable ASSIGNATION assignation_element
+	variable ASSIGNATION assignation_element 
 		{ 
 			if(affichage_traduction)
 			{
@@ -1315,7 +1302,7 @@ boucle_while:
 	;
 
 boucle_for:
-	FOR assignation TO expression DO block_instructions_global 
+	FOR assignation TO expression DO block_instructions_global
 		{ 
 			if(affichage_traduction)
 			{
@@ -1445,7 +1432,7 @@ condition_if:
 	;
 	
 condition_if_instruction:
-	block_instructions_global condition_if_instruction_else 
+	condition_if_instruction_else_debut condition_if_instruction_else 
 		{ 
 			if(affichage_traduction)
 			{
@@ -1461,67 +1448,61 @@ condition_if_instruction:
 				$1=concatener_chaine($1,$2," ");
 			}
 			
-			if(affichage_grammaire) printf("Fin de condition_if_instruction condition_if (%s)\n",$1); 
+			if(affichage_grammaire) printf("Fin de reconnaissance condition_if_instruction (%s)\n",$1); 
 			$$=$1;
 		}
 	|
-	instruction condition_if_instruction_else 
+	condition_if_instruction_else_debut 
 		{ 
-			if(affichage_traduction)
-			{
-				$1=concatener_chaine($1,$2," ");
-			}
-			else
-			{
-				$1=concatener_chaine($1,$2," ");
-			}
-			
-			if(affichage_grammaire) printf("Fin de condition_if_instruction condition_if (%s)\n",$1); 
+			if(affichage_grammaire) printf("Fin de reconnaissance condition_if_instruction (%s)\n",$1); 
 			$$=$1;
 		}
 	;
 
 condition_if_instruction_else:
-	POINTVIRGULE
-		{ 
-			if(affichage_grammaire) printf("Fin de condition_if_instruction condition_if (VIDE)\n"); 
-			$$="";
-		}
-	|
-	POINTVIRGULE ELSE block_instructions_global 
-		{ 
+	ELSE condition_if_instruction_else_suite 
+		{
 			if(affichage_traduction)
 			{
-				$3=concatener_chaine("; {",$3," ");
-				$3=concatener_chaine($3,"}"," ");
-				$1=concatener_chaine($2,$3," ");
+				$1=concatener_chaine($1,$2," ");
 			}
 			else
 			{
 				$1=concatener_chaine($1,$2," ");
 			}
-			
-			if(affichage_grammaire) printf("Fin de condition_if_instruction condition_if (%s)\n",$1); 
+			if(affichage_grammaire) printf("Fin de reconnaissance condition_if_instruction_else (%s)\n",$1); 
+			$$=$1;
+		}
+	;
+
+condition_if_instruction_else_debut:
+	block_instructions_global 
+		{
+			if(affichage_grammaire) printf("Fin de reconnaissance condition_if_instruction_else_debut (%s)\n",$1); 
 			$$=$1;
 		}
 	|
-	POINTVIRGULE ELSE instruction  
-		{ 
-			if(affichage_traduction)
-			{
-				$3=concatener_chaine("; {",$3," ");
-				$3=concatener_chaine($3,"}"," ");
-				$1=concatener_chaine($2,$3," ");
-			}
-			else
-			{
-				$1=concatener_chaine($1,$2," ");
-			}
-			if(affichage_grammaire) printf("Fin de condition_if_instruction condition_if (%s)\n",$1); 
+	instruction
+		{
+			if(affichage_grammaire) printf("Fin de reconnaissance condition_if_instruction_else_debut (%s)\n",$1); 
 			$$=$1;
 		}
 	;
 	
+	
+condition_if_instruction_else_suite:
+	block_instructions_global 
+		{
+			if(affichage_grammaire) printf("Fin de reconnaissance condition_if_instruction_else_suite (%s)\n",$1); 
+			$$=$1;
+		}
+	|
+	instruction
+		{
+			if(affichage_grammaire) printf("Fin de reconnaissance condition_if_instruction_else_suite (%s)\n",$1); 
+			$$=$1;
+		}
+	;
 %%
 int main(int argc, char * argv[])
 {

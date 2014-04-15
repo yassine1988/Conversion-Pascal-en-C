@@ -37,9 +37,35 @@ PROCEDURE toto();
 begin
 	f();
 	if (n1 > n2) then
-		m:=n1;
+		m:=n1
 	else
 		m:=n2;
+		
+	if(n1 < n2) then
+	begin
+		m:=1;
+	end
+	else
+	begin
+		m:=1;
+	end;
+	
+	if y = ans then
+	begin
+		writeln('incorrect answer');
+		writeln('exiting program');
+	end;
+	
+	if mark > 50 then 
+		write('pass')
+	else write ('fail');
+	
+	if temp < 15 then
+		write('cold')
+	else if (temp > 15) and (temp < 20) then
+		write('warm')
+	else write('hot');
+		
 end;
 
 { main program }
