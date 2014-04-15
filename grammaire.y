@@ -120,7 +120,6 @@
 %type <type_string> block_declaration_variable_suite;
 %type <type_string> declaration_variable;
 %type <type_string> suite_identifiants;
-%type <type_string> type_variable;
 %type <type_string> appel_fonction;
 %type <type_string> identifiant_fonction;
 %type <type_string> variables_fonction;
@@ -333,12 +332,12 @@ declaration_variables:
 	;
 	
 declaration_variable:
-	suite_identifiants DEUX_POINTS type_variable 
+	suite_identifiants DEUX_POINTS TYPE 
 		{ 
 			if(affichage_traduction)
 			{
-				$2=concatener_chaine($2,$3," ");
-				$1=concatener_chaine($1,$2," ");
+				//$2=concatener_chaine($2,$3," ");
+				$1=concatener_chaine($3,$1," ");
 			}
 			else
 			{
@@ -348,19 +347,13 @@ declaration_variable:
 			if(affichage_grammaire) printf("Fin de reconnaissance declaration_variable (%s)\n",$1);
 			$$=$1;
 		}
-	;
-
-type_variable:
-	TYPE 
-		{ 
-			if(affichage_grammaire) printf("Fin de reconnaissance TYPE (%s)\n",$1); 
-			$$=$1;
-		}
 	|
-	ARRAY CROCHETOUVRANT expression POINTPOINT expression CROCHETFERMANT OF TYPE 
-		{
+	suite_identifiants DEUX_POINTS ARRAY CROCHETOUVRANT expression POINTPOINT expression CROCHETFERMANT OF TYPE  
+		{ 
 			if(affichage_traduction)
 			{
+				$9=concatener_chaine($9,$10," ");
+				$8=concatener_chaine($8,$9," ");
 				$7=concatener_chaine($7,$8," ");
 				$6=concatener_chaine($6,$7," ");
 				$5=concatener_chaine($5,$6," ");
@@ -371,6 +364,8 @@ type_variable:
 			}
 			else
 			{
+				$9=concatener_chaine($9,$10," ");
+				$8=concatener_chaine($8,$9," ");
 				$7=concatener_chaine($7,$8," ");
 				$6=concatener_chaine($6,$7," ");
 				$5=concatener_chaine($5,$6," ");
@@ -379,11 +374,12 @@ type_variable:
 				$2=concatener_chaine($2,$3," ");
 				$1=concatener_chaine($1,$2," ");
 			}
-
-			if(affichage_grammaire) printf("Fin de reconnaissance ARRAY (%s)\n",$1);
+			if(affichage_grammaire) printf("Fin de reconnaissance declaration_variable (%s)\n",$1);
 			$$=$1;
 		}
 	;
+
+
 
 suite_identifiants:
 	suite_identifiants VIRGULE IDENTIFIANT 
@@ -436,7 +432,8 @@ block_declaration_variable:
 		{ 
 			if(affichage_traduction)
 			{
-				$1=concatener_chaine($1,$2," ");
+				//$1=concatener_chaine($1,$2," ");
+				$1=$2;
 			}
 			else
 			{
