@@ -16,7 +16,7 @@ BEGIN
     names[1] := 3;
     write('toto');
     
-    for i:= 1 to 10 do
+    for w:= 1 to 10 do
     begin
 		writeln('toto');
 		readln(marks[i]);
@@ -31,6 +31,10 @@ BEGIN
 		IF i MOD 2 = 0 THEN
 			f := f + i;
     END;
+    
+    repeat
+		readln(pass);
+	until (pass = 'toto');
 END;
 
 PROCEDURE toto();

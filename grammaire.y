@@ -108,7 +108,7 @@
 %token<type_string> ENTRESORTIE;
 %left PLUS MOINS;
 %left MULTIPLIE SLASH DIV MOD AND OR;
-%right THEN ELSE;
+%right THEN ELSE NOT;
 
 
 %type <type_string> expression;
@@ -209,7 +209,8 @@ declarations_globale:
 	declaration_fonction POINTVIRGULE 
 		{ 
 			if(affichage_traduction)
-				$1=concatener_chaine($1,$2," ");
+				//$1=concatener_chaine($1,$2," ");
+				$1=$1;
 			else
 				$1=concatener_chaine($1,$2," ");
 			if(affichage_grammaire) printf("Fin de reconnaissance declarations_globale (%s)\n",$1); 
@@ -229,7 +230,8 @@ declarations_globale:
 	declaration_procedure POINTVIRGULE 
 		{ 
 			if(affichage_traduction)
-				$1=concatener_chaine($1,$2," ");
+				//$1=concatener_chaine($1,$2," ");
+				$1=$1;
 			else
 				$1=concatener_chaine($1,$2," ");
 			if(affichage_grammaire) printf("Fin de reconnaissance declarations_globale (%s)\n",$1); 
@@ -242,13 +244,11 @@ declaration_fonction:
 		{ 
 			if(affichage_traduction)
 			{
-				$8=concatener_chaine($8,$9," ");
-				$7=concatener_chaine($7,$8," ");
-				$6=concatener_chaine($6,$7," ");
-				$5=concatener_chaine($5,$6," ");
+				$5=concatener_chaine($5,$9," ");
 				$4=concatener_chaine($4,$5," ");
 				$3=concatener_chaine($3,$4," ");
 				$2=concatener_chaine($2,$3," ");
+				$1=concatener_chaine($7,$1," ");
 				$1=concatener_chaine($1,$2," ");
 			}
 			else
@@ -273,12 +273,11 @@ declaration_procedure:
 		{ 
 			if(affichage_traduction)
 			{
-				$6=concatener_chaine($6,$7," ");
-				$5=concatener_chaine($5,$6," ");
+				$5=concatener_chaine($5,$7," ");
 				$4=concatener_chaine($4,$5," ");
 				$3=concatener_chaine($3,$4," ");
 				$2=concatener_chaine($2,$3," ");
-				$1=concatener_chaine($1,$2," ");
+				$1=concatener_chaine("void ",$2," ");
 			}
 			else
 			{
@@ -660,8 +659,8 @@ expression:
 		{ 
 			if(affichage_traduction)
 			{
-				$2=concatener_chaine($2,$3," ");
-				$1=concatener_chaine($1,$2," ");
+				$1=concatener_chaine($1,"/"," ");
+				$1=concatener_chaine($1,$3," ");
 			}
 			else
 			{
@@ -676,8 +675,8 @@ expression:
 		{ 
 			if(affichage_traduction)
 			{
-				$2=concatener_chaine($2,$3," ");
-				$1=concatener_chaine($1,$2," ");
+				$1=concatener_chaine($1,"%"," ");
+				$1=concatener_chaine($1,$3," ");
 			}
 			else
 			{
@@ -838,8 +837,8 @@ boolean:
 		{ 
 			if(affichage_traduction)
 			{
-				$2=concatener_chaine($2,$3," ");
-				$1=concatener_chaine($1,$2," ");
+				$1=concatener_chaine($1,"=="," ");
+				$1=concatener_chaine($1,$3," ");
 			}
 			else
 			{
@@ -854,8 +853,8 @@ boolean:
 		{ 
 			if(affichage_traduction)
 			{
-				$2=concatener_chaine($2,$3," ");
-				$1=concatener_chaine($1,$2," ");
+				$1=concatener_chaine($1,"!="," ");
+				$1=concatener_chaine($1,$3," ");
 			}
 			else
 			{
@@ -870,8 +869,8 @@ boolean:
 		{ 
 			if(affichage_traduction)
 			{
-				$2=concatener_chaine($2,$3," ");
-				$1=concatener_chaine($1,$2," ");
+				$1=concatener_chaine($1,"&&"," ");
+				$1=concatener_chaine($1,$3," ");
 			}
 			else
 			{
@@ -886,8 +885,8 @@ boolean:
 		{ 
 			if(affichage_traduction)
 			{
-				$2=concatener_chaine($2,$3," ");
-				$1=concatener_chaine($1,$2," ");
+				$1=concatener_chaine($1,"||"," ");
+				$1=concatener_chaine($1,$3," ");
 			}
 			else
 			{
@@ -908,6 +907,36 @@ boolean:
 			else
 			{
 				$2=concatener_chaine($2,$3," ");
+				$1=concatener_chaine($1,$2," ");
+			}
+			if(affichage_grammaire) printf("Fin de reconnaissance boolean (%s)\n",$1); 
+			$$=$1;
+		}
+	|
+	expression EGALE CHAINE_DE_CARACTERE
+		{
+			if(affichage_traduction)
+			{
+				$2=concatener_chaine($2,$3," ");
+				$1=concatener_chaine($1,$2," ");
+			}
+			else
+			{
+				$2=concatener_chaine($2,$3," ");
+				$1=concatener_chaine($1,$2," ");
+			}
+			if(affichage_grammaire) printf("Fin de reconnaissance boolean (%s)\n",$1); 
+			$$=$1;
+		}
+	|
+	NOT boolean
+		{
+			if(affichage_traduction)
+			{
+				$1=concatener_chaine($1,$2," ");
+			}
+			else
+			{
 				$1=concatener_chaine($1,$2," ");
 			}
 			if(affichage_grammaire) printf("Fin de reconnaissance boolean (%s)\n",$1); 
@@ -974,6 +1003,11 @@ instruction:
 appel_procedure:
 	identifiant_procedure
 	{
+		if(affichage_traduction)
+			{
+				$1=concatener_chaine($1,"("," ");
+				$1=concatener_chaine($1,")"," ");
+			}
 		if(affichage_grammaire) printf("Fin de reconnaissance appel_procedure (%s)\n",$1);
 		$$=$1;
 	}
@@ -1273,31 +1307,6 @@ boucle_while:
 			if(affichage_grammaire) printf("Fin de reconnaissance boucle_while (%s)\n",$1); 
 			$$=$1;
 		}
-	|
-	WHILE NOT PARENTHESEOUVRANTE boolean PARENTHESEFERMANTE DO block_instructions_global 
-		{ 
-			if(affichage_traduction)
-			{
-				$6=concatener_chaine($6,$7," ");
-				$5=concatener_chaine($5,$6," ");
-				$4=concatener_chaine($4,$5," ");
-				$3=concatener_chaine($3,$4," ");
-				$2=concatener_chaine($2,$3," ");
-				$1=concatener_chaine($1,$2," ");
-			}
-			else
-			{
-				$6=concatener_chaine($6,$7," ");
-				$5=concatener_chaine($5,$6," ");
-				$4=concatener_chaine($4,$5," ");
-				$3=concatener_chaine($3,$4," ");
-				$2=concatener_chaine($2,$3," ");
-				$1=concatener_chaine($1,$2," ");
-			}
-			
-			if(affichage_grammaire) printf("Fin de reconnaissance boucle_while (%s)\n",$1); 
-			$$=$1;
-		}
 	;
 
 boucle_for:
@@ -1363,13 +1372,16 @@ boucle_for:
 	;
 
 boucle_repeat_until:
-	REPEAT block_instructions_global UNTIL boolean 
+	REPEAT block_instructions UNTIL boolean 
 		{ 
 			if(affichage_traduction)
 			{
-				$3=concatener_chaine($3,$4," ");
+				
+				$3=concatener_chaine("while (!(",$4," ");
+				$3=concatener_chaine($3,"))"," ");
+				$2=concatener_chaine($2," } "," ");
 				$2=concatener_chaine($2,$3," ");
-				$1=concatener_chaine($1,$2," ");
+				$1=concatener_chaine("do { ",$2," ");
 			}
 			else
 			{

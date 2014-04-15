@@ -79,6 +79,8 @@ NQUOTE [^']
 {S}{Q}{R}{T}				{ if(affichage) printf("SQRT ");		yylval.type_string = copier_chaine(yytext); return(TSQRT);		}
 {S}{Q}{R}					{ if(affichage) printf("SQR ");		yylval.type_string = copier_chaine(yytext); return(TSQR);		}
 {I}{N}{T}					{ if(affichage) printf("INT ");		yylval.type_string = copier_chaine(yytext); return(TINT);		}
+{R}{E}{P}{E}{A}{T}			{ if(affichage) printf("REPEAT ");		yylval.type_string = copier_chaine(yytext); return(REPEAT);		}
+{U}{N}{T}{I}{L}				{ if(affichage) printf("UNTIL ");		yylval.type_string = copier_chaine(yytext); return(UNTIL);		}
 
 {S}{T}{R}{I}{N}{G}			{ 	if(affichage) printf("STRING ");	
 								yylval.type_string = copier_chaine(yytext); 
