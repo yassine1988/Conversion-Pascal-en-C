@@ -6,7 +6,7 @@
 	int yylex();
 	extern FILE *yyin;
 	int affichage_grammaire = 1;
-	int affichage_traduction = 0;
+	int affichage_traduction = 1;
 	
 	char * concatener_chaine(char * chaine1,char * chaine2, char * separateur) {
 		char * ntest= malloc((strlen(separateur)+strlen(chaine2)+strlen(chaine1)+1)*sizeof(char));
@@ -108,6 +108,7 @@
 %token<type_string> ENTRESORTIE;
 %left PLUS MOINS;
 %left MULTIPLIE SLASH DIV MOD AND OR;
+%right THEN ELSE;
 
 
 %type <type_string> expression;
@@ -130,7 +131,6 @@
 %type <type_string> boucle_while;
 %type <type_string> condition_if;
 %type <type_string> condition_if_instruction;
-%type <type_string> condition_if_instruction_else;
 %type <type_string> appel_procedure;
 %type <type_string> identifiant_procedure;
 %type <type_string> block_instructions_global;
@@ -148,8 +148,7 @@
 %type <type_string> declarations_globales;
 %type <type_string> prog_entete;
 %type <type_string> programme;
-%type <type_string> condition_if_instruction_else_suite;
-%type <type_string> condition_if_instruction_else_debut;
+
 %%
 programme:
 	prog_entete declarations_globales prog_principal 
@@ -524,7 +523,7 @@ block:
 			{
 				$1=concatener_chaine("{ ",$1," ");
 				$1=concatener_chaine($1,$2," ");
-				$1=concatener_chaine($1,"}"," ");
+				$1=concatener_chaine($1,"} "," ");
 			}
 			else
 			{
@@ -1258,8 +1257,8 @@ boucle_while:
 		{ 
 			if(affichage_traduction)
 			{
-				$4=concatener_chaine($4,"}"," ");
-				$4=concatener_chaine("{",$4," ");
+				$4=concatener_chaine($4,"} "," ");
+				$4=concatener_chaine(" {",$4," ");
 				$2=concatener_chaine($2,")"," ");
 				$2=concatener_chaine("(",$2," ");
 				$1=concatener_chaine($1,$2," ");
@@ -1416,6 +1415,8 @@ condition_if:
 		{ 
 			if(affichage_traduction)
 			{
+				$2=concatener_chaine("(",$2," ");
+				$2=concatener_chaine($2,")"," ");
 				$2=concatener_chaine($2,$4," ");
 				$1=concatener_chaine($1,$2," ");
 			}
@@ -1429,77 +1430,51 @@ condition_if:
 			if(affichage_grammaire) printf("Fin de reconnaissance condition_if (%s)\n",$1); 
 			$$=$1;
 		}
-	;
-	
-condition_if_instruction:
-	condition_if_instruction_else_debut condition_if_instruction_else 
+	|
+	IF boolean THEN condition_if_instruction ELSE condition_if_instruction
 		{ 
 			if(affichage_traduction)
 			{
-				$1=concatener_chaine("{",$1," ");
-				$1=concatener_chaine($1,"}"," ");
-				if(!strcmp($2,";"))
-				{
-					$1=concatener_chaine($1,$2," ");
-				}
+				$5=concatener_chaine($5,$6," ");
+				$4=concatener_chaine($4,$5," ");
+				$2=concatener_chaine("(",$2," ");
+				$2=concatener_chaine($2,")"," ");
+				$2=concatener_chaine($2,$4," ");
+				$1=concatener_chaine($1,$2," ");
 			}
 			else
 			{
+				$5=concatener_chaine($5,$6," ");
+				$4=concatener_chaine($4,$5," ");
+				$3=concatener_chaine($3,$4," ");
+				$2=concatener_chaine($2,$3," ");
 				$1=concatener_chaine($1,$2," ");
 			}
 			
-			if(affichage_grammaire) printf("Fin de reconnaissance condition_if_instruction (%s)\n",$1); 
-			$$=$1;
-		}
-	|
-	condition_if_instruction_else_debut 
-		{ 
-			if(affichage_grammaire) printf("Fin de reconnaissance condition_if_instruction (%s)\n",$1); 
+			if(affichage_grammaire) printf("Fin de reconnaissance condition_if (%s)\n",$1); 
 			$$=$1;
 		}
 	;
-
-condition_if_instruction_else:
-	ELSE condition_if_instruction_else_suite 
+	
+condition_if_instruction:
+	block_instructions_global 
 		{
 			if(affichage_traduction)
 			{
-				$1=concatener_chaine($1,$2," ");
+				$1=concatener_chaine("{",$1," ");
+				$1=concatener_chaine($1,"} "," ");
 			}
-			else
+			if(affichage_grammaire) printf("Fin de reconnaissance condition_if_instruction_else_debut (%s)\n",$1); 
+			$$=$1;
+		}
+	|
+	instruction
+		{
+			if(affichage_traduction)
 			{
-				$1=concatener_chaine($1,$2," ");
+				$1=concatener_chaine($1,";","");
 			}
-			if(affichage_grammaire) printf("Fin de reconnaissance condition_if_instruction_else (%s)\n",$1); 
-			$$=$1;
-		}
-	;
-
-condition_if_instruction_else_debut:
-	block_instructions_global 
-		{
 			if(affichage_grammaire) printf("Fin de reconnaissance condition_if_instruction_else_debut (%s)\n",$1); 
-			$$=$1;
-		}
-	|
-	instruction
-		{
-			if(affichage_grammaire) printf("Fin de reconnaissance condition_if_instruction_else_debut (%s)\n",$1); 
-			$$=$1;
-		}
-	;
-	
-	
-condition_if_instruction_else_suite:
-	block_instructions_global 
-		{
-			if(affichage_grammaire) printf("Fin de reconnaissance condition_if_instruction_else_suite (%s)\n",$1); 
-			$$=$1;
-		}
-	|
-	instruction
-		{
-			if(affichage_grammaire) printf("Fin de reconnaissance condition_if_instruction_else_suite (%s)\n",$1); 
 			$$=$1;
 		}
 	;
