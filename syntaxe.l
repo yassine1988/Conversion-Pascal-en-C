@@ -83,11 +83,11 @@ NQUOTE [^']
 {U}{N}{T}{I}{L}				{ if(affichage) printf("UNTIL ");		yylval.type_string = copier_chaine(yytext); return(UNTIL);		}
 
 {S}{T}{R}{I}{N}{G}			{ 	if(affichage) printf("STRING ");	
-								yylval.type_string = copier_chaine(yytext); 
+								yylval.type_string = copier_chaine("char * "); 
 								return(TYPE);		
 							}
 {I}{N}{T}{E}{G}{E}{R}		{ 	if(affichage) printf("INTEGER ");	
-								yylval.type_string = copier_chaine(yytext);  
+								yylval.type_string = copier_chaine("int");  
 								return(TYPE);			
 							}
 {T}{R}{U}{E}				{ if(affichage) printf("TRUE ");	yylval.type_string = copier_chaine(yytext);	return(TTRUE);		}

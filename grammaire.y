@@ -147,7 +147,8 @@
 %type <type_string> declarations_globales;
 %type <type_string> prog_entete;
 %type <type_string> programme;
-
+%type <type_string> tableau_crochets;
+%type <type_string> suite_crochet;
 %%
 programme:
 	prog_entete declarations_globales prog_principal 
@@ -338,6 +339,7 @@ declaration_variable:
 			{
 				//$2=concatener_chaine($2,$3," ");
 				$1=concatener_chaine($3,$1," ");
+				$1=concatener_chaine($1,";\n","");
 			}
 			else
 			{
@@ -348,26 +350,24 @@ declaration_variable:
 			$$=$1;
 		}
 	|
-	suite_identifiants DEUX_POINTS ARRAY CROCHETOUVRANT expression POINTPOINT expression CROCHETFERMANT OF TYPE  
+	suite_identifiants DEUX_POINTS ARRAY tableau_crochets OF TYPE  
 		{ 
 			if(affichage_traduction)
 			{
-				$9=concatener_chaine($9,$10," ");
-				$8=concatener_chaine($8,$9," ");
-				$7=concatener_chaine($7,$8," ");
-				$6=concatener_chaine($6,$7," ");
-				$5=concatener_chaine($5,$6," ");
-				$4=concatener_chaine($4,$5," ");
-				$3=concatener_chaine($3,$4," ");
-				$2=concatener_chaine($2,$3," ");
-				$1=concatener_chaine($1,$2," ");
+				char* chaine = strdup($1);
+				char* variable;
+				$1="";
+				while ((variable = strsep(&chaine, ","))!=NULL)
+				{
+					printf("\n%s\n",variable);
+					$1=concatener_chaine($1,$6," ");
+					$1=concatener_chaine($1,variable," ");
+					$1=concatener_chaine($1,$4,"");
+					$1=concatener_chaine($1,";\n","");
+				}
 			}
 			else
 			{
-				$9=concatener_chaine($9,$10," ");
-				$8=concatener_chaine($8,$9," ");
-				$7=concatener_chaine($7,$8," ");
-				$6=concatener_chaine($6,$7," ");
 				$5=concatener_chaine($5,$6," ");
 				$4=concatener_chaine($4,$5," ");
 				$3=concatener_chaine($3,$4," ");
@@ -379,15 +379,49 @@ declaration_variable:
 		}
 	;
 
+tableau_crochets:
+	CROCHETOUVRANT expression POINTPOINT expression CROCHETFERMANT suite_crochet
+		{
+			if(affichage_traduction)
+			{
+				$1=concatener_chaine($1,$4,"(");
+				$1=concatener_chaine($1,$2,")-(");
+				$1=concatener_chaine($1,$5,")+1");
+				$1=concatener_chaine($1,$6,"");
+			}
+			else
+			{
+				$5=concatener_chaine($5,$6," ");
+				$4=concatener_chaine($4,$5," ");
+				$3=concatener_chaine($3,$4," ");
+				$2=concatener_chaine($2,$3," ");
+				$1=concatener_chaine($1,$2," ");
+			}
+			if(affichage_grammaire) printf("Fin de reconnaissance tableau_crochets (%s)\n",$1);
+			$$=$1;
+		}
+	;
 
+suite_crochet:
+	tableau_crochets
+		{
+			if(affichage_grammaire) printf("Fin de reconnaissance suite_crochet (%s)\n",$1);
+			$$=$1;
+		}
+	|
+		{
+			if(affichage_grammaire) printf("Fin de reconnaissance suite_crochet (VIDE)\n");
+			$$="";
+		}
+	;
 
 suite_identifiants:
 	suite_identifiants VIRGULE IDENTIFIANT 
 		{ 	
 			if(affichage_traduction)
 			{
-				$2=concatener_chaine($2,$3," ");
-				$1=concatener_chaine($1,$2," ");
+				$2=concatener_chaine($2,$3,"");
+				$1=concatener_chaine($1,$2,"");
 			}
 			else
 			{
@@ -463,7 +497,8 @@ block_declaration_variable_suite:
 		{ 
 			if(affichage_traduction)
 			{
-				$1=concatener_chaine($1,$2," ");
+				//$1=concatener_chaine($1,$2," ");
+				$$=$1;
 			}
 			else
 			{
@@ -477,8 +512,8 @@ block_declaration_variable_suite:
 		{	
 			if(affichage_traduction)
 			{
-				$2=concatener_chaine($2,$3," ");
-				$1=concatener_chaine($1,$2," ");
+				//$2=concatener_chaine($2,$3," ");
+				$1=concatener_chaine($1,$3," ");
 			}
 			else
 			{
@@ -497,9 +532,9 @@ prog_principal:
 			if(affichage_traduction)
 			{
 				//$2=concatener_chaine($2,$3," ");
-				$1=concatener_chaine("{ ",$1," ");
+				$1=concatener_chaine("\n{\n ",$1," ");
 				$1=concatener_chaine($1,$2," ");
-				$1=concatener_chaine($1,"}"," ");
+				$1=concatener_chaine($1,"\n}\n"," ");
 			}
 			else
 			{
@@ -517,9 +552,9 @@ block:
 		{ 
 			if(affichage_traduction)
 			{
-				$1=concatener_chaine("{ ",$1," ");
+				$1=concatener_chaine("\n{\n ",$1," ");
 				$1=concatener_chaine($1,$2," ");
-				$1=concatener_chaine($1,"} "," ");
+				$1=concatener_chaine($1,"\n}\n "," ");
 			}
 			else
 			{
@@ -1288,8 +1323,8 @@ boucle_while:
 		{ 
 			if(affichage_traduction)
 			{
-				$4=concatener_chaine($4,"} "," ");
-				$4=concatener_chaine(" {",$4," ");
+				$4=concatener_chaine($4,"\n}\n "," ");
+				$4=concatener_chaine(" \n{\n",$4," ");
 				$2=concatener_chaine($2,")"," ");
 				$2=concatener_chaine("(",$2," ");
 				$1=concatener_chaine($1,$2," ");
@@ -1342,8 +1377,8 @@ boucle_for:
 		{ 
 			if(affichage_traduction)
 			{
-				char* chaine = strdup($2);
-				char* variable = strsep(&chaine, "=");
+				char * chaine = strdup($2);
+				char * variable = strsep(&chaine, "=");
 				$2=concatener_chaine("(",$2," ");
 				$2=concatener_chaine($2,";"," ");
 				$2=concatener_chaine($2,$4," ");
@@ -1376,9 +1411,9 @@ boucle_repeat_until:
 				
 				$3=concatener_chaine("while (!(",$4," ");
 				$3=concatener_chaine($3,"))"," ");
-				$2=concatener_chaine($2," } "," ");
+				$2=concatener_chaine($2," \n}\n "," ");
 				$2=concatener_chaine($2,$3," ");
-				$1=concatener_chaine("do { ",$2," ");
+				$1=concatener_chaine("do \n{\n ",$2," ");
 			}
 			else
 			{
@@ -1442,8 +1477,8 @@ sous_block_instruction:
 		{
 			if(affichage_traduction)
 			{
-				$1=concatener_chaine("{",$1," ");
-				$1=concatener_chaine($1,"} "," ");
+				$1=concatener_chaine("\n{\n",$1," ");
+				$1=concatener_chaine($1,"\n}\n "," ");
 			}
 			if(affichage_grammaire) printf("Fin de reconnaissance condition_if_instruction_else_debut (%s)\n",$1); 
 			$$=$1;
