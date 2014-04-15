@@ -130,7 +130,7 @@
 %type <type_string> boucle_repeat_until;
 %type <type_string> boucle_while;
 %type <type_string> condition_if;
-%type <type_string> condition_if_instruction;
+%type <type_string> sous_block_instruction;
 %type <type_string> appel_procedure;
 %type <type_string> identifiant_procedure;
 %type <type_string> block_instructions_global;
@@ -1301,14 +1301,23 @@ boucle_while:
 	;
 
 boucle_for:
-	FOR assignation TO expression DO block_instructions_global
+	FOR assignation TO expression DO sous_block_instruction
 		{ 
 			if(affichage_traduction)
 			{
-				$5=concatener_chaine($5,$6," ");
-				$4=concatener_chaine($4,$5," ");
-				$3=concatener_chaine($3,$4," ");
-				$2=concatener_chaine($2,$3," ");
+				char* chaine = strdup($2);
+				char* variable = strsep(&chaine, "=");
+				$2=concatener_chaine("(",$2," ");
+				$2=concatener_chaine($2,";"," ");
+				$2=concatener_chaine($2,$4," ");
+				$2=concatener_chaine($2,"<="," ");
+				$2=concatener_chaine($2,variable," ");
+				$2=concatener_chaine($2,";"," ");
+				$2=concatener_chaine($2,variable," ");
+				$2=concatener_chaine($2,"++","");
+				$2=concatener_chaine($2,")","");
+				$2=concatener_chaine($2,$6," ");
+
 				$1=concatener_chaine($1,$2," ");
 			}
 			else
@@ -1323,59 +1332,22 @@ boucle_for:
 			$$=$1;
 		}
 	|
-	FOR assignation TO expression DO instruction 
+	FOR assignation DOWNTO expression DO sous_block_instruction
 		{ 
 			if(affichage_traduction)
 			{
-				$5=concatener_chaine($5,$6," ");
-				$4=concatener_chaine($4,$5," ");
-				$3=concatener_chaine($3,$4," ");
-				$2=concatener_chaine($2,$3," ");
-				$1=concatener_chaine($1,$2," ");
-			}
-			else
-			{
-				$5=concatener_chaine($5,$6," ");
-				$4=concatener_chaine($4,$5," ");
-				$3=concatener_chaine($3,$4," ");
-				$2=concatener_chaine($2,$3," ");
-				$1=concatener_chaine($1,$2," ");
-			}
-			if(affichage_grammaire) printf("Fin de reconnaissance boucle_for (%s)\n",$1); 
-			$$=$1;
-		}
-	|
-	FOR assignation DOWNTO expression DO block_instructions_global 
-		{ 
-			if(affichage_traduction)
-			{
-				$5=concatener_chaine($5,$6," ");
-				$4=concatener_chaine($4,$5," ");
-				$3=concatener_chaine($3,$4," ");
-				$2=concatener_chaine($2,$3," ");
-				$1=concatener_chaine($1,$2," ");
-			}
-			else
-			{
-				$5=concatener_chaine($5,$6," ");
-				$4=concatener_chaine($4,$5," ");
-				$3=concatener_chaine($3,$4," ");
-				$2=concatener_chaine($2,$3," ");
-				$1=concatener_chaine($1,$2," ");
-			}
-			if(affichage_grammaire) printf("Fin de reconnaissance boucle_for (%s)\n",$1); 
-			$$=$1;
-		}
-	|
-	FOR assignation DOWNTO expression DO instruction 
-		{ 
-			if(affichage_traduction)
-			{
-				$5=concatener_chaine($5,$6," ");
-				$4=concatener_chaine($4,$5," ");
-				$3=concatener_chaine($3,$4," ");
-				$2=concatener_chaine($2,$3," ");
-				$1=concatener_chaine($1,$2," ");
+				char* chaine = strdup($2);
+				char* variable = strsep(&chaine, "=");
+				$2=concatener_chaine("(",$2," ");
+				$2=concatener_chaine($2,";"," ");
+				$2=concatener_chaine($2,$4," ");
+				$2=concatener_chaine($2,">="," ");
+				$2=concatener_chaine($2,variable," ");
+				$2=concatener_chaine($2,";"," ");
+				$2=concatener_chaine($2,variable," ");
+				$2=concatener_chaine($2,"--","");
+				$2=concatener_chaine($2,")","");
+				$2=concatener_chaine($2,$6," ");
 			}
 			else
 			{
@@ -1411,7 +1383,7 @@ boucle_repeat_until:
 	;
 
 condition_if:
-	IF boolean THEN condition_if_instruction 
+	IF boolean THEN sous_block_instruction 
 		{ 
 			if(affichage_traduction)
 			{
@@ -1431,7 +1403,7 @@ condition_if:
 			$$=$1;
 		}
 	|
-	IF boolean THEN condition_if_instruction ELSE condition_if_instruction
+	IF boolean THEN sous_block_instruction ELSE sous_block_instruction
 		{ 
 			if(affichage_traduction)
 			{
@@ -1456,7 +1428,7 @@ condition_if:
 		}
 	;
 	
-condition_if_instruction:
+sous_block_instruction:
 	block_instructions_global 
 		{
 			if(affichage_traduction)
