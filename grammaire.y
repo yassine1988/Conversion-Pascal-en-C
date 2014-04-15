@@ -149,6 +149,7 @@
 %type <type_string> programme;
 %type <type_string> tableau_crochets;
 %type <type_string> suite_crochet;
+%type <type_string> declaration_variable_spe_fonction;
 %%
 programme:
 	prog_entete declarations_globales prog_principal 
@@ -248,7 +249,7 @@ declaration_fonction:
 				$5=concatener_chaine($5,$9," ");
 				$4=concatener_chaine($4,$5," ");
 				$3=concatener_chaine($3,$4," ");
-				$2=concatener_chaine($2,$3," ");
+				$2=concatener_chaine($2,$3,"");
 				$1=concatener_chaine($7,$2," ");
 				//$1=concatener_chaine($1,$2," ");
 				$1=concatener_chaine("\n",$1,"");
@@ -278,7 +279,7 @@ declaration_procedure:
 				$5=concatener_chaine($5,$7," ");
 				$4=concatener_chaine($4,$5," ");
 				$3=concatener_chaine($3,$4," ");
-				$2=concatener_chaine($2,$3," ");
+				$2=concatener_chaine($2,$3,"");
 				$1=concatener_chaine("\nvoid ",$2,"");
 			}
 			else
@@ -307,7 +308,7 @@ declaration_variables_fonction:
 		{ 
 			if(affichage_traduction)
 			{
-				$2=concatener_chaine($2,$3," ");
+				$2=concatener_chaine(",",$3," ");
 				$1=concatener_chaine($1,$2," ");
 			}
 			else
@@ -322,7 +323,7 @@ declaration_variables_fonction:
 	;
 	
 declaration_variables:
-	declaration_variable 
+	declaration_variable_spe_fonction 
 		{ 
 			if(affichage_grammaire) printf("Fin de reconnaissance declaration_variables (%s)\n",$1); 
 			$$=$1;
@@ -333,7 +334,66 @@ declaration_variables:
 			$$=" ";
 		}
 	;
-	
+declaration_variable_spe_fonction:
+	suite_identifiants DEUX_POINTS TYPE 
+		{ 
+			if(affichage_traduction)
+			{
+				char* chaine = strdup($1);
+				char* variable;
+				$1="";
+				while ((variable = strsep(&chaine, ","))!=NULL)
+				{
+					printf("\n%s\n",variable);
+					if(strcmp("",$1))
+					{
+						$1=concatener_chaine($1,",","");
+					}
+					$1=concatener_chaine($1,$3," ");
+					$1=concatener_chaine($1,variable," ");
+					
+				}
+			}
+			else
+			{
+				$2=concatener_chaine($2,$3," ");
+				$1=concatener_chaine($1,$2," ");
+			}
+			if(affichage_grammaire) printf("Fin de reconnaissance declaration_variable (%s)\n",$1);
+			$$=$1;
+		}
+	|
+	suite_identifiants DEUX_POINTS ARRAY tableau_crochets OF TYPE  
+		{ 
+			if(affichage_traduction)
+			{
+				char* chaine = strdup($1);
+				char* variable;
+				$1="";
+				while ((variable = strsep(&chaine, ","))!=NULL)
+				{
+					printf("\n%s\n",variable);
+					if(strcmp("",$1))
+					{
+						$1=concatener_chaine($1,",","");
+					}
+					$1=concatener_chaine($1,$6," ");
+					$1=concatener_chaine($1,variable," ");
+					$1=concatener_chaine($1,$4,"");
+				}
+			}
+			else
+			{
+				$5=concatener_chaine($5,$6," ");
+				$4=concatener_chaine($4,$5," ");
+				$3=concatener_chaine($3,$4," ");
+				$2=concatener_chaine($2,$3," ");
+				$1=concatener_chaine($1,$2," ");
+			}
+			if(affichage_grammaire) printf("Fin de reconnaissance declaration_variable (%s)\n",$1);
+			$$=$1;
+		}
+	;
 declaration_variable:
 	suite_identifiants DEUX_POINTS TYPE 
 		{ 
@@ -1096,7 +1156,7 @@ appel_fonction:
 			{
 				$3=concatener_chaine($3,$4," ");
 				$2=concatener_chaine($2,$3," ");
-				$1=concatener_chaine($1,$2,"");
+				$1=concatener_chaine("printf",$2,"");
 			}
 			else
 			{
@@ -1114,7 +1174,7 @@ appel_fonction:
 			{
 				$3=concatener_chaine($3,$4," ");
 				$2=concatener_chaine($2,$3," ");
-				$1=concatener_chaine($1,$2,"");
+				$1=concatener_chaine("printf",$2,"");
 			}
 			else
 			{
@@ -1132,7 +1192,7 @@ appel_fonction:
 			{
 				$3=concatener_chaine($3,$4," ");
 				$2=concatener_chaine($2,$3," ");
-				$1=concatener_chaine($1,$2,"");
+				$1=concatener_chaine("scanf",$2,"");
 			}
 			else
 			{
@@ -1458,7 +1518,7 @@ condition_if:
 		{ 
 			if(affichage_traduction)
 			{
-				$2=concatener_chaine("(",$2,"");
+				$2=concatener_chaine("(",$2," ");
 				$2=concatener_chaine($2,")"," ");
 				$2=concatener_chaine($2,$4," ");
 				$1=concatener_chaine($1,$2," ");

@@ -15,7 +15,7 @@ BEGIN
     bool := false;
     names[1] := 3;
     write('toto');
-    
+    f('tot',5);
     for w:= 1 to 10 do
     begin
 		writeln('toto');
