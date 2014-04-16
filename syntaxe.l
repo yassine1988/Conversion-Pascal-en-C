@@ -1,4 +1,5 @@
 %{
+	#include"table.h"
 	#include "grammaire.tab.h"
 	extern FILE *yyin;
 	int ligne_no = 1;

@@ -14,3 +14,4 @@ table.o: table.h table.c
 clean:
 	rm *.tab.*
 	rm *.yy.*
+	rm *.o

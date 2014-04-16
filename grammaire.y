@@ -2,12 +2,14 @@
 	#include <stdio.h>
 	#include <string.h>
 	#include <stdlib.h>
+	#include "table.h"
+	
 	void yyerror(char const *s);
 	int yylex();
 	extern FILE *yyin;
 	int affichage_grammaire = 1;
 	int affichage_traduction = 1;
-	
+
 	char * concatener_chaine(char * chaine1,char * chaine2, char * separateur) {
 		char * ntest= malloc((strlen(separateur)+strlen(chaine2)+strlen(chaine1)+1)*sizeof(char));
 		strcat(ntest,chaine1);
@@ -15,6 +17,10 @@
 		strcat(ntest,chaine2);
 		return ntest;
 	}
+	
+	
+   // }
+   // afficherListe(ma_liste);
 %}
 %union 
 {
@@ -154,6 +160,7 @@
 programme:
 	prog_entete declarations_globales prog_principal 
 		{ 
+			ajouterEnTeteSimple("toto");
 			if(affichage_traduction)
 			{
 				$1=concatener_chaine($1,$2,$3);
@@ -857,7 +864,7 @@ variable:
 			{
 				$3=concatener_chaine($3,$4," ");
 				$2=concatener_chaine($2,$3," ");
-				$1=concatener_chaine($1,$2," ");
+				$1=concatener_chaine($1,$2,"");
 			}
 			else
 			{

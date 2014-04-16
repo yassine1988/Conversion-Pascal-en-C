@@ -1,20 +1,18 @@
 #include <stdlib.h>
-
-typedef enum TypeVariable TypeVariable;
-enum TypeVariable
-{
-    INT, REEL, CHAR, ARRAY
-};
+#include <string.h>
+#include <stdlib.h>
+#include "table.h"
 
 typedef struct element element;
-struct element
-{
-    char * valeur;
-	TypeVariable type_variable;
-    struct element *nxt;
-};
- 
+
 typedef element* llist;
+
+llist table;
+
+llist ajouterEnTeteSimple(char * valeur)
+{
+	ajouterEnTete(table, valeur);
+}
 
 llist ajouterEnTete(llist liste, char * valeur)
 {
