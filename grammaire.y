@@ -1206,6 +1206,10 @@ appel_fonction:
 	|
 	CLRSCR
 		{
+			if(affichage_traduction)
+			{
+				$1="system('clear')";
+			}
 			if(affichage_grammaire) printf("Fin de reconnaissance appel_fonction (%s)\n",$1); 
 			$$=$1;
 		}
@@ -1251,8 +1255,32 @@ appel_fonction:
 			$$=$1;
 		}
 	|
+	TSQR PARENTHESEOUVRANTE expression PARENTHESEFERMANTE
+		{ 
+			if(affichage_traduction)
+			{
+				$3=concatener_chaine($3,",2"," ");
+				$3=concatener_chaine($3,$4," ");
+				$2=concatener_chaine($2,$3," ");
+				$1=concatener_chaine("pow",$2,"");
+			}
+			else
+			{
+				$3=concatener_chaine($3,$4," ");
+				$2=concatener_chaine($2,$3," ");
+				$1=concatener_chaine($1,$2," ");
+			}
+			
+			if(affichage_grammaire) printf("Fin de reconnaissance appel_fonction (%s)\n",$1); 
+			$$=$1;
+		}
+	|
 	RANDOMIZE
 		{
+			if(affichage_traduction)
+			{
+				$1="srand(time(NULL))";
+			}
 			if(affichage_grammaire) printf("Fin de reconnaissance appel_fonction (%s)\n",$1); 
 			$$=$1;
 		}
@@ -1273,17 +1301,15 @@ fonction_un_param_expression :
 	|
 	RANDOM
 		{
+			if(affichage_traduction)
+			{
+				$1="rand";
+			}
 			if(affichage_grammaire) printf("Fin de reconnaissance fonction_un_param_expression (%s)\n",$1); 
 			$$=$1;
 		}
 	|
 	TABS
-		{
-			if(affichage_grammaire) printf("Fin de reconnaissance fonction_un_param_expression (%s)\n",$1); 
-			$$=$1;
-		}
-	|
-	TSQR
 		{
 			if(affichage_grammaire) printf("Fin de reconnaissance fonction_un_param_expression (%s)\n",$1); 
 			$$=$1;
@@ -1297,6 +1323,10 @@ fonction_un_param_expression :
 	|
 	TINT
 		{
+			if(affichage_traduction)
+			{
+				$1="(int)floor";
+			}
 			if(affichage_grammaire) printf("Fin de reconnaissance fonction_un_param_expression (%s)\n",$1); 
 			$$=$1;
 		}
