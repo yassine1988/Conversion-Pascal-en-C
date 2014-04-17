@@ -253,6 +253,7 @@ declaration_fonction:
 		{ 
 			if(affichage_traduction)
 			{
+				ajouterEnFinSimple($2,"FUNCTION",$7);
 				$5=concatener_chaine($5,$9," ");
 				$4=concatener_chaine($4,$5," ");
 				$3=concatener_chaine($3,$4," ");
@@ -283,6 +284,7 @@ declaration_procedure:
 		{ 
 			if(affichage_traduction)
 			{
+				ajouterEnFinSimple($2,"FUNCTION","void");
 				$5=concatener_chaine($5,$7," ");
 				$4=concatener_chaine($4,$5," ");
 				$3=concatener_chaine($3,$4," ");
@@ -1449,6 +1451,7 @@ boucle_while:
 				$2=concatener_chaine($2,")"," ");
 				$2=concatener_chaine("(",$2,"");
 				$1=concatener_chaine($1,$2," ");
+				$1=concatener_chaine($1,$4," ");
 			}
 			else
 			{

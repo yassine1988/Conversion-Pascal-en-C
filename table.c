@@ -14,6 +14,7 @@ struct element
 	char * type_valeur;
 	char * type_valeur_valeur;
     struct element *nxt;
+	struct element *table_perso;
 };
 
 llist table;
