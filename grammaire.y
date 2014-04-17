@@ -409,7 +409,7 @@ declaration_variable:
 				$1="";
 				while ((variable = strsep(&chaine, ","))!=NULL)
 				{
-					ajouterEnFinSimple(variable,$3);
+					ajouterEnFinSimple(variable,$3,"");
 					$1=concatener_chaine($1,$3," ");
 					$1=concatener_chaine($1,variable," ");
 					$1=concatener_chaine($1,";\n","");
@@ -433,7 +433,7 @@ declaration_variable:
 				$1="";
 				while ((variable = strsep(&chaine, ","))!=NULL)
 				{
-					ajouterEnFinSimple(variable,strcat($3,$6));
+					ajouterEnFinSimple(variable,$3,$6);
 					$1=concatener_chaine($1,$6," ");
 					$1=concatener_chaine($1,variable," ");
 					$1=concatener_chaine($1,$4,"");
@@ -608,7 +608,7 @@ prog_principal:
 				//$2=concatener_chaine($2,$3," ");
 				$1=concatener_chaine("\n{\n ",$1," ");
 				$1=concatener_chaine($1,$2," ");
-				$1=concatener_chaine($1,"\n}\n"," ");
+				$1=concatener_chaine($1,"\nreturn 1;\n}\n"," ");
 			}
 			else
 			{
@@ -1632,7 +1632,7 @@ int main(int argc, char * argv[])
 	}
 	yyparse();
 	printf("-------------------\n");
-	ajouterEnFinSimple("toto","test");
+	ajouterEnFinSimple("toto","test","");
 	afficherListeSimple();
 	printf("\nFin du programme\n");
 	if(f != NULL)

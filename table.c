@@ -12,6 +12,7 @@ struct element
 {
     char * valeur;
 	char * type_valeur;
+	char * type_valeur_valeur;
     struct element *nxt;
 };
 
@@ -22,10 +23,11 @@ llist ajouterEnTeteSimple(char * valeur)
 	table=ajouterEnTete(table, valeur);
 }
 
-llist ajouterEnFinSimple(char * valeur, char * type_valeur)
+llist ajouterEnFinSimple(char * valeur, char * type_valeur,char * type_valeur_valeur)
 {
-	table=ajouterEnFin(table, valeur,type_valeur);
+	table=ajouterEnFin(table, valeur,type_valeur,type_valeur_valeur);
 }
+
 
 void afficherListeSimple()
 {
@@ -57,7 +59,7 @@ llist ajouterEnTete(llist liste, char * valeur)
     return nouvelElement;
 }
 
-llist ajouterEnFin(llist liste, char * valeur, char * type_valeur)
+llist ajouterEnFin(llist liste, char * valeur, char * type_valeur,char * type_valeur_valeur)
 {
     /* On crée un nouvel élément */
     element* nouvelElement = malloc(sizeof(element));
@@ -66,6 +68,8 @@ llist ajouterEnFin(llist liste, char * valeur, char * type_valeur)
     nouvelElement->valeur = valeur;
 	
 	nouvelElement->type_valeur = type_valeur;
+	
+	nouvelElement->type_valeur_valeur = type_valeur_valeur;
  
     /* On ajoute en fin, donc aucun élément ne va suivre */
     nouvelElement->nxt = NULL;
