@@ -488,7 +488,7 @@ declaration_variable:
 					element * test = rechercherElement(table,variable,"");
 					if(test==NULL)
 					{
-						if(strcmp($3,"int")==0 || strcmp($3,"float")==0)
+						if(strcmp($6,"int")==0 || strcmp($6,"float")==0)
 						{
 							ajouterEnFinSimple(variable,"ARRAY","NOMBRE");
 						}else
@@ -885,20 +885,6 @@ expression:
 	|
 	variable 
 		{ 
-			element * test = rechercherElement(table,$1,"");
-			if(test==NULL)
-			{
-				printf("\nERREUR la variable %s n'est pas déclaré",$1);
-			}else
-			{
-				if(strcmp(test->type_valeur,"ARRAY")==0)
-				{
-					assignation_element=test->type_valeur_valeur;
-				}else
-				{
-					assignation_element=test->type_valeur;
-				}
-			}
 			if(affichage_grammaire) printf("Fin de reconnaissance variable (%s)\n",$1); 
 			$$=$1;
 		}
@@ -1249,7 +1235,7 @@ appel_procedure:
 				{
 					if(!strcmp(test->type_valeur_valeur,"VOID")==0)
 					{
-						assignation_element="NOMBRE";
+						printf("\nERREUR %s n'est pas une précédure!",$1);
 					}
 				}
 				$1=concatener_chaine($1,"(","");
@@ -1558,17 +1544,22 @@ assignation:
 		{ 
 			if(affichage_traduction)
 			{
-				element * test = rechercherElement(table,$1,"");
+				char* chaine = strdup($1);
+				char* variable;
+				variable = strsep(&chaine, "[");
+				element * test = rechercherElement(table,variable,"");
 				if(test==NULL)
 				{
-					printf("\nERREUR la variable %s n'est pas déclaré",$1);
+					printf("\nERREUR la variable %s n'est pas déclaré",variable);
 				}else
 				{
-					if(!(strcmp(assignation_element,test->type_valeur)==0 || strcmp(assignation_element,test->type_valeur)==0))
+					if(!(strcmp(assignation_element,test->type_valeur)==0 || strcmp(assignation_element,test->type_valeur_valeur)==0))
 					{
-						printf("\nERREUR assignation, la variable %s est de type %s",$1,test->type_valeur);
+						printf("\nERREUR assignation, la variable %s est de type %s %s",variable,test->type_valeur,test->type_valeur_valeur);
+						afficherListeSimple();
 					}
 				}
+				assignation_element="";
 				$2=concatener_chaine("=",$3," ");
 				$1=concatener_chaine($1,$2," ");
 			}

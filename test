@@ -75,5 +75,5 @@ BEGIN
 	toto;
     READLN(x);
     WRITELN(f(x));
-    WRITELN('HELLO WORLDssssssssssssssssssssssssssssssssssssssssssssss');
+    WRITELN('HELLO WORLDsssss');
 END.
