@@ -1,8 +1,8 @@
 %{
-	#include <stdio.h>
-	#include <string.h>
-	#include <stdlib.h>
-	#include "table.h"
+	#include<stdio.h>
+	#include<string.h>
+	#include<stdlib.h>
+	#include"table.h"
 	
 	void yyerror(char const *s);
 	int yylex();
@@ -160,7 +160,6 @@
 programme:
 	prog_entete declarations_globales prog_principal 
 		{ 
-			ajouterEnTeteSimple("toto");
 			if(affichage_traduction)
 			{
 				$1=concatener_chaine($1,$2,$3);
@@ -1633,6 +1632,8 @@ int main(int argc, char * argv[])
 		yyin = f;
 	}
 	yyparse();
+				ajouterEnTeteSimple("toto");
+
 	printf("\nFin du programme\n");
 	if(f != NULL)
 	{
