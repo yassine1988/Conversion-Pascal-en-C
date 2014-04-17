@@ -11,7 +11,7 @@
 	int affichage_traduction = 1;
 
 	char * concatener_chaine(char * chaine1,char * chaine2, char * separateur) {
-		char * ntest= malloc((strlen(separateur)+strlen(chaine2)+strlen(chaine1)+1)*sizeof(char));
+		char * ntest= malloc((strlen(separateur)+strlen(chaine2)+strlen(chaine1)+50)*sizeof(char));
 		strcat(ntest,chaine1);
 		strcat(ntest,separateur);
 		strcat(ntest,chaine2);
@@ -431,7 +431,6 @@ declaration_variable:
 				$1="";
 				while ((variable = strsep(&chaine, ","))!=NULL)
 				{
-					printf("\n%s\n",variable);
 					$1=concatener_chaine($1,$6," ");
 					$1=concatener_chaine($1,variable," ");
 					$1=concatener_chaine($1,$4,"");
