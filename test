@@ -2,9 +2,9 @@ PROGRAM prog;
 
 { function f }
 FUNCTION f (x,y:INTEGER;test:STRING) :INTEGER;
-VAR i,ii:INTEGER;toto:STRING;names,toto:ARRAY[1..10] OF INTEGER;
+VAR i,ii:INTEGER;toto:STRING;names,toto2:ARRAY[1..10] OF INTEGER;
 CONST truc:INTEGER;
-CONST toto:STRING;
+CONST toto3:STRING;
 BEGIN
     i := 0;
     f := 0;

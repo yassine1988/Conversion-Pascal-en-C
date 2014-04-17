@@ -7,7 +7,7 @@
 	void yyerror(char const *s);
 	int yylex();
 	extern FILE *yyin;
-	int affichage_grammaire = 1;
+	int affichage_grammaire = 0;
 	int affichage_traduction = 1;
 
 	char * concatener_chaine(char * chaine1,char * chaine2, char * separateur) {
@@ -254,7 +254,14 @@ declaration_fonction:
 			if(affichage_traduction)
 			{
 				ajouterEnFinSimple($2,"FUNCTION",$7);
+				$6=concatener_chaine("{\n ",$7,"");
+				$6=concatener_chaine($6,$2," ");
+				$6=concatener_chaine($6,";\n","");
+				$5=concatener_chaine($5,$6," ");
 				$5=concatener_chaine($5,$9," ");
+				$5=concatener_chaine($5,"return "," ");
+				$5=concatener_chaine($5,$2," ");
+				$5=concatener_chaine($5,";\n}","");
 				$4=concatener_chaine($4,$5," ");
 				$3=concatener_chaine($3,$4," ");
 				$2=concatener_chaine($2,$3,"");
@@ -353,6 +360,14 @@ declaration_variable_spe_fonction:
 				$1="";
 				while ((variable = strsep(&chaine, ","))!=NULL)
 				{
+					element * test = rechercherElement(table,variable,"");
+					if(test==NULL)
+					{
+						ajouterEnFinSimple(variable,$3,"");
+					}else
+					{
+						printf("\n\n\nERREUR la variable %s a déja été déclaré",variable);
+					}
 					if(strcmp("",$1))
 					{
 						$1=concatener_chaine($1,",","");
@@ -380,7 +395,16 @@ declaration_variable_spe_fonction:
 				$1="";
 				while ((variable = strsep(&chaine, ","))!=NULL)
 				{
-					if(strcmp("",$1))
+					element * test = rechercherElement(table,variable,"");
+					if(test==NULL)
+					{
+						ajouterEnFinSimple(variable,$3,$6);
+					}else
+					{
+						printf("\n\n\nERREUR la variable %s a déja été déclaré",variable);
+					}
+					
+					if(strcmp("",$1)==0)
 					{
 						$1=concatener_chaine($1,",","");
 					}
@@ -411,7 +435,15 @@ declaration_variable:
 				$1="";
 				while ((variable = strsep(&chaine, ","))!=NULL)
 				{
-					ajouterEnFinSimple(variable,$3,"");
+					element * test = rechercherElement(table,variable,"");
+					if(test==NULL)
+					{
+						ajouterEnFinSimple(variable,$3,"");
+					}else
+					{
+						printf("\n\n\nERREUR la variable %s a déja été déclaré",variable);
+					}
+					
 					$1=concatener_chaine($1,$3," ");
 					$1=concatener_chaine($1,variable," ");
 					$1=concatener_chaine($1,";\n","");
@@ -435,7 +467,14 @@ declaration_variable:
 				$1="";
 				while ((variable = strsep(&chaine, ","))!=NULL)
 				{
-					ajouterEnFinSimple(variable,$3,$6);
+					element * test = rechercherElement(table,variable,"");
+					if(test==NULL)
+					{
+						ajouterEnFinSimple(variable,$3,$6);
+					}else
+					{
+						printf("\n\n\nERREUR la variable %s a déja été déclaré",variable);
+					}
 					$1=concatener_chaine($1,$6," ");
 					$1=concatener_chaine($1,variable," ");
 					$1=concatener_chaine($1,$4,"");
@@ -628,9 +667,9 @@ block:
 		{ 
 			if(affichage_traduction)
 			{
-				$1=concatener_chaine("\n{\n ",$1," ");
+				//$1=concatener_chaine("\n{\n ",$1," ");
 				$1=concatener_chaine($1,$2," ");
-				$1=concatener_chaine($1,"\n}\n "," ");
+				//$1=concatener_chaine($1,"\n}\n "," ");
 			}
 			else
 			{
@@ -1534,8 +1573,8 @@ boucle_repeat_until:
 			if(affichage_traduction)
 			{
 				
-				$3=concatener_chaine("while (!(",$4," ");
-				$3=concatener_chaine($3,"))"," ");
+				$3=concatener_chaine("while (",$4," ");
+				$3=concatener_chaine($3,")"," ");
 				$2=concatener_chaine($2," \n}\n "," ");
 				$2=concatener_chaine($2,$3," ");
 				$1=concatener_chaine("do \n{\n ",$2," ");

@@ -19,9 +19,10 @@ llist ajouterEnFin(llist liste, char* symbole,char * type_valeur,char * type_val
 llist ajouterEnTete(llist liste, char* symbole);
 void afficherListe(llist liste);
 int estVide(llist liste);
-llist rechercherElement(llist liste, char* symbole);
+llist rechercherElement(llist liste, char* symbole, char * type_valeur);
 llist ajoutSymbole(llist liste, char* symbole);
 llist supprimerElementEnTete(llist liste);
 void liberationMemoire(llist liste);
+llist effacerListe(llist liste);
 
 #endif

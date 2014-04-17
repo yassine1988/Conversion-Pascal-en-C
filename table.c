@@ -14,10 +14,11 @@ struct element
 	char * type_valeur;
 	char * type_valeur_valeur;
     struct element *nxt;
-	struct element *table_perso;
 };
 
 llist table;
+llist table_fonction;
+llist table_constante;
 
 llist ajouterEnTeteSimple(char * valeur)
 {
@@ -26,13 +27,23 @@ llist ajouterEnTeteSimple(char * valeur)
 
 llist ajouterEnFinSimple(char * valeur, char * type_valeur,char * type_valeur_valeur)
 {
-	table=ajouterEnFin(table, valeur,type_valeur,type_valeur_valeur);
+	if(strcmp(type_valeur,"FUNCTION")==0)
+	{
+		table_fonction=ajouterEnFin(table_fonction, valeur,type_valeur,type_valeur_valeur);
+		table=NULL;
+	}else if(strcmp(type_valeur,"CONSTANT")==0)
+	{
+		table_constante=ajouterEnFin(table_constante, valeur,type_valeur,type_valeur_valeur);
+	} else
+	{
+		table=ajouterEnFin(table, valeur,type_valeur,type_valeur_valeur);
+	}
 }
-
 
 void afficherListeSimple()
 {
 	afficherListe(table);
+	afficherListe(table_fonction);
 }
 
 void afficherListe(llist list)
@@ -90,6 +101,7 @@ llist ajouterEnFin(llist liste, char * valeur, char * type_valeur,char * type_va
             temp = temp->nxt;
         }
         temp->nxt = nouvelElement;
+
         return liste;
     }
 }
@@ -145,13 +157,13 @@ llist supprimerElementEnFin(llist liste)
     return liste;
 }
 
-llist rechercherElement(llist liste, char * valeur)
+llist rechercherElement(llist liste, char * valeur, char * type_valeur)
 {
     element *tmp=liste;
     /* Tant que l'on n'est pas au bout de la liste */
     while(tmp != NULL)
     {
-        if(tmp->valeur == valeur)
+        if(strcmp(tmp->valeur,valeur)==0 && (strcmp(tmp->type_valeur,type_valeur)==0 || strcmp("",type_valeur)==0))
         {
             /* Si l'élément a la valeur recherchée, on renvoie son adresse */
             return tmp;
@@ -161,7 +173,7 @@ llist rechercherElement(llist liste, char * valeur)
     return NULL;
 }
 
-int nombreOccurences(llist liste, char * valeur)
+int nombreOccurences(llist liste, char * valeur, char * valeur_type)
 {
     int i = 0;
  
@@ -170,7 +182,7 @@ int nombreOccurences(llist liste, char * valeur)
         return 0;
  
     /* Sinon, tant qu'il y a encore un élément ayant la val = valeur */
-    while((liste = rechercherElement(liste, valeur)) != NULL)
+    while((liste = rechercherElement(liste, valeur,valeur_type)) != NULL)
     {
         /* On incrémente */
         liste = liste->nxt;
