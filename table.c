@@ -39,7 +39,7 @@ void afficherListe(llist list)
     element * tmp = list;
     while(tmp != NULL)
     {
-        printf("Symbole %s, valeur %s\n",tmp->valeur,tmp->type_valeur);
+        printf("Symbole %s, valeur %s %s\n",tmp->valeur,tmp->type_valeur,tmp->type_valeur_valeur);
         tmp = tmp->nxt;
     }
 }

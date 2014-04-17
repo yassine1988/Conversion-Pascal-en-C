@@ -102,7 +102,7 @@ NQUOTE [^']
 
 
  ":="   			{ if(affichage) printf( "ASSIGNATION "); 			yylval.type_string = copier_chaine(yytext); return(ASSIGNATION);		}
-'({NQUOTE}|'')+'  	{ if(affichage) printf( "CHAINE_DE_CARACTERE "); 	yylval.type_string = copier_chaine(yytext); return(CHAINE_DE_CARACTERE);}
+'({NQUOTE}|'')+'  	{ if(affichage) printf( "CHAINE_DE_CARACTERE "); yytext[0]='"';yytext[strlen(yytext)-1]='"';	yylval.type_string = copier_chaine(yytext); return(CHAINE_DE_CARACTERE);}
  ":"    			{ if(affichage) printf( "DEUX_POINTS "); 			yylval.type_string = copier_chaine(yytext); return(DEUX_POINTS);		}
  ","    			{ if(affichage) printf( "VIRGULE "); 				yylval.type_string = copier_chaine(yytext); return(VIRGULE);			}
 [0-9]+  			{ 	if(affichage) printf( "NOMBRE "); 			
