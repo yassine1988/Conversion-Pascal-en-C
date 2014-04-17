@@ -885,6 +885,20 @@ expression:
 	|
 	variable 
 		{ 
+			element * test = rechercherElement(table,$1,"");
+			if(test==NULL)
+			{
+				printf("\nERREUR la variable %s n'est pas déclaré",$1);
+			}else
+			{
+				if(strcmp(test->type_valeur,"ARRAY")==0)
+				{
+					assignation_element=test->type_valeur_valeur;
+				}else
+				{
+					assignation_element=test->type_valeur;
+				}
+			}
 			if(affichage_grammaire) printf("Fin de reconnaissance variable (%s)\n",$1); 
 			$$=$1;
 		}
@@ -934,7 +948,7 @@ variable:
 			{
 				if(test2==NULL)
 				{
-					printf("\n\n\nERREUR la variable %s n'existe pas!",$1);
+					printf("\nERREUR l'identifiant %s n'existe pas!",$1);
 				}else
 				{
 					assignation_element=test2->type_valeur;
@@ -954,7 +968,7 @@ variable:
 				element * test = rechercherElement(table,$1,"");
 				if(test==NULL)
 				{
-					printf("\n\n\nERREUR la variable %s n'existe pas!",$1);
+					printf("\nERREUR la variable %s n'existe pas!",$1);
 				}else
 				{
 					assignation_element=test->type_valeur;
@@ -1227,6 +1241,17 @@ appel_procedure:
 	{
 		if(affichage_traduction)
 			{
+				element * test = rechercherElement(table_fonction,$1,"");
+				if(test==NULL)
+				{
+					printf("\nERREUR la procédure %s n'existe pas!",$1);
+				}else
+				{
+					if(!strcmp(test->type_valeur_valeur,"VOID")==0)
+					{
+						assignation_element="NOMBRE";
+					}
+				}
 				$1=concatener_chaine($1,"(","");
 				$1=concatener_chaine($1,")"," ");
 			}
@@ -1240,6 +1265,20 @@ appel_fonction:
 		{ 
 			if(affichage_traduction)
 			{
+				element * test = rechercherElement(table_fonction,$1,"");
+				if(test==NULL)
+				{
+					printf("\nERREUR la function %s n'existe pas!",$1);
+				}else
+				{
+					if(strcmp(test->type_valeur_valeur,"int")==0 || strcmp(test->type_valeur_valeur,"float")==0)
+					{
+						assignation_element="NOMBRE";
+					}else
+					{
+						assignation_element="CHAINE_DE_CARACTERE";
+					}
+				}
 				$3=concatener_chaine($3,$4," ");
 				$2=concatener_chaine($2,$3," ");
 				$1=concatener_chaine($1,$2,"");
@@ -1258,6 +1297,7 @@ appel_fonction:
 		{ 
 			if(affichage_traduction)
 			{
+				assignation_element="VOID";
 				$3=concatener_chaine($3,$4," ");
 				$2=concatener_chaine($2,$3," ");
 				$1=concatener_chaine("printf",$2,"");
@@ -1276,6 +1316,7 @@ appel_fonction:
 		{ 
 			if(affichage_traduction)
 			{
+				assignation_element="VOID";
 				$3=concatener_chaine($3,$4," ");
 				$2=concatener_chaine($2,$3," ");
 				$1=concatener_chaine("printf",$2,"");
@@ -1294,6 +1335,7 @@ appel_fonction:
 		{ 
 			if(affichage_traduction)
 			{
+				assignation_element="VOID";
 				$3=concatener_chaine($3,$4," ");
 				$2=concatener_chaine($2,$3," ");
 				$1=concatener_chaine("scanf",$2,"");
@@ -1310,6 +1352,7 @@ appel_fonction:
 	|
 	CLRSCR
 		{
+			assignation_element="VOID";
 			if(affichage_traduction)
 			{
 				$1="system('clear')";
@@ -1322,6 +1365,7 @@ appel_fonction:
 		{ 
 			if(affichage_traduction)
 			{
+				assignation_element="VOID";
 				$5=concatener_chaine($5,$6," ");
 				$4=concatener_chaine($4,$5," ");
 				$3=concatener_chaine($3,$4," ");
@@ -1363,6 +1407,7 @@ appel_fonction:
 		{ 
 			if(affichage_traduction)
 			{
+				assignation_element="NOMBRE";
 				$3=concatener_chaine($3,",2"," ");
 				$3=concatener_chaine($3,$4," ");
 				$2=concatener_chaine($2,$3," ");
@@ -1393,18 +1438,21 @@ appel_fonction:
 fonction_un_param_expression :
 	TEXTCOLOR
 		{
+			assignation_element="VOID";
 			if(affichage_grammaire) printf("Fin de reconnaissance fonction_un_param_expression (%s)\n",$1); 
 			$$=$1;
 		}
 	|
 	TEXTBACKGROUND
 		{
+			assignation_element="VOID";
 			if(affichage_grammaire) printf("Fin de reconnaissance fonction_un_param_expression (%s)\n",$1); 
 			$$=$1;
 		}
 	|
 	RANDOM
 		{
+			assignation_element="NOMBRE";
 			if(affichage_traduction)
 			{
 				$1="rand";
@@ -1415,18 +1463,21 @@ fonction_un_param_expression :
 	|
 	TABS
 		{
+			assignation_element="NOMBRE";
 			if(affichage_grammaire) printf("Fin de reconnaissance fonction_un_param_expression (%s)\n",$1); 
 			$$=$1;
 		}
 	|
 	TSQRT
 		{
+			assignation_element="NOMBRE";
 			if(affichage_grammaire) printf("Fin de reconnaissance fonction_un_param_expression (%s)\n",$1); 
 			$$=$1;
 		}
 	|
 	TINT
 		{
+			assignation_element="NOMBRE";
 			if(affichage_traduction)
 			{
 				$1="(int)floor";
@@ -1489,12 +1540,14 @@ variable_fonction:
 	|
 	boolean 
 		{
+			assignation_element="BOOLEAN";
 			if(affichage_grammaire) printf("Fin de reconnaissance variable_fonction (%s)\n",$1); 
 			$$=$1;
 		}
 	|
 	CHAINE_DE_CARACTERE
 		{
+			assignation_element="BOOLEAN";
 			if(affichage_grammaire) printf("Fin de reconnaissance variable_fonction (%s)\n",$1); 
 			$$=$1;
 		}
@@ -1508,12 +1561,12 @@ assignation:
 				element * test = rechercherElement(table,$1,"");
 				if(test==NULL)
 				{
-					printf("\n\n\nERREUR la variable %s n'est pas déclaré",$1);
+					printf("\nERREUR la variable %s n'est pas déclaré",$1);
 				}else
 				{
 					if(!(strcmp(assignation_element,test->type_valeur)==0 || strcmp(assignation_element,test->type_valeur)==0))
 					{
-						printf("\n\n\nERREUR assignation, la variable %s est de type %s",$1,test->type_valeur);
+						printf("\nERREUR assignation, la variable %s est de type %s",$1,test->type_valeur);
 					}
 				}
 				$2=concatener_chaine("=",$3," ");
@@ -1532,7 +1585,6 @@ assignation:
 assignation_element:
 	expression
 		{
-			assignation_element="NOMBRE";
 			if(affichage_grammaire) printf("Fin de reconnaissance assignation_element (%s)\n",$1); 
 			$$=$1;
 		}
