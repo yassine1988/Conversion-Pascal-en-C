@@ -6,15 +6,15 @@ enum TypeVariable
 {
     INT, REEL, CHAR
 };
+
 typedef struct element element;
-struct element
-{
-    char * valeur;
-	TypeVariable type_variable;
-    struct element *nxt;
-};
 typedef element* llist;
+llist table;
+
 llist ajouterEnTeteSimple(char * valeur);
+llist ajouterEnFinSimple(char * valeur);
+void afficherListeSimple();
+void afficherListe(llist list);
 llist ajouterEnFin(llist liste, char* symbole);
 llist ajouterEnTete(llist liste, char* symbole);
 void afficherListe(llist liste);

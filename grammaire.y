@@ -1632,8 +1632,9 @@ int main(int argc, char * argv[])
 		yyin = f;
 	}
 	yyparse();
-				ajouterEnTeteSimple("toto");
-
+	printf("-------------------\n");
+	ajouterEnFinSimple("toto");
+	afficherListeSimple();
 	printf("\nFin du programme\n");
 	if(f != NULL)
 	{

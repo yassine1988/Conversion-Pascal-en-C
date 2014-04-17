@@ -1,17 +1,45 @@
 #include <stdlib.h>
 #include <string.h>
 #include <stdlib.h>
+#include <stdio.h>
 #include "table.h"
 
 typedef struct element element;
 
-typedef element* llist;
+typedef element * llist;
+
+struct element
+{
+    char * valeur;
+	TypeVariable type_variable;
+    struct element *nxt;
+};
 
 llist table;
 
 llist ajouterEnTeteSimple(char * valeur)
 {
-	ajouterEnTete(table, valeur);
+	table=ajouterEnTete(table, valeur);
+}
+
+llist ajouterEnFinSimple(char * valeur)
+{
+	table=ajouterEnFin(table, valeur);
+}
+
+void afficherListeSimple()
+{
+	afficherListe(table);
+}
+
+void afficherListe(llist list)
+{
+    element * tmp = list;
+    while(tmp != NULL)
+    {
+        printf("Symbole %s\n",tmp->valeur);
+        tmp = tmp->nxt;
+    }
 }
 
 llist ajouterEnTete(llist liste, char * valeur)
