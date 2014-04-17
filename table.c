@@ -8,13 +8,6 @@ typedef struct element element;
 
 typedef element * llist;
 
-struct element
-{
-    char * valeur;
-	char * type_valeur;
-	char * type_valeur_valeur;
-    struct element *nxt;
-};
 
 llist table;
 llist table_fonction;

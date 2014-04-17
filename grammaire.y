@@ -18,7 +18,7 @@
 		return ntest;
 	}
 	
-	
+	char * assignation_element="";
    // }
    // afficherListe(ma_liste);
 %}
@@ -363,10 +363,16 @@ declaration_variable_spe_fonction:
 					element * test = rechercherElement(table,variable,"");
 					if(test==NULL)
 					{
-						ajouterEnFinSimple(variable,$3,"");
+						if(strcmp($3,"int")==0 || strcmp($3,"float")==0)
+						{
+							ajouterEnFinSimple(variable,"NOMBRE","");
+						}else
+						{
+							ajouterEnFinSimple(variable,"CHAINE_DE_CARACTERE","");
+						}
 					}else
 					{
-						printf("\n\n\nERREUR la variable %s a déja été déclaré",variable);
+						printf("\n\n\nERREUR la variable %s a déja été déclaré, type %s",variable,test->type_valeur);
 					}
 					if(strcmp("",$1))
 					{
@@ -398,10 +404,16 @@ declaration_variable_spe_fonction:
 					element * test = rechercherElement(table,variable,"");
 					if(test==NULL)
 					{
-						ajouterEnFinSimple(variable,$3,$6);
+						if(strcmp($6,"int")==0 || strcmp($6,"float")==0)
+						{
+							ajouterEnFinSimple(variable,"ARRAY","NOMBRE");
+						}else
+						{
+							ajouterEnFinSimple(variable,"ARRAY","CHAINE_DE_CARACTERE");
+						}
 					}else
 					{
-						printf("\n\n\nERREUR la variable %s a déja été déclaré",variable);
+						printf("\n\n\nERREUR la variable %s a déja été déclaré, type %s",variable,test->type_valeur);
 					}
 					
 					if(strcmp("",$1)==0)
@@ -438,10 +450,16 @@ declaration_variable:
 					element * test = rechercherElement(table,variable,"");
 					if(test==NULL)
 					{
-						ajouterEnFinSimple(variable,$3,"");
+						if(strcmp($3,"int")==0 || strcmp($3,"float")==0)
+						{
+							ajouterEnFinSimple(variable,"NOMBRE","");
+						}else
+						{
+							ajouterEnFinSimple(variable,"CHAINE_DE_CARACTERE","");
+						}
 					}else
 					{
-						printf("\n\n\nERREUR la variable %s a déja été déclaré",variable);
+						printf("\n\n\nERREUR la variable %s a déja été déclaré, type %s",variable,test->type_valeur);
 					}
 					
 					$1=concatener_chaine($1,$3," ");
@@ -470,10 +488,16 @@ declaration_variable:
 					element * test = rechercherElement(table,variable,"");
 					if(test==NULL)
 					{
-						ajouterEnFinSimple(variable,$3,$6);
+						if(strcmp($3,"int")==0 || strcmp($3,"float")==0)
+						{
+							ajouterEnFinSimple(variable,"ARRAY","NOMBRE");
+						}else
+						{
+							ajouterEnFinSimple(variable,"ARRAY","CHAINE_DE_CARACTERE");
+						}
 					}else
 					{
-						printf("\n\n\nERREUR la variable %s a déja été déclaré",variable);
+						printf("\n\n\nERREUR la variable %s a déja été déclaré, type ",variable,test->type_valeur);
 					}
 					$1=concatener_chaine($1,$6," ");
 					$1=concatener_chaine($1,variable," ");
@@ -743,6 +767,7 @@ expression:
 		{ 
 			if(affichage_traduction)
 			{
+				assignation_element="NOMBRE";
 				$2=concatener_chaine($2,$3," ");
 				$1=concatener_chaine($1,$2," ");
 			}
@@ -759,6 +784,7 @@ expression:
 		{ 
 			if(affichage_traduction)
 			{
+				assignation_element="NOMBRE";
 				$2=concatener_chaine($2,$3," ");
 				$1=concatener_chaine($1,$2," ");
 			}
@@ -775,6 +801,7 @@ expression:
 		{ 
 			if(affichage_traduction)
 			{
+				assignation_element="NOMBRE";
 				$2=concatener_chaine($2,$3," ");
 				$1=concatener_chaine($1,$2," ");
 			}
@@ -791,6 +818,7 @@ expression:
 		{ 
 			if(affichage_traduction)
 			{
+				assignation_element="NOMBRE";
 				$2=concatener_chaine($2,$3," ");
 				$1=concatener_chaine($1,$2," ");
 			}
@@ -807,11 +835,13 @@ expression:
 		{ 
 			if(affichage_traduction)
 			{
+				assignation_element="NOMBRE";
 				$1=concatener_chaine($1,"/"," ");
 				$1=concatener_chaine($1,$3," ");
 			}
 			else
 			{
+				assignation_element="NOMBRE";
 				$2=concatener_chaine($2,$3," ");
 				$1=concatener_chaine($1,$2," ");
 			}
@@ -823,6 +853,7 @@ expression:
 		{ 
 			if(affichage_traduction)
 			{
+				assignation_element="NOMBRE";
 				$1=concatener_chaine($1,"%"," ");
 				$1=concatener_chaine($1,$3," ");
 			}
@@ -839,6 +870,7 @@ expression:
 		{ 
 			if(affichage_traduction)
 			{
+				assignation_element="NOMBRE";
 				$2=concatener_chaine($2,$3," ");
 				$1=concatener_chaine($1,$2," ");
 			}
@@ -859,12 +891,14 @@ expression:
 	|
 	NOMBRE 
 		{ 
+			assignation_element="NOMBRE";
 			if(affichage_grammaire) printf("Fin de reconnaissance nombre (%s)\n",$1); 
 			$$=$1;
 		}
 	|
 	NOMBREREEL 
 		{ 
+			assignation_element="NOMBRE";
 			if(affichage_grammaire) printf("Fin de reconnaissance nombrereel (%s)\n",$1); 
 			$$=$1;
 		}
@@ -873,6 +907,7 @@ expression:
 		{ 
 			if(affichage_traduction)
 			{
+				assignation_element="NOMBRE";
 				$1=concatener_chaine($1,$2," ");
 			}
 			else
@@ -885,7 +920,7 @@ expression:
 	|
 	appel_fonction  
 		{ 
-			if(affichage_grammaire) printf("Fin de reconnaissance nombrereel (%s)\n",$1); 
+			if(affichage_grammaire) printf("Fin de reconnaissance expression (%s)\n",$1); 
 			$$=$1; 
 		}
 	;
@@ -893,6 +928,21 @@ expression:
 variable:
 	IDENTIFIANT 
 		{ 
+			element * test = rechercherElement(table,$1,"");
+			element * test2 = rechercherElement(table_fonction,$1,"");
+			if(test==NULL)
+			{
+				if(test2==NULL)
+				{
+					printf("\n\n\nERREUR la variable %s n'existe pas!",$1);
+				}else
+				{
+					assignation_element=test2->type_valeur;
+				}
+			}else
+			{
+				assignation_element=test->type_valeur;
+			}
 			if(affichage_grammaire) printf("Fin de reconnaissance IDENTIFIANT (%s)\n",$1); 
 			$$=$1;
 		}
@@ -901,6 +951,14 @@ variable:
 		{ 
 			if(affichage_traduction)
 			{
+				element * test = rechercherElement(table,$1,"");
+				if(test==NULL)
+				{
+					printf("\n\n\nERREUR la variable %s n'existe pas!",$1);
+				}else
+				{
+					assignation_element=test->type_valeur;
+				}
 				$3=concatener_chaine($3,$4," ");
 				$2=concatener_chaine($2,$3," ");
 				$1=concatener_chaine($1,$2,"");
@@ -1447,6 +1505,17 @@ assignation:
 		{ 
 			if(affichage_traduction)
 			{
+				element * test = rechercherElement(table,$1,"");
+				if(test==NULL)
+				{
+					printf("\n\n\nERREUR la variable %s n'est pas déclaré",$1);
+				}else
+				{
+					if(!(strcmp(assignation_element,test->type_valeur)==0 || strcmp(assignation_element,test->type_valeur)==0))
+					{
+						printf("\n\n\nERREUR assignation, la variable %s est de type %s",$1,test->type_valeur);
+					}
+				}
 				$2=concatener_chaine("=",$3," ");
 				$1=concatener_chaine($1,$2," ");
 			}
@@ -1463,18 +1532,21 @@ assignation:
 assignation_element:
 	expression
 		{
+			assignation_element="NOMBRE";
 			if(affichage_grammaire) printf("Fin de reconnaissance assignation_element (%s)\n",$1); 
 			$$=$1;
 		}
 	|
 	CHAINE_DE_CARACTERE
 		{
+			assignation_element="CHAINE_DE_CARACTERE";
 			if(affichage_grammaire) printf("Fin de reconnaissance assignation_element (%s)\n",$1); 
 			$$=$1;
 		}
 	|
 	boolean
 		{
+			assignation_element="BOOLEAN";
 			if(affichage_grammaire) printf("Fin de reconnaissance assignation_element (%s)\n",$1); 
 			$$=$1;
 		}
