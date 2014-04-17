@@ -350,7 +350,6 @@ declaration_variable_spe_fonction:
 				$1="";
 				while ((variable = strsep(&chaine, ","))!=NULL)
 				{
-					printf("\n%s\n",variable);
 					if(strcmp("",$1))
 					{
 						$1=concatener_chaine($1,",","");
@@ -378,7 +377,6 @@ declaration_variable_spe_fonction:
 				$1="";
 				while ((variable = strsep(&chaine, ","))!=NULL)
 				{
-					printf("\n%s\n",variable);
 					if(strcmp("",$1))
 					{
 						$1=concatener_chaine($1,",","");
@@ -410,7 +408,6 @@ declaration_variable:
 				$1="";
 				while ((variable = strsep(&chaine, ","))!=NULL)
 				{
-					printf("\n%s\n",variable);
 					$1=concatener_chaine($1,$3," ");
 					$1=concatener_chaine($1,variable," ");
 					$1=concatener_chaine($1,";\n","");
