@@ -162,6 +162,7 @@ programme:
 		{ 
 			if(affichage_traduction)
 			{
+				$1=concatener_chaine("#include<stdio.h>\n\n",$1,"");
 				$1=concatener_chaine($1,$2,$3);
 			}
 			else
@@ -408,6 +409,7 @@ declaration_variable:
 				$1="";
 				while ((variable = strsep(&chaine, ","))!=NULL)
 				{
+					ajouterEnFinSimple(variable,$3);
 					$1=concatener_chaine($1,$3," ");
 					$1=concatener_chaine($1,variable," ");
 					$1=concatener_chaine($1,";\n","");
@@ -431,6 +433,7 @@ declaration_variable:
 				$1="";
 				while ((variable = strsep(&chaine, ","))!=NULL)
 				{
+					ajouterEnFinSimple(variable,strcat($3,$6));
 					$1=concatener_chaine($1,$6," ");
 					$1=concatener_chaine($1,variable," ");
 					$1=concatener_chaine($1,$4,"");
@@ -1374,7 +1377,7 @@ variables_fonction:
 	|
 		{ 
 			if(affichage_grammaire) printf("Fin de reconnaissance variables_fonction (VIDE)\n"); 
-			$$=" ";
+			$$="";
 		}
 	;
 	
@@ -1629,7 +1632,7 @@ int main(int argc, char * argv[])
 	}
 	yyparse();
 	printf("-------------------\n");
-	ajouterEnFinSimple("toto");
+	ajouterEnFinSimple("toto","test");
 	afficherListeSimple();
 	printf("\nFin du programme\n");
 	if(f != NULL)

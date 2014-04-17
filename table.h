@@ -12,10 +12,10 @@ typedef element* llist;
 llist table;
 
 llist ajouterEnTeteSimple(char * valeur);
-llist ajouterEnFinSimple(char * valeur);
+llist ajouterEnFinSimple(char * valeur,char * type_valeur);
 void afficherListeSimple();
 void afficherListe(llist list);
-llist ajouterEnFin(llist liste, char* symbole);
+llist ajouterEnFin(llist liste, char* symbole,char * type_valeur);
 llist ajouterEnTete(llist liste, char* symbole);
 void afficherListe(llist liste);
 int estVide(llist liste);

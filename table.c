@@ -11,7 +11,7 @@ typedef element * llist;
 struct element
 {
     char * valeur;
-	TypeVariable type_variable;
+	char * type_valeur;
     struct element *nxt;
 };
 
@@ -22,9 +22,9 @@ llist ajouterEnTeteSimple(char * valeur)
 	table=ajouterEnTete(table, valeur);
 }
 
-llist ajouterEnFinSimple(char * valeur)
+llist ajouterEnFinSimple(char * valeur, char * type_valeur)
 {
-	table=ajouterEnFin(table, valeur);
+	table=ajouterEnFin(table, valeur,type_valeur);
 }
 
 void afficherListeSimple()
@@ -37,7 +37,7 @@ void afficherListe(llist list)
     element * tmp = list;
     while(tmp != NULL)
     {
-        printf("Symbole %s\n",tmp->valeur);
+        printf("Symbole %s, valeur %s\n",tmp->valeur,tmp->type_valeur);
         tmp = tmp->nxt;
     }
 }
@@ -57,13 +57,15 @@ llist ajouterEnTete(llist liste, char * valeur)
     return nouvelElement;
 }
 
-llist ajouterEnFin(llist liste, char * valeur)
+llist ajouterEnFin(llist liste, char * valeur, char * type_valeur)
 {
     /* On crée un nouvel élément */
     element* nouvelElement = malloc(sizeof(element));
  
     /* On assigne la valeur au nouvel élément */
     nouvelElement->valeur = valeur;
+	
+	nouvelElement->type_valeur = type_valeur;
  
     /* On ajoute en fin, donc aucun élément ne va suivre */
     nouvelElement->nxt = NULL;

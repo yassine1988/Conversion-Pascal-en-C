@@ -67,7 +67,7 @@ begin
 	if temp < 15 then
 		write('cold')
 	else if (temp > 15) and (temp < 20) then
-		write('warm')
+		writeln('warm')
 	else write('hot');
 		
 end;
@@ -78,4 +78,5 @@ BEGIN
 	toto;
     READLN(x);
     WRITELN(f(x));
+    WRITELN('HELLO WORLDssssssssssssssssssssssssssssssssssssssssssssss');
 END.
