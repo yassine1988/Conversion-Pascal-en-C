@@ -156,6 +156,9 @@
 %type <type_string> tableau_crochets;
 %type <type_string> suite_crochet;
 %type <type_string> declaration_variable_spe_fonction;
+%type <type_string> declaration_fonction1;
+%type <type_string> declaration_fonction2;
+
 %%
 programme:
 	prog_entete declarations_globales prog_principal 
@@ -182,7 +185,6 @@ prog_entete:
 			if(affichage_traduction)
 			{
 				$1="int main() ";
-				
 			}
 			else
 			{
@@ -248,20 +250,34 @@ declarations_globale:
 		}
 	;
 	
-declaration_fonction:
-	FUNCTION identifiant_fonction PARENTHESEOUVRANTE declaration_variables_fonction PARENTHESEFERMANTE DEUX_POINTS TYPE POINTVIRGULE block 
+declaration_fonction2:
+	FUNCTION identifiant_fonction PARENTHESEOUVRANTE declaration_variables_fonction PARENTHESEFERMANTE DEUX_POINTS TYPE POINTVIRGULE 
 		{ 
+			printf("ici");
 			if(affichage_traduction)
 			{
-				ajouterEnFinSimple($2,"FUNCTION",$7);
+				element * test = rechercherElement(table_fonction,$2,"");
+				if(test==NULL)
+				{
+					if(strcmp($7,"int")==0 || strcmp($7,"float")==0)
+					{
+						ajouterEnFinSimple($2,"FUNCTION","NOMBRE");
+						ajouterEnFinSimple($2,"NOMBRE","");
+					}else
+					{
+						ajouterEnFinSimple($2,"FUNCTION","CHAINE_DE_CARACTERE");
+						ajouterEnFinSimple($2,"CHAINE_DE_CARACTERE","");
+					}
+				}else
+				{
+					printf("\n\n\nERREUR la fonction %s a déja été déclaré, type ",$2,test->type_valeur_valeur);
+				}
 				$6=concatener_chaine("{\n ",$7,"");
 				$6=concatener_chaine($6,$2," ");
 				$6=concatener_chaine($6,";\n","");
 				$5=concatener_chaine($5,$6," ");
-				$5=concatener_chaine($5,$9," ");
-				$5=concatener_chaine($5,"return "," ");
-				$5=concatener_chaine($5,$2," ");
-				$5=concatener_chaine($5,";\n}","");
+				//$5=concatener_chaine($5,$9," ");
+				
 				$4=concatener_chaine($4,$5," ");
 				$3=concatener_chaine($3,$4," ");
 				$2=concatener_chaine($2,$3,"");
@@ -271,7 +287,7 @@ declaration_fonction:
 			}
 			else
 			{
-				$8=concatener_chaine($8,$9," ");
+				//$8=concatener_chaine($8,$9," ");
 				$7=concatener_chaine($7,$8," ");
 				$6=concatener_chaine($6,$7," ");
 				$5=concatener_chaine($5,$6," ");
@@ -285,14 +301,40 @@ declaration_fonction:
 			$$=$1;
 		}
 	;
+	
+declaration_fonction1:
+	block
+		{
+			$$=$1;
+		}
+	;
+declaration_fonction:
+	declaration_fonction2 declaration_fonction1
+	{
+		element * tmp = table_fonction;
+		element * tmp2;
+		while(tmp != NULL)
+		{
+			tmp2 = tmp;
+			tmp = tmp->nxt;
+		}
+		$2=concatener_chaine($2,"\nreturn ","");
+		$2=concatener_chaine($2,tmp2->valeur,"");
+		$2=concatener_chaine($2,";\n}","");
+		$1=concatener_chaine($1,$2," ");
+		$$=$1;
+	}
+	;
 
 declaration_procedure:
 	PROCEDURE identifiant_procedure PARENTHESEOUVRANTE declaration_variables_fonction PARENTHESEFERMANTE POINTVIRGULE block
 		{ 
 			if(affichage_traduction)
 			{
-				ajouterEnFinSimple($2,"FUNCTION","void");
-				$5=concatener_chaine($5,$7," ");
+				ajouterEnFinSimple($2,"FUNCTION","VOID");
+				$6=concatener_chaine("{\n",$7,"");
+				$6=concatener_chaine($6,"\n}","");
+				$5=concatener_chaine($5,$6," ");
 				$4=concatener_chaine($4,$5," ");
 				$3=concatener_chaine($3,$4," ");
 				$2=concatener_chaine($2,$3,"");
@@ -1235,7 +1277,7 @@ appel_procedure:
 				{
 					if(!strcmp(test->type_valeur_valeur,"VOID")==0)
 					{
-						printf("\nERREUR %s n'est pas une précédure!",$1);
+						printf("\nERREUR %s n'est pas une procédure!",$1);
 					}
 				}
 				$1=concatener_chaine($1,"(","");
