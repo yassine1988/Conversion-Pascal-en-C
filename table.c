@@ -23,7 +23,6 @@ llist ajouterEnFinSimple(char * valeur, char * type_valeur,char * type_valeur_va
 	if(strcmp(type_valeur,"FUNCTION")==0)
 	{
 		table_fonction=ajouterEnFin(table_fonction, valeur,type_valeur,type_valeur_valeur);
-		table=NULL;
 	}else if(strcmp(type_valeur,"CONSTANT")==0)
 	{
 		table_constante=ajouterEnFin(table_constante, valeur,type_valeur,type_valeur_valeur);

@@ -70,10 +70,12 @@ begin
 end;
 
 { main program }
-VAR x:INTEGER;
+VAR x:INTEGER;y:STRING;
 BEGIN
 	toto;
+	y:='test';
     READLN(x);
-    WRITELN(f(x));
+    WRITE(f(x),' toto');
+    WRITE(y,' toto');
     WRITELN('HELLO WORLDsssss');
 END.

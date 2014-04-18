@@ -165,8 +165,10 @@ programme:
 		{ 
 			if(affichage_traduction)
 			{
+				
+				$3=concatener_chaine("\n\nint main()",$3,"");
 				$1=concatener_chaine("#include<stdio.h>\n\n",$1,"");
-				$1=concatener_chaine($1,$2,$3);
+				$1=concatener_chaine($1,$3,$2);
 			}
 			else
 			{
@@ -184,7 +186,7 @@ prog_entete:
 		{ 
 			if(affichage_traduction)
 			{
-				$1="int main() ";
+				$1="";
 			}
 			else
 			{
@@ -253,7 +255,6 @@ declarations_globale:
 declaration_fonction2:
 	FUNCTION identifiant_fonction PARENTHESEOUVRANTE declaration_variables_fonction PARENTHESEFERMANTE DEUX_POINTS TYPE POINTVIRGULE 
 		{ 
-			printf("ici");
 			if(affichage_traduction)
 			{
 				element * test = rechercherElement(table_fonction,$2,"");
@@ -322,6 +323,7 @@ declaration_fonction:
 		$2=concatener_chaine($2,tmp2->valeur,"");
 		$2=concatener_chaine($2,";\n}","");
 		$1=concatener_chaine($1,$2," ");
+		table=NULL;
 		$$=$1;
 	}
 	;
@@ -349,7 +351,7 @@ declaration_procedure:
 				$2=concatener_chaine($2,$3," ");
 				$1=concatener_chaine($1,$2," ");
 			}
-			
+			table=NULL;
 			if(affichage_grammaire) printf("Fin de reconnaissance declaration_procedure (%s)\n",$1); 
 			$$=$1;
 		}
@@ -1181,7 +1183,7 @@ boolean:
 		{
 			if(affichage_traduction)
 			{
-				$1=concatener_chaine($1,$2," ");
+				$1=concatener_chaine("!",$2," ");
 			}
 			else
 			{
@@ -1325,7 +1327,59 @@ appel_fonction:
 		{ 
 			if(affichage_traduction)
 			{
+				char* futur1="";
+				char* futur2="";
+				char* chaine = strdup($3);
+				char* variable;
+				while ((variable = strsep(&chaine, ","))!=NULL)
+				{
+					if(variable[0]=='"')
+					{
+						variable[0]=' ';
+						variable[strlen(variable)-1]=' ';
+						futur1=concatener_chaine(futur1,variable,"");
+					}else
+					{
+						char* chaine2 = strdup(variable);
+						char* variable2;
+						variable2 = strsep(&chaine2, "(");
+						element * test = rechercherElement(table,variable2,"");
+						if(test==NULL)
+						{
+							element * test2 = rechercherElement(table_fonction,variable2,"");
+							if(test2==NULL)
+							{
+								printf("\nERREUR la variable %s n'existe pas!",variable2);
+							}else
+							{
+								if(strcmp(test2->type_valeur,"NOMBRE")==0 || strcmp(test2->type_valeur_valeur,"NOMBRE")==0)
+								{
+									futur1=concatener_chaine(futur1,"%d","");
+									futur2=concatener_chaine(futur2,variable,",");
+								}else
+								{
+									futur1=concatener_chaine(futur1,"%s","");
+									futur2=concatener_chaine(futur2,variable,",");
+								}
+							}
+						}else
+						{
+							if(strcmp(test->type_valeur,"NOMBRE")==0 || strcmp(test->type_valeur_valeur,"NOMBRE")==0)
+							{
+								futur1=concatener_chaine(futur1,"%d","");
+								futur2=concatener_chaine(futur2,variable,",");
+							}else
+							{
+								futur1=concatener_chaine(futur1,"%s","");
+								futur2=concatener_chaine(futur2,variable,",");
+							}
+						}	
+					}
+				}
 				assignation_element="VOID";
+				futur1=concatener_chaine("\"",futur1,"");
+				futur1=concatener_chaine(futur1,"\"","");
+				$3=concatener_chaine(futur1,futur2,"");
 				$3=concatener_chaine($3,$4," ");
 				$2=concatener_chaine($2,$3," ");
 				$1=concatener_chaine("printf",$2,"");
@@ -1344,7 +1398,59 @@ appel_fonction:
 		{ 
 			if(affichage_traduction)
 			{
+				char* futur1="";
+				char* futur2="";
+				char* chaine = strdup($3);
+				char* variable;
+				while ((variable = strsep(&chaine, ","))!=NULL)
+				{
+					if(variable[0]=='"')
+					{
+						variable[0]=' ';
+						variable[strlen(variable)-1]=' ';
+						futur1=concatener_chaine(futur1,variable,"");
+					}else
+					{
+						char* chaine2 = strdup(variable);
+						char* variable2;
+						variable2 = strsep(&chaine2, "(");
+						element * test = rechercherElement(table,variable2,"");
+						if(test==NULL)
+						{
+							element * test2 = rechercherElement(table_fonction,variable2,"");
+							if(test2==NULL)
+							{
+								printf("\nERREUR la variable %s n'existe pas!",variable2);
+							}else
+							{
+								if(strcmp(test2->type_valeur,"NOMBRE")==0 || strcmp(test2->type_valeur_valeur,"NOMBRE")==0)
+								{
+									futur1=concatener_chaine(futur1,"%d","");
+									futur2=concatener_chaine(futur2,variable,",");
+								}else
+								{
+									futur1=concatener_chaine(futur1,"%s","");
+									futur2=concatener_chaine(futur2,variable,",");
+								}
+							}
+						}else
+						{
+							if(strcmp(test->type_valeur,"NOMBRE")==0 || strcmp(test->type_valeur_valeur,"NOMBRE")==0)
+							{
+								futur1=concatener_chaine(futur1,"%d","");
+								futur2=concatener_chaine(futur2,variable,",");
+							}else
+							{
+								futur1=concatener_chaine(futur1,"%s","");
+								futur2=concatener_chaine(futur2,variable,",");
+							}
+						}	
+					}
+				}
 				assignation_element="VOID";
+				futur1=concatener_chaine("\"",futur1,"");
+				futur1=concatener_chaine(futur1,"\\n\"","");
+				$3=concatener_chaine(futur1,futur2,"");
 				$3=concatener_chaine($3,$4," ");
 				$2=concatener_chaine($2,$3," ");
 				$1=concatener_chaine("printf",$2,"");
@@ -1431,6 +1537,25 @@ appel_fonction:
 			$$=$1;
 		}
 	|
+	RANDOM PARENTHESEOUVRANTE expression PARENTHESEFERMANTE
+		{
+			assignation_element="NOMBRE";
+			if(affichage_traduction)
+			{
+				$1="rand()%(";
+				$1=concatener_chaine($1,$3,"");
+				$1=concatener_chaine($1,")","");
+			}
+			else
+			{
+				$3=concatener_chaine($3,$4," ");
+				$2=concatener_chaine($2,$3," ");
+				$1=concatener_chaine($1,$2," ");
+			}
+			if(affichage_grammaire) printf("Fin de reconnaissance fonction_un_param_expression (%s)\n",$1); 
+			$$=$1;
+		}
+	|
 	TSQR PARENTHESEOUVRANTE expression PARENTHESEFERMANTE
 		{ 
 			if(affichage_traduction)
@@ -1474,17 +1599,6 @@ fonction_un_param_expression :
 	TEXTBACKGROUND
 		{
 			assignation_element="VOID";
-			if(affichage_grammaire) printf("Fin de reconnaissance fonction_un_param_expression (%s)\n",$1); 
-			$$=$1;
-		}
-	|
-	RANDOM
-		{
-			assignation_element="NOMBRE";
-			if(affichage_traduction)
-			{
-				$1="rand";
-			}
 			if(affichage_grammaire) printf("Fin de reconnaissance fonction_un_param_expression (%s)\n",$1); 
 			$$=$1;
 		}
@@ -1535,8 +1649,8 @@ variables_fonction:
 		{ 
 			if(affichage_traduction)
 			{
-				$2=concatener_chaine($2,$3," ");
-				$1=concatener_chaine($1,$2," ");
+				$2=concatener_chaine($2,$3,"");
+				$1=concatener_chaine($1,$2,"");
 			}
 			else
 			{
@@ -1598,7 +1712,6 @@ assignation:
 					if(!(strcmp(assignation_element,test->type_valeur)==0 || strcmp(assignation_element,test->type_valeur_valeur)==0))
 					{
 						printf("\nERREUR assignation, la variable %s est de type %s %s",variable,test->type_valeur,test->type_valeur_valeur);
-						afficherListeSimple();
 					}
 				}
 				assignation_element="";
@@ -1670,9 +1783,9 @@ boucle_for:
 				char* variable = strsep(&chaine, "=");
 				$2=concatener_chaine("(",$2,"");
 				$2=concatener_chaine($2,";"," ");
-				$2=concatener_chaine($2,$4," ");
-				$2=concatener_chaine($2,"<="," ");
 				$2=concatener_chaine($2,variable," ");
+				$2=concatener_chaine($2,"<="," ");
+				$2=concatener_chaine($2,$4," ");
 				$2=concatener_chaine($2,";"," ");
 				$2=concatener_chaine($2,variable," ");
 				$2=concatener_chaine($2,"++","");
@@ -1701,9 +1814,9 @@ boucle_for:
 				char * variable = strsep(&chaine, "=");
 				$2=concatener_chaine("(",$2,"");
 				$2=concatener_chaine($2,";"," ");
-				$2=concatener_chaine($2,$4," ");
-				$2=concatener_chaine($2,">="," ");
 				$2=concatener_chaine($2,variable," ");
+				$2=concatener_chaine($2,">="," ");
+				$2=concatener_chaine($2,$4," ");
 				$2=concatener_chaine($2,";"," ");
 				$2=concatener_chaine($2,variable," ");
 				$2=concatener_chaine($2,"--","");
