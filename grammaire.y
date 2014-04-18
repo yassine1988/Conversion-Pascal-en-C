@@ -1073,7 +1073,7 @@ variable:
 					erreur=1;
 				}else
 				{
-					assignation_element=test->type_valeur;
+					assignation_element=test->type_valeur_valeur;
 				}
 				$3=concatener_chaine($3,$4," ");
 				$2=concatener_chaine($2,$3," ");

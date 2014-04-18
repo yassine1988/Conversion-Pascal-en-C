@@ -12,6 +12,7 @@ BEGIN
     f := 0;
     bool := false;
     names[1] := 3;
+    f:=names[1];
     write('toto');
     f('tot',5);
     for w:= 1 to 10 do
