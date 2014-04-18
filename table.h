@@ -20,7 +20,7 @@ struct element
 llist table;
 llist table_fonction;
 llist table_constante;
-
+int ligne_no;
 llist ajouterEnTeteSimple(char * valeur);
 llist ajouterEnFinSimple(char * valeur,char * type_valeur,char * type_valeur_valeur);
 void afficherListeSimple();

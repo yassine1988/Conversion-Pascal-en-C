@@ -8,6 +8,7 @@ typedef struct element element;
 
 typedef element * llist;
 
+int ligne_no = 0;
 
 llist table;
 llist table_fonction;

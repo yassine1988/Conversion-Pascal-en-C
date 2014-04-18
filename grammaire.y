@@ -1955,5 +1955,5 @@ int main(int argc, char * argv[])
 
 void yyerror(char const *s)
 {
-	fprintf(stderr,"Erreur %s à la ligne ...\n",s);
+	fprintf(stderr,"Erreur %s à la ligne %d\n",s,ligne_no);
 }

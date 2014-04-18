@@ -15,7 +15,7 @@ BEGIN
     f('tot',5);
     for w:= 1 to 10 do
     begin
-		writeln('toto');
+		writeln('toto')
 		readln(marks[i]);
     end;
     
