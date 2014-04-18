@@ -309,7 +309,7 @@ declaration_fonction_entete:
 				$1=concatener_chaine($1,$2," ");
 			}
 			
-			if(affichage_grammaire) printf("Fin de reconnaissance declaration_fonction (%s)\n",$1); 
+			if(affichage_grammaire) printf("Fin de reconnaissance declaration_fonction_entete (%s)\n",$1); 
 			$$=$1;
 		}
 	;
@@ -317,26 +317,28 @@ declaration_fonction_entete:
 declaration_fonction_block:
 	block
 		{
+			if(affichage_grammaire) printf("Fin de reconnaissance declaration_fonction_block (%s)\n",$1); 
 			$$=$1;
 		}
 	;
 declaration_fonction:
 	declaration_fonction_entete declaration_fonction_block
-	{
-		element * tmp = table_fonction;
-		element * tmp2;
-		while(tmp != NULL)
 		{
-			tmp2 = tmp;
-			tmp = tmp->nxt;
+			element * tmp = table_fonction;
+			element * tmp2;
+			while(tmp != NULL)
+			{
+				tmp2 = tmp;
+				tmp = tmp->nxt;
+			}
+			$2=concatener_chaine($2,"\nreturn ","");
+			$2=concatener_chaine($2,tmp2->valeur,"");
+			$2=concatener_chaine($2,";\n}","");
+			$1=concatener_chaine($1,$2," ");
+			table=NULL;
+			if(affichage_grammaire) printf("Fin de reconnaissance declaration_fonction (%s)\n",$1); 
+			$$=$1;
 		}
-		$2=concatener_chaine($2,"\nreturn ","");
-		$2=concatener_chaine($2,tmp2->valeur,"");
-		$2=concatener_chaine($2,";\n}","");
-		$1=concatener_chaine($1,$2," ");
-		table=NULL;
-		$$=$1;
-	}
 	;
 
 declaration_procedure:
@@ -595,9 +597,8 @@ tableau_crochets:
 		{
 			if(affichage_traduction)
 			{
-				$1=concatener_chaine($1,$4,"(");
-				$1=concatener_chaine($1,$2,")-(");
-				$1=concatener_chaine($1,$5,")+1");
+				$1=concatener_chaine($1,$4,"");
+				$1=concatener_chaine($1,$5,"");
 				$1=concatener_chaine($1,$6,"");
 			}
 			else
