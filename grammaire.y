@@ -25,7 +25,6 @@
 %}
 %union 
 {
-	int type_integer;
 	char * type_string;
 };
 
@@ -282,7 +281,7 @@ declaration_fonction_entete:
 					}
 				}else
 				{
-					printf("\n\n\nERREUR(ligne:%d) la fonction %s a déja été déclaré! type ",ligne_no,$2,test->type_valeur_valeur);
+					printf("\n\n\nERREUR(ligne:%d) la fonction %s a déja été déclaré! type %s",ligne_no,$2,test->type_valeur_valeur);
 				}
 				$6=concatener_chaine("{\n ",$7,"");
 				$6=concatener_chaine($6,$2," ");
@@ -570,7 +569,7 @@ declaration_variable:
 						}
 					}else
 					{
-						printf("\n\n\nERREUR(ligne:%d) la variable %s a déja été déclaré! type ",ligne_no,variable,test->type_valeur);
+						printf("\n\n\nERREUR(ligne:%d) la variable %s a déja été déclaré! type %s",ligne_no,variable,test->type_valeur);
 						erreur=1;
 					}
 					$1=concatener_chaine($1,$6," ");
@@ -693,7 +692,8 @@ block_declaration_variable:
 		{ 
 			if(affichage_traduction)
 			{
-				$1=concatener_chaine("#define ",$2," ");
+				//$1=concatener_chaine("#define ",$2," ");
+				$1=$2;
 			}
 			else
 			{
