@@ -330,18 +330,21 @@ declaration_fonction_block:
 declaration_fonction:
 	declaration_fonction_entete declaration_fonction_block
 		{
-			element * tmp = table_fonction;
-			element * tmp2;
-			while(tmp != NULL)
+			if(affichage_traduction)
 			{
-				tmp2 = tmp;
-				tmp = tmp->nxt;
+				element * tmp = table_fonction;
+				element * tmp2;
+				while(tmp != NULL)
+				{
+					tmp2 = tmp;
+					tmp = tmp->nxt;
+				}
+				$2=concatener_chaine($2,"\nreturn ","");
+				$2=concatener_chaine($2,tmp2->valeur,"");
+				$2=concatener_chaine($2,";\n}","");
+				$1=concatener_chaine($1,$2," ");
+				table=NULL;
 			}
-			$2=concatener_chaine($2,"\nreturn ","");
-			$2=concatener_chaine($2,tmp2->valeur,"");
-			$2=concatener_chaine($2,";\n}","");
-			$1=concatener_chaine($1,$2," ");
-			table=NULL;
 			if(affichage_grammaire) printf("Fin de reconnaissance declaration_fonction (%s)\n",$1); 
 			$$=$1;
 		}
@@ -684,7 +687,6 @@ block_declaration_variable:
 		{ 
 			if(affichage_traduction)
 			{
-				//$1=concatener_chaine($1,$2," ");
 				$1=$2;
 			}
 			else
@@ -699,7 +701,6 @@ block_declaration_variable:
 		{ 
 			if(affichage_traduction)
 			{
-				//$1=concatener_chaine("#define ",$2," ");
 				$1=$2;
 			}
 			else
@@ -716,7 +717,6 @@ block_declaration_variable_suite:
 		{ 
 			if(affichage_traduction)
 			{
-				//$1=concatener_chaine($1,$2," ");
 				$$=$1;
 			}
 			else
@@ -731,7 +731,6 @@ block_declaration_variable_suite:
 		{	
 			if(affichage_traduction)
 			{
-				//$2=concatener_chaine($2,$3," ");
 				$1=concatener_chaine($1,$3," ");
 			}
 			else
@@ -750,7 +749,6 @@ prog_principal:
 		{ 
 			if(affichage_traduction)
 			{
-				//$2=concatener_chaine($2,$3," ");
 				$1=concatener_chaine("\n{\n ",$1," ");
 				$1=concatener_chaine($1,$2," ");
 				$1=concatener_chaine($1,"\nreturn 1;\n}\n"," ");
@@ -771,9 +769,7 @@ block:
 		{ 
 			if(affichage_traduction)
 			{
-				//$1=concatener_chaine("\n{\n ",$1," ");
 				$1=concatener_chaine($1,$2," ");
-				//$1=concatener_chaine($1,"\n}\n "," ");
 			}
 			else
 			{
@@ -830,7 +826,6 @@ block_instruction:
 		{ 
 			if(affichage_traduction)
 			{
-				//$1=concatener_chaine($1,$2," ");
 				$$=$1;
 			}
 			else
@@ -995,17 +990,23 @@ expression:
 	|
 	NOMBRE 
 		{ 
-			if(strcmp(assignation_element,"NOMBREREEL")!=0)
+			if(affichage_traduction)
+			{
+				if(strcmp(assignation_element,"NOMBREREEL")!=0)
 				{
 					assignation_element="NOMBRE";
 				}
+			}
 			if(affichage_grammaire) printf("Fin de reconnaissance nombre (%s)\n",$1); 
 			$$=$1;
 		}
 	|
 	NOMBREREEL 
 		{ 
-			assignation_element="NOMBREREEL";
+			if(affichage_traduction)
+			{
+				assignation_element="NOMBREREEL";
+			}
 			if(affichage_grammaire) printf("Fin de reconnaissance nombrereel (%s)\n",$1); 
 			$$=$1;
 		}
@@ -1038,21 +1039,24 @@ expression:
 variable:
 	IDENTIFIANT 
 		{ 
-			element * test = rechercherElement(table,$1,"");
-			element * test2 = rechercherElement(table_fonction,$1,"");
-			if(test==NULL)
+			if(affichage_traduction)
 			{
-				if(test2==NULL)
+				element * test = rechercherElement(table,$1,"");
+				element * test2 = rechercherElement(table_fonction,$1,"");
+				if(test==NULL)
 				{
-					printf("\nERREUR(ligne:%d) l'identifiant %s n'existe pas!",ligne_no,$1);
-					erreur=1;
+					if(test2==NULL)
+					{
+						printf("\nERREUR(ligne:%d) l'identifiant %s n'existe pas!",ligne_no,$1);
+						erreur=1;
+					}else
+					{
+						assignation_element=test2->type_valeur;
+					}
 				}else
 				{
-					assignation_element=test2->type_valeur;
+					assignation_element=test->type_valeur;
 				}
-			}else
-			{
-				assignation_element=test->type_valeur;
 			}
 			if(affichage_grammaire) printf("Fin de reconnaissance IDENTIFIANT (%s)\n",$1); 
 			$$=$1;
@@ -1336,8 +1340,8 @@ instruction:
 	
 appel_procedure:
 	identifiant_procedure
-	{
-		if(affichage_traduction)
+		{
+			if(affichage_traduction)
 			{
 				element * test = rechercherElement(table_fonction,$1,"");
 				if(test==NULL)
@@ -1355,9 +1359,9 @@ appel_procedure:
 				$1=concatener_chaine($1,"(","");
 				$1=concatener_chaine($1,")"," ");
 			}
-		if(affichage_grammaire) printf("Fin de reconnaissance appel_procedure (%s)\n",$1);
-		$$=$1;
-	}
+			if(affichage_grammaire) printf("Fin de reconnaissance appel_procedure (%s)\n",$1);
+			$$=$1;
+		}
 	;
 
 appel_fonction:
@@ -1578,9 +1582,9 @@ appel_fonction:
 	|
 	CLRSCR
 		{
-			assignation_element="VOID";
 			if(affichage_traduction)
 			{
+				assignation_element="VOID";
 				$1="system('clear')";
 			}
 			if(affichage_grammaire) printf("Fin de reconnaissance appel_fonction (%s)\n",$1); 
@@ -1631,10 +1635,9 @@ appel_fonction:
 	|
 	RANDOM PARENTHESEOUVRANTE expression PARENTHESEFERMANTE
 		{
-			assignation_element="NOMBRE";
-
 			if(affichage_traduction)
 			{
+				assignation_element="NOMBRE";
 				$1="rand()%(";
 				$1=concatener_chaine($1,$3,"");
 				$1=concatener_chaine($1,")","");
@@ -1687,21 +1690,30 @@ appel_fonction:
 fonction_un_param_expression :
 	TEXTCOLOR
 		{
-			assignation_element="VOID";
+			if(affichage_traduction)
+			{
+				assignation_element="VOID";
+			}
 			if(affichage_grammaire) printf("Fin de reconnaissance fonction_un_param_expression (%s)\n",$1); 
 			$$=$1;
 		}
 	|
 	TEXTBACKGROUND
 		{
-			assignation_element="VOID";
+			if(affichage_traduction)
+			{
+				assignation_element="VOID";
+			}
 			if(affichage_grammaire) printf("Fin de reconnaissance fonction_un_param_expression (%s)\n",$1); 
 			$$=$1;
 		}
 	|
 	TABS
 		{
-			assignation_element="NOMBRE";
+			if(affichage_traduction)
+			{
+				assignation_element="NOMBRE";
+			}
 			if(affichage_grammaire) printf("Fin de reconnaissance fonction_un_param_expression (%s)\n",$1); 
 			$$=$1;
 		}
@@ -1718,9 +1730,9 @@ fonction_un_param_expression :
 	|
 	TINT
 		{
-			assignation_element="NOMBRE";
 			if(affichage_traduction)
 			{
+				assignation_element="NOMBRE";
 				$1="(int)floor";
 			}
 			if(affichage_grammaire) printf("Fin de reconnaissance fonction_un_param_expression (%s)\n",$1); 
@@ -1781,14 +1793,20 @@ variable_fonction:
 	|
 	boolean 
 		{
-			assignation_element="NOMBRE";
+			if(affichage_traduction)
+			{
+				assignation_element="NOMBRE";
+			}
 			if(affichage_grammaire) printf("Fin de reconnaissance variable_fonction (%s)\n",$1); 
 			$$=$1;
 		}
 	|
 	CHAINE_DE_CARACTERE
 		{
-			assignation_element="CHAINE_DE_CARACTERE";
+			if(affichage_traduction)
+			{
+				assignation_element="CHAINE_DE_CARACTERE";
+			}
 			if(affichage_grammaire) printf("Fin de reconnaissance variable_fonction (%s)\n",$1); 
 			$$=$1;
 		}
@@ -1846,14 +1864,20 @@ assignation_element:
 	|
 	CHAINE_DE_CARACTERE
 		{
-			assignation_element="CHAINE_DE_CARACTERE";
+			if(affichage_traduction)
+			{
+				assignation_element="CHAINE_DE_CARACTERE";
+			}
 			if(affichage_grammaire) printf("Fin de reconnaissance assignation_element (%s)\n",$1); 
 			$$=$1;
 		}
 	|
 	boolean
 		{
-			assignation_element="NOMBRE";
+			if(affichage_traduction)
+			{
+				assignation_element="NOMBRE";
+			}
 			if(affichage_grammaire) printf("Fin de reconnaissance assignation_element (%s)\n",$1); 
 			$$=$1;
 		}
