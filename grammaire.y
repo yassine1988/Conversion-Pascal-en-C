@@ -2076,10 +2076,7 @@ int main(int argc, char * argv[])
 		yyin = f;
 	}
 	yyparse();
-	//printf("-------------------\n");
-	//ajouterEnFinSimple("toto","test","");
-	//afficherListeSimple();
-	//printf("\nFin du programme\n");
+
 	if(f != NULL)
 	{
 		fclose(f);
