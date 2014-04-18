@@ -12,6 +12,7 @@ lex.yy.c: syntaxe.l grammaire.tab.h
 table.o: table.h table.c
 	gcc -o $@ -c table.c 
 clean:
-	rm *.tab.*
-	rm *.yy.*
-	rm *.o
+	rm -f *.tab.*
+	rm -f *.yy.*
+	rm -f *.o
+	rm -f *.output
