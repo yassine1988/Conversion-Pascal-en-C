@@ -158,12 +158,6 @@ NQUOTE [^']
 
 %%
 
-commenteof()
-{
-	fprintf (stderr,  "Fin de fichier innatendue à la ligne : %d\n ", ligne_no);
-	exit (1);
-}
-
 yywrap ()
 {
 	return (1);
