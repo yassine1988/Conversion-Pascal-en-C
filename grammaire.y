@@ -167,7 +167,7 @@ programme:
 			{
 				
 				$3=concatener_chaine("\n\nint main()",$3,"");
-				$1=concatener_chaine("#include<stdio.h>\n#include<stdlib.h>\n\n",$1,"");
+				$1=concatener_chaine("#include<stdio.h>\n#include<stdlib.h>\n#include<math.h>\n\n",$1,"");
 				$1=concatener_chaine($1,$3,$2);
 			}
 			else
