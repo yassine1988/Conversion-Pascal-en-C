@@ -2,7 +2,7 @@ PROGRAM prog;
 
 { function f }
 FUNCTION f (x,y:INTEGER;test:STRING) :INTEGER;
-VAR i,ii,te:INTEGER;toto:STRING;names,toto2:ARRAY[1..10] OF INTEGER;
+VAR i,ii,te:REAL;toto:STRING;names,toto2:ARRAY[1..10] OF INTEGER;
 CONST truc:INTEGER;
 CONST toto3:STRING;
 CONST bool:BOOLEAN;
@@ -71,10 +71,11 @@ begin
 end;
 
 { main program }
-VAR x:INTEGER;y:STRING;
+VAR x:INTEGER;y:STRING;z:REAL;
 BEGIN
 	toto;
 	y:='test';
+	z:=f(3);
     READLN(x);
     WRITE(f(x),' toto');
     WRITE(y,' toto');

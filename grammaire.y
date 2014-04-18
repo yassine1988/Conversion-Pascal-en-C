@@ -9,6 +9,7 @@
 	extern FILE *yyin;
 	int affichage_grammaire = 0;
 	int affichage_traduction = 1;
+	int erreur=0;
 
 	char * concatener_chaine(char * chaine1,char * chaine2, char * separateur) {
 		char * ntest= malloc((strlen(separateur)+strlen(chaine2)+strlen(chaine1)+50)*sizeof(char));
@@ -177,7 +178,13 @@ programme:
 			}
 			if(affichage_grammaire) printf("Fin de reconnaissance programme (%s)\n",$1); 
 			$$=$1;
-			printf("\n\n%s",$$);
+			if(erreur==0)
+			{
+				printf("\n\n%s",$$);
+			}else
+			{
+				printf("\n");
+			}
 		}
 	;
 	
@@ -260,10 +267,14 @@ declaration_fonction2:
 				element * test = rechercherElement(table_fonction,$2,"");
 				if(test==NULL)
 				{
-					if(strcmp($7,"int")==0 || strcmp($7,"float")==0)
+					if(strcmp($7,"int")==0)
 					{
 						ajouterEnFinSimple($2,"FUNCTION","NOMBRE");
 						ajouterEnFinSimple($2,"NOMBRE","");
+					}else if(strcmp($7,"double")==0)
+					{
+						ajouterEnFinSimple($2,"FUNCTION","NOMBREREEL");
+						ajouterEnFinSimple($2,"NOMBREREEL","");
 					}else
 					{
 						ajouterEnFinSimple($2,"FUNCTION","CHAINE_DE_CARACTERE");
@@ -407,9 +418,12 @@ declaration_variable_spe_fonction:
 					element * test = rechercherElement(table,variable,"");
 					if(test==NULL)
 					{
-						if(strcmp($3,"int")==0 || strcmp($3,"float")==0)
+						if(strcmp($3,"int")==0)
 						{
 							ajouterEnFinSimple(variable,"NOMBRE","");
+						}else if(strcmp($3,"double")==0)
+						{
+							ajouterEnFinSimple($3,"NOMBREREEL","");
 						}else
 						{
 							ajouterEnFinSimple(variable,"CHAINE_DE_CARACTERE","");
@@ -417,6 +431,7 @@ declaration_variable_spe_fonction:
 					}else
 					{
 						printf("\n\n\nERREUR(ligne:%d) la variable %s a déja été déclaré! type %s",ligne_no,variable,test->type_valeur);
+						erreur=1;
 					}
 					if(strcmp("",$1))
 					{
@@ -448,16 +463,21 @@ declaration_variable_spe_fonction:
 					element * test = rechercherElement(table,variable,"");
 					if(test==NULL)
 					{
-						if(strcmp($6,"int")==0 || strcmp($6,"float")==0)
+						if(strcmp($6,"int")==0)
 						{
 							ajouterEnFinSimple(variable,"ARRAY","NOMBRE");
-						}else
+						}else if(strcmp($6,"double")==0)
+						{
+							ajouterEnFinSimple(variable,"ARRAY","NOMBREREEL");
+						}
+						else
 						{
 							ajouterEnFinSimple(variable,"ARRAY","CHAINE_DE_CARACTERE");
 						}
 					}else
 					{
 						printf("\n\n\nERREUR(ligne:%d) la variable %s a déja été déclaré! type %s",ligne_no,variable,test->type_valeur);
+						erreur=1;
 					}
 					
 					if(strcmp("",$1)==0)
@@ -494,9 +514,12 @@ declaration_variable:
 					element * test = rechercherElement(table,variable,"");
 					if(test==NULL)
 					{
-						if(strcmp($3,"int")==0 || strcmp($3,"float")==0)
+						if(strcmp($3,"int")==0)
 						{
 							ajouterEnFinSimple(variable,"NOMBRE","");
+						}else if(strcmp($3,"double")==0)
+						{
+							ajouterEnFinSimple(variable,"NOMBREREEL","");
 						}else
 						{
 							ajouterEnFinSimple(variable,"CHAINE_DE_CARACTERE","");
@@ -504,6 +527,7 @@ declaration_variable:
 					}else
 					{
 						printf("\n\n\nERREUR(ligne:%d) la variable %s a déja été déclaré! type %s",ligne_no,variable,test->type_valeur);
+						erreur=1;
 					}
 					
 					$1=concatener_chaine($1,$3," ");
@@ -532,9 +556,12 @@ declaration_variable:
 					element * test = rechercherElement(table,variable,"");
 					if(test==NULL)
 					{
-						if(strcmp($6,"int")==0 || strcmp($6,"float")==0)
+						if(strcmp($6,"int")==0)
 						{
 							ajouterEnFinSimple(variable,"ARRAY","NOMBRE");
+						}else if(strcmp($6,"double")==0)
+						{
+							ajouterEnFinSimple(variable,"ARRAY","NOMBREREEL");
 						}else
 						{
 							ajouterEnFinSimple(variable,"ARRAY","CHAINE_DE_CARACTERE");
@@ -542,6 +569,7 @@ declaration_variable:
 					}else
 					{
 						printf("\n\n\nERREUR(ligne:%d) la variable %s a déja été déclaré! type ",ligne_no,variable,test->type_valeur);
+						erreur=1;
 					}
 					$1=concatener_chaine($1,$6," ");
 					$1=concatener_chaine($1,variable," ");
@@ -811,7 +839,10 @@ expression:
 		{ 
 			if(affichage_traduction)
 			{
-				assignation_element="NOMBRE";
+				if(strcmp(assignation_element,"NOMBREREEL")!=0)
+				{
+					assignation_element="NOMBRE";
+				}
 				$2=concatener_chaine($2,$3," ");
 				$1=concatener_chaine($1,$2," ");
 			}
@@ -828,7 +859,10 @@ expression:
 		{ 
 			if(affichage_traduction)
 			{
-				assignation_element="NOMBRE";
+				if(strcmp(assignation_element,"NOMBREREEL")!=0)
+				{
+					assignation_element="NOMBRE";
+				}
 				$2=concatener_chaine($2,$3," ");
 				$1=concatener_chaine($1,$2," ");
 			}
@@ -845,7 +879,10 @@ expression:
 		{ 
 			if(affichage_traduction)
 			{
-				assignation_element="NOMBRE";
+				if(strcmp(assignation_element,"NOMBREREEL")!=0)
+				{
+					assignation_element="NOMBRE";
+				}
 				$2=concatener_chaine($2,$3," ");
 				$1=concatener_chaine($1,$2," ");
 			}
@@ -862,7 +899,10 @@ expression:
 		{ 
 			if(affichage_traduction)
 			{
-				assignation_element="NOMBRE";
+				if(strcmp(assignation_element,"NOMBREREEL")!=0)
+				{
+					assignation_element="NOMBRE";
+				}
 				$2=concatener_chaine($2,$3," ");
 				$1=concatener_chaine($1,$2," ");
 			}
@@ -879,13 +919,19 @@ expression:
 		{ 
 			if(affichage_traduction)
 			{
-				assignation_element="NOMBRE";
+				if(strcmp(assignation_element,"NOMBREREEL")!=0)
+				{
+					assignation_element="NOMBRE";
+				}
 				$1=concatener_chaine($1,"/"," ");
 				$1=concatener_chaine($1,$3," ");
 			}
 			else
 			{
-				assignation_element="NOMBRE";
+				if(strcmp(assignation_element,"NOMBREREEL")!=0)
+				{
+					assignation_element="NOMBRE";
+				}
 				$2=concatener_chaine($2,$3," ");
 				$1=concatener_chaine($1,$2," ");
 			}
@@ -897,7 +943,10 @@ expression:
 		{ 
 			if(affichage_traduction)
 			{
-				assignation_element="NOMBRE";
+				if(strcmp(assignation_element,"NOMBREREEL")!=0)
+				{
+					assignation_element="NOMBRE";
+				}
 				$1=concatener_chaine($1,"%"," ");
 				$1=concatener_chaine($1,$3," ");
 			}
@@ -914,7 +963,10 @@ expression:
 		{ 
 			if(affichage_traduction)
 			{
-				assignation_element="NOMBRE";
+				if(strcmp(assignation_element,"NOMBREREEL")!=0)
+				{
+					assignation_element="NOMBRE";
+				}
 				$2=concatener_chaine($2,$3," ");
 				$1=concatener_chaine($1,$2," ");
 			}
@@ -935,14 +987,17 @@ expression:
 	|
 	NOMBRE 
 		{ 
-			assignation_element="NOMBRE";
+			if(strcmp(assignation_element,"NOMBREREEL")!=0)
+				{
+					assignation_element="NOMBRE";
+				}
 			if(affichage_grammaire) printf("Fin de reconnaissance nombre (%s)\n",$1); 
 			$$=$1;
 		}
 	|
 	NOMBREREEL 
 		{ 
-			assignation_element="NOMBRE";
+			assignation_element="NOMBREREEL";
 			if(affichage_grammaire) printf("Fin de reconnaissance nombrereel (%s)\n",$1); 
 			$$=$1;
 		}
@@ -951,7 +1006,10 @@ expression:
 		{ 
 			if(affichage_traduction)
 			{
-				assignation_element="NOMBRE";
+				if(strcmp(assignation_element,"NOMBREREEL")!=0)
+				{
+					assignation_element="NOMBRE";
+				}
 				$1=concatener_chaine($1,$2," ");
 			}
 			else
@@ -979,6 +1037,7 @@ variable:
 				if(test2==NULL)
 				{
 					printf("\nERREUR(ligne:%d) l'identifiant %s n'existe pas!",ligne_no,$1);
+					erreur=1;
 				}else
 				{
 					assignation_element=test2->type_valeur;
@@ -999,6 +1058,7 @@ variable:
 				if(test==NULL)
 				{
 					printf("\nERREUR(ligne:%d) la variable %s n'existe pas!",ligne_no,$1);
+					erreur=1;
 				}else
 				{
 					assignation_element=test->type_valeur;
@@ -1275,11 +1335,13 @@ appel_procedure:
 				if(test==NULL)
 				{
 					printf("\nERREUR(ligne:%d) la procédure %s n'existe pas!",ligne_no,$1);
+					erreur=1;
 				}else
 				{
 					if(!strcmp(test->type_valeur_valeur,"VOID")==0)
 					{
 						printf("\nERREUR(ligne:%d) %s n'est pas une procédure!",ligne_no,$1);
+						erreur=1;
 					}
 				}
 				$1=concatener_chaine($1,"(","");
@@ -1299,11 +1361,15 @@ appel_fonction:
 				if(test==NULL)
 				{
 					printf("\nERREUR(ligne:%d) la function %s n'existe pas!",ligne_no,$1);
+					erreur=1;
 				}else
 				{
-					if(strcmp(test->type_valeur_valeur,"int")==0 || strcmp(test->type_valeur_valeur,"float")==0)
+					if(strcmp(test->type_valeur_valeur,"NOMBRE")==0)
 					{
 						assignation_element="NOMBRE";
+					}else if(strcmp(test->type_valeur_valeur,"NOMBREREEL")==0)
+					{
+						assignation_element="NOMBREREEL";
 					}else
 					{
 						assignation_element="CHAINE_DE_CARACTERE";
@@ -1350,11 +1416,16 @@ appel_fonction:
 							if(test2==NULL)
 							{
 								printf("\nERREUR(ligne:%d) la variable %s n'existe pas!",ligne_no,variable2);
+								erreur=1;
 							}else
 							{
 								if(strcmp(test2->type_valeur,"NOMBRE")==0 || strcmp(test2->type_valeur_valeur,"NOMBRE")==0)
 								{
 									futur1=concatener_chaine(futur1,"%d","");
+									futur2=concatener_chaine(futur2,variable,",");
+								}else if(strcmp(test2->type_valeur,"NOMBREREEL")==0 || strcmp(test2->type_valeur_valeur,"NOMBREREEL")==0)
+								{
+									futur1=concatener_chaine(futur1,"%f","");
 									futur2=concatener_chaine(futur2,variable,",");
 								}else
 								{
@@ -1367,6 +1438,10 @@ appel_fonction:
 							if(strcmp(test->type_valeur,"NOMBRE")==0 || strcmp(test->type_valeur_valeur,"NOMBRE")==0)
 							{
 								futur1=concatener_chaine(futur1,"%d","");
+								futur2=concatener_chaine(futur2,variable,",");
+							}else if(strcmp(test->type_valeur,"NOMBREREEL")==0 || strcmp(test->type_valeur_valeur,"NOMBREREEL")==0)
+							{
+								futur1=concatener_chaine(futur1,"%f","");
 								futur2=concatener_chaine(futur2,variable,",");
 							}else
 							{
@@ -1421,11 +1496,16 @@ appel_fonction:
 							if(test2==NULL)
 							{
 								printf("\nERREUR(ligne:%d) la variable %s n'existe pas!",ligne_no,variable2);
+								erreur=1;
 							}else
 							{
 								if(strcmp(test2->type_valeur,"NOMBRE")==0 || strcmp(test2->type_valeur_valeur,"NOMBRE")==0)
 								{
 									futur1=concatener_chaine(futur1,"%d","");
+									futur2=concatener_chaine(futur2,variable,",");
+								}else if(strcmp(test2->type_valeur,"NOMBREREEL")==0 || strcmp(test2->type_valeur_valeur,"NOMBREREEL")==0)
+								{
+									futur1=concatener_chaine(futur1,"%f","");
 									futur2=concatener_chaine(futur2,variable,",");
 								}else
 								{
@@ -1438,6 +1518,10 @@ appel_fonction:
 							if(strcmp(test->type_valeur,"NOMBRE")==0 || strcmp(test->type_valeur_valeur,"NOMBRE")==0)
 							{
 								futur1=concatener_chaine(futur1,"%d","");
+								futur2=concatener_chaine(futur2,variable,",");
+							}else if(strcmp(test->type_valeur,"NOMBREREEL")==0 || strcmp(test->type_valeur_valeur,"NOMBREREEL")==0)
+							{
+								futur1=concatener_chaine(futur1,"%f","");
 								futur2=concatener_chaine(futur2,variable,",");
 							}else
 							{
@@ -1540,6 +1624,7 @@ appel_fonction:
 	RANDOM PARENTHESEOUVRANTE expression PARENTHESEFERMANTE
 		{
 			assignation_element="NOMBRE";
+
 			if(affichage_traduction)
 			{
 				$1="rand()%(";
@@ -1560,7 +1645,10 @@ appel_fonction:
 		{ 
 			if(affichage_traduction)
 			{
-				assignation_element="NOMBRE";
+				if(strcmp(assignation_element,"NOMBREREEL")!=0)
+				{
+					assignation_element="NOMBRE";
+				}
 				$3=concatener_chaine($3,",2"," ");
 				$3=concatener_chaine($3,$4," ");
 				$2=concatener_chaine($2,$3," ");
@@ -1612,7 +1700,10 @@ fonction_un_param_expression :
 	|
 	TSQRT
 		{
-			assignation_element="NOMBRE";
+			if(strcmp(assignation_element,"NOMBREREEL")!=0)
+			{
+				assignation_element="NOMBRE";
+			}
 			if(affichage_grammaire) printf("Fin de reconnaissance fonction_un_param_expression (%s)\n",$1); 
 			$$=$1;
 		}
@@ -1703,15 +1794,25 @@ assignation:
 				char* chaine = strdup($1);
 				char* variable;
 				variable = strsep(&chaine, "[");
+				char * chaine2 = strdup(variable);
+				variable = strsep(&chaine2, "(");
 				element * test = rechercherElement(table,variable,"");
 				if(test==NULL)
 				{
 					printf("\nERREUR(ligne:%d) la variable %s n'est pas déclaré!",ligne_no,variable);
+					erreur=1;
 				}else
 				{
-					if(!(strcmp(assignation_element,test->type_valeur)==0 || strcmp(assignation_element,test->type_valeur_valeur)==0))
+					if(!((strcmp("NOMBRE",test->type_valeur)==0 || strcmp("NOMBRE",test->type_valeur_valeur)==0) && strcmp("NOMBREREEL",assignation_element)==0))
 					{
-						printf("\nERREUR(ligne:%d) assignation, la variable %s est de type %s %sn attendu : %s",ligne_no,variable,test->type_valeur,test->type_valeur_valeur,assignation_element);
+						if(!((strcmp("NOMBREREEL",test->type_valeur)==0 || strcmp("NOMBREREEL",test->type_valeur_valeur)==0) && strcmp("NOMBRE",assignation_element)==0))
+						{
+							if(!(strcmp(assignation_element,test->type_valeur)==0 || strcmp(assignation_element,test->type_valeur_valeur)==0))
+							{
+								printf("\nERREUR(ligne:%d) assignation, la variable %s est de type %s %s, affecté : %s",ligne_no,variable,test->type_valeur,test->type_valeur_valeur,assignation_element);
+								erreur=1;
+							}
+						}
 					}
 				}
 				assignation_element="";
@@ -1956,4 +2057,5 @@ int main(int argc, char * argv[])
 void yyerror(char const *s)
 {
 	fprintf(stderr,"Erreur %s à la ligne %d\n",s,ligne_no);
+	erreur=1;
 }

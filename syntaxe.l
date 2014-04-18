@@ -84,8 +84,12 @@ NQUOTE [^']
 {U}{N}{T}{I}{L}				{ if(affichage) printf("UNTIL ");		yylval.type_string = copier_chaine(yytext); return(UNTIL);		}
 
 {S}{T}{R}{I}{N}{G}			{ 	if(affichage) printf("STRING ");	
-								yylval.type_string = copier_chaine("char * "); 
+								yylval.type_string = copier_chaine("char *"); 
 								return(TYPE);		
+							}
+{R}{E}{A}{L}				{ 	if(affichage) printf("REAL ");	
+								yylval.type_string = copier_chaine("double");  
+								return(TYPE);			
 							}
 {I}{N}{T}{E}{G}{E}{R}		{ 	if(affichage) printf("INTEGER ");	
 								yylval.type_string = copier_chaine("int");  
