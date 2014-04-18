@@ -91,6 +91,10 @@ NQUOTE [^']
 								yylval.type_string = copier_chaine("int");  
 								return(TYPE);			
 							}
+{B}{O}{O}{L}{E}{A}{N}		{ 	if(affichage) printf("BOOLEAN ");	
+								yylval.type_string = copier_chaine("int");  
+								return(TYPE);			
+							}
 {T}{R}{U}{E}				{ if(affichage) printf("TRUE ");	yylval.type_string = copier_chaine(yytext);	return(TTRUE);		}
 {F}{A}{L}{S}{E}				{ if(affichage) printf("FALSE ");	yylval.type_string = copier_chaine(yytext);	return(TFALSE);		}
 

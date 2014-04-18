@@ -167,7 +167,7 @@ programme:
 			{
 				
 				$3=concatener_chaine("\n\nint main()",$3,"");
-				$1=concatener_chaine("#include<stdio.h>\n\n",$1,"");
+				$1=concatener_chaine("#include<stdio.h>\n#include<stdlib.h>\n\n",$1,"");
 				$1=concatener_chaine($1,$3,$2);
 			}
 			else
@@ -271,7 +271,7 @@ declaration_fonction2:
 					}
 				}else
 				{
-					printf("\n\n\nERREUR la fonction %s a déja été déclaré, type ",$2,test->type_valeur_valeur);
+					printf("\n\n\nERREUR(ligne:%d) la fonction %s a déja été déclaré! type ",ligne_no,$2,test->type_valeur_valeur);
 				}
 				$6=concatener_chaine("{\n ",$7,"");
 				$6=concatener_chaine($6,$2," ");
@@ -416,7 +416,7 @@ declaration_variable_spe_fonction:
 						}
 					}else
 					{
-						printf("\n\n\nERREUR la variable %s a déja été déclaré, type %s",variable,test->type_valeur);
+						printf("\n\n\nERREUR(ligne:%d) la variable %s a déja été déclaré! type %s",ligne_no,variable,test->type_valeur);
 					}
 					if(strcmp("",$1))
 					{
@@ -457,7 +457,7 @@ declaration_variable_spe_fonction:
 						}
 					}else
 					{
-						printf("\n\n\nERREUR la variable %s a déja été déclaré, type %s",variable,test->type_valeur);
+						printf("\n\n\nERREUR(ligne:%d) la variable %s a déja été déclaré! type %s",ligne_no,variable,test->type_valeur);
 					}
 					
 					if(strcmp("",$1)==0)
@@ -503,7 +503,7 @@ declaration_variable:
 						}
 					}else
 					{
-						printf("\n\n\nERREUR la variable %s a déja été déclaré, type %s",variable,test->type_valeur);
+						printf("\n\n\nERREUR(ligne:%d) la variable %s a déja été déclaré! type %s",ligne_no,variable,test->type_valeur);
 					}
 					
 					$1=concatener_chaine($1,$3," ");
@@ -541,7 +541,7 @@ declaration_variable:
 						}
 					}else
 					{
-						printf("\n\n\nERREUR la variable %s a déja été déclaré, type ",variable,test->type_valeur);
+						printf("\n\n\nERREUR(ligne:%d) la variable %s a déja été déclaré! type ",ligne_no,variable,test->type_valeur);
 					}
 					$1=concatener_chaine($1,$6," ");
 					$1=concatener_chaine($1,variable," ");
@@ -978,7 +978,7 @@ variable:
 			{
 				if(test2==NULL)
 				{
-					printf("\nERREUR l'identifiant %s n'existe pas!",$1);
+					printf("\nERREUR(ligne:%d) l'identifiant %s n'existe pas!",ligne_no,$1);
 				}else
 				{
 					assignation_element=test2->type_valeur;
@@ -998,7 +998,7 @@ variable:
 				element * test = rechercherElement(table,$1,"");
 				if(test==NULL)
 				{
-					printf("\nERREUR la variable %s n'existe pas!",$1);
+					printf("\nERREUR(ligne:%d) la variable %s n'existe pas!",ligne_no,$1);
 				}else
 				{
 					assignation_element=test->type_valeur;
@@ -1274,12 +1274,12 @@ appel_procedure:
 				element * test = rechercherElement(table_fonction,$1,"");
 				if(test==NULL)
 				{
-					printf("\nERREUR la procédure %s n'existe pas!",$1);
+					printf("\nERREUR(ligne:%d) la procédure %s n'existe pas!",ligne_no,$1);
 				}else
 				{
 					if(!strcmp(test->type_valeur_valeur,"VOID")==0)
 					{
-						printf("\nERREUR %s n'est pas une procédure!",$1);
+						printf("\nERREUR(ligne:%d) %s n'est pas une procédure!",ligne_no,$1);
 					}
 				}
 				$1=concatener_chaine($1,"(","");
@@ -1298,7 +1298,7 @@ appel_fonction:
 				element * test = rechercherElement(table_fonction,$1,"");
 				if(test==NULL)
 				{
-					printf("\nERREUR la function %s n'existe pas!",$1);
+					printf("\nERREUR(ligne:%d) la function %s n'existe pas!",ligne_no,$1);
 				}else
 				{
 					if(strcmp(test->type_valeur_valeur,"int")==0 || strcmp(test->type_valeur_valeur,"float")==0)
@@ -1349,7 +1349,7 @@ appel_fonction:
 							element * test2 = rechercherElement(table_fonction,variable2,"");
 							if(test2==NULL)
 							{
-								printf("\nERREUR la variable %s n'existe pas!",variable2);
+								printf("\nERREUR(ligne:%d) la variable %s n'existe pas!",ligne_no,variable2);
 							}else
 							{
 								if(strcmp(test2->type_valeur,"NOMBRE")==0 || strcmp(test2->type_valeur_valeur,"NOMBRE")==0)
@@ -1420,7 +1420,7 @@ appel_fonction:
 							element * test2 = rechercherElement(table_fonction,variable2,"");
 							if(test2==NULL)
 							{
-								printf("\nERREUR la variable %s n'existe pas!",variable2);
+								printf("\nERREUR(ligne:%d) la variable %s n'existe pas!",ligne_no,variable2);
 							}else
 							{
 								if(strcmp(test2->type_valeur,"NOMBRE")==0 || strcmp(test2->type_valeur_valeur,"NOMBRE")==0)
@@ -1682,14 +1682,14 @@ variable_fonction:
 	|
 	boolean 
 		{
-			assignation_element="BOOLEAN";
+			assignation_element="NOMBRE";
 			if(affichage_grammaire) printf("Fin de reconnaissance variable_fonction (%s)\n",$1); 
 			$$=$1;
 		}
 	|
 	CHAINE_DE_CARACTERE
 		{
-			assignation_element="BOOLEAN";
+			assignation_element="CHAINE_DE_CARACTERE";
 			if(affichage_grammaire) printf("Fin de reconnaissance variable_fonction (%s)\n",$1); 
 			$$=$1;
 		}
@@ -1706,12 +1706,12 @@ assignation:
 				element * test = rechercherElement(table,variable,"");
 				if(test==NULL)
 				{
-					printf("\nERREUR la variable %s n'est pas déclaré",variable);
+					printf("\nERREUR(ligne:%d) la variable %s n'est pas déclaré!",ligne_no,variable);
 				}else
 				{
 					if(!(strcmp(assignation_element,test->type_valeur)==0 || strcmp(assignation_element,test->type_valeur_valeur)==0))
 					{
-						printf("\nERREUR assignation, la variable %s est de type %s %s",variable,test->type_valeur,test->type_valeur_valeur);
+						printf("\nERREUR(ligne:%d) assignation, la variable %s est de type %s %sn attendu : %s",ligne_no,variable,test->type_valeur,test->type_valeur_valeur,assignation_element);
 					}
 				}
 				assignation_element="";
@@ -1744,7 +1744,7 @@ assignation_element:
 	|
 	boolean
 		{
-			assignation_element="BOOLEAN";
+			assignation_element="NOMBRE";
 			if(affichage_grammaire) printf("Fin de reconnaissance assignation_element (%s)\n",$1); 
 			$$=$1;
 		}
@@ -1943,10 +1943,10 @@ int main(int argc, char * argv[])
 		yyin = f;
 	}
 	yyparse();
-	printf("-------------------\n");
-	ajouterEnFinSimple("toto","test","");
-	afficherListeSimple();
-	printf("\nFin du programme\n");
+	//printf("-------------------\n");
+	//ajouterEnFinSimple("toto","test","");
+	//afficherListeSimple();
+	//printf("\nFin du programme\n");
 	if(f != NULL)
 	{
 		fclose(f);
