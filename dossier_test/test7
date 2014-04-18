@@ -1,0 +1,22 @@
+Program prog;
+
+function Add(n1, n2:integer):integer;
+var ans:integer;
+begin
+	ans := n1 + n2;
+	Add := ans;
+end;
+
+function Max(n1, n2:integer):integer;
+var m :integer;
+begin
+	if (n1 > n2) then m:= n1
+	else m := n2;
+	Max := m;	
+end;
+
+var m : integer;
+begin
+	m:=Max( 3 , 5 );
+	writeln(m);
+end.

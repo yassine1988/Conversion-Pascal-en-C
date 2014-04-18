@@ -1,0 +1,21 @@
+Program HelloWorld;
+
+var names : array[1..4] of string;
+    	marks : array[1..4] of integer;
+            i : integer;
+
+BEGIN
+
+	{assignement}
+	names[1] := 'Lucky';
+	names[2] := 'Max';
+	marks[3] := 5;
+	marks[4] := marks[3]+10;
+
+	{using arrays inside loops}
+	for i := 2 to 4 do
+	begin
+		writeln(i);
+	end;
+    
+END.

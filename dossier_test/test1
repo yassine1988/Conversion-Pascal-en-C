@@ -1,0 +1,11 @@
+Program HelloWorld;
+var x:integer;
+BEGIN
+	x := 5;
+	repeat
+		
+			writeln('coucou');
+			x := x - 1;
+		
+	until (x>0);
+END.

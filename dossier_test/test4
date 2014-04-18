@@ -1,0 +1,14 @@
+Program HelloWorld;
+
+var i : integer;
+
+BEGIN
+
+    i := 0;
+	while not (i = 10) do
+		begin
+			writeln('salut');
+			i := i+1;
+		end;
+    
+END.

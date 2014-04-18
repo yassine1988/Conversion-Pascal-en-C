@@ -1,0 +1,20 @@
+Program prog;
+
+function f(x:integer):integer;
+var i:integer;
+begin
+	i := 0;
+	f := 0;
+	while i < x do
+	begin
+		if i mod 2 = 0 then
+			begin
+				f := f+i; 	
+			end;
+		i := i +1;
+	end;
+end;
+
+BEGIN
+	writeln(f(4));
+END.

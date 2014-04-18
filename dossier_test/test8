@@ -1,0 +1,17 @@
+Program prog;
+
+procedure f(x,y:integer);
+var result:integer;
+begin
+        result := 0;
+    	result := (x + y);
+		writeln(result);	
+		result :=(x - y);
+		writeln(result);	
+		result := (x * y);
+		writeln(result);	
+end;
+
+BEGIN
+	f(4,3);
+END.

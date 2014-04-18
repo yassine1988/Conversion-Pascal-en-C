@@ -1,0 +1,12 @@
+Program HelloWorld;
+var x:integer;
+BEGIN
+	randomize;
+	x := random(100);
+	repeat
+		
+			writeln('coucou');
+			x := x - 1;
+		
+	until (x>0);
+END.

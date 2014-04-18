@@ -1,0 +1,17 @@
+Program prog;
+
+procedure f(x:integer);
+var i:integer;y:integer;
+begin
+	i := 0;
+	while i < x do
+	begin
+			y := y+i;
+			i := i+1;
+	end;
+	writeln(y);
+end;
+
+BEGIN
+	f(3);
+END.
