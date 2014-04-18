@@ -20,8 +20,6 @@
 	}
 	
 	char * assignation_element="";
-   // }
-   // afficherListe(ma_liste);
 %}
 %union 
 {
@@ -227,10 +225,13 @@ declarations_globale:
 	declaration_fonction POINTVIRGULE 
 		{ 
 			if(affichage_traduction)
-				//$1=concatener_chaine($1,$2," ");
+			{
 				$1=$1;
+			}
 			else
+			{
 				$1=concatener_chaine($1,$2," ");
+			}
 			if(affichage_grammaire) printf("Fin de reconnaissance declarations_globale (%s)\n",$1); 
 			$$=$1;
 		}
@@ -238,10 +239,13 @@ declarations_globale:
 	declaration_variables POINTVIRGULE 
 		{ 
 			if(affichage_traduction)
-				//$1=concatener_chaine($1,$2," ");
+			{
 				$$=$1;
+			}
 			else
+			{
 				$1=concatener_chaine($1,$2," ");
+			}
 			if(affichage_grammaire) printf("Fin de reconnaissance declarations_globale (%s)\n",$1); 
 			$$=$1;
 		}
@@ -249,10 +253,13 @@ declarations_globale:
 	declaration_procedure POINTVIRGULE 
 		{ 
 			if(affichage_traduction)
-				//$1=concatener_chaine($1,$2," ");
+			{	
 				$$=$1;
+			}
 			else
+			{
 				$1=concatener_chaine($1,$2," ");
+			}
 			if(affichage_grammaire) printf("Fin de reconnaissance declarations_globale (%s)\n",$1); 
 			$$=$1;
 		}

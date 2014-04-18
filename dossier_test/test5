@@ -13,6 +13,8 @@ begin
 			end;
 		i := i +1;
 	end;
+	for i := f-1 downto 0 do
+      begin x := 0; end;
 end;
 
 BEGIN
