@@ -157,8 +157,8 @@
 %type <type_string> tableau_crochets;
 %type <type_string> suite_crochet;
 %type <type_string> declaration_variable_spe_fonction;
-%type <type_string> declaration_fonction1;
-%type <type_string> declaration_fonction2;
+%type <type_string> declaration_fonction_block;
+%type <type_string> declaration_fonction_entete;
 
 %%
 programme:
@@ -259,7 +259,7 @@ declarations_globale:
 		}
 	;
 	
-declaration_fonction2:
+declaration_fonction_entete:
 	FUNCTION identifiant_fonction PARENTHESEOUVRANTE declaration_variables_fonction PARENTHESEFERMANTE DEUX_POINTS TYPE POINTVIRGULE 
 		{ 
 			if(affichage_traduction)
@@ -314,14 +314,14 @@ declaration_fonction2:
 		}
 	;
 	
-declaration_fonction1:
+declaration_fonction_block:
 	block
 		{
 			$$=$1;
 		}
 	;
 declaration_fonction:
-	declaration_fonction2 declaration_fonction1
+	declaration_fonction_entete declaration_fonction_block
 	{
 		element * tmp = table_fonction;
 		element * tmp2;
