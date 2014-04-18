@@ -288,7 +288,7 @@ declaration_fonction_entete:
 					}
 				}else
 				{
-					printf("\n\n\nERREUR(ligne:%d) la fonction %s a déja été déclaré! type %s",ligne_no,$2,test->type_valeur_valeur);
+					printf("\nERREUR(ligne:%d) la fonction %s a déja été déclaré! type %s",ligne_no,$2,test->type_valeur_valeur);
 				}
 				$6=concatener_chaine("{\n ",$7,"");
 				$6=concatener_chaine($6,$2," ");
@@ -441,7 +441,7 @@ declaration_variable_spe_fonction:
 						}
 					}else
 					{
-						printf("\n\n\nERREUR(ligne:%d) la variable %s a déja été déclaré! type %s",ligne_no,variable,test->type_valeur);
+						printf("\nERREUR(ligne:%d) la variable %s a déja été déclaré! type %s",ligne_no,variable,test->type_valeur);
 						erreur=1;
 					}
 					if(strcmp("",$1))
@@ -487,7 +487,7 @@ declaration_variable_spe_fonction:
 						}
 					}else
 					{
-						printf("\n\n\nERREUR(ligne:%d) la variable %s a déja été déclaré! type %s",ligne_no,variable,test->type_valeur);
+						printf("\nERREUR(ligne:%d) la variable %s a déja été déclaré! type %s",ligne_no,variable,test->type_valeur);
 						erreur=1;
 					}
 					
@@ -537,7 +537,7 @@ declaration_variable:
 						}
 					}else
 					{
-						printf("\n\n\nERREUR(ligne:%d) la variable %s a déja été déclaré! type %s",ligne_no,variable,test->type_valeur);
+						printf("\nERREUR(ligne:%d) la variable %s a déja été déclaré! type %s",ligne_no,variable,test->type_valeur);
 						erreur=1;
 					}
 					
@@ -579,7 +579,7 @@ declaration_variable:
 						}
 					}else
 					{
-						printf("\n\n\nERREUR(ligne:%d) la variable %s a déja été déclaré! type %s",ligne_no,variable,test->type_valeur);
+						printf("\nERREUR(ligne:%d) la variable %s a déja été déclaré! type %s",ligne_no,variable,test->type_valeur);
 						erreur=1;
 					}
 					$1=concatener_chaine($1,$6," ");
