@@ -1,0 +1,10 @@
+Program HelloWorld;
+{ Erreur while boolean }
+VAR y:BOOLEAN;x:INTEGER; 
+BEGIN
+	y:=true;
+	WHILE x DO
+	BEGIN
+		x:=5;
+	END;
+END.

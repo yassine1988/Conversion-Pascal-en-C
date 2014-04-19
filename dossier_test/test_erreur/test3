@@ -1,0 +1,8 @@
+Program HelloWorld;
+{ Erreur assignation variable mauvais type (variable)}
+VAR x:integer;y:STRING;
+BEGIN
+	y := 'coucou';
+	x := y;
+	y := x;
+END.

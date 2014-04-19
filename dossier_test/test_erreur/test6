@@ -1,0 +1,6 @@
+Program HelloWorld;
+{ Erreur declaration variable (type inconu) }
+VAR y:monType; 
+BEGIN
+	y:=f();
+END.

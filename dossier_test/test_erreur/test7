@@ -1,0 +1,6 @@
+Program HelloWorld;
+{ Erreur appel procédure inconue }
+VAR y:INTEGER; 
+BEGIN
+	precedure;
+END.

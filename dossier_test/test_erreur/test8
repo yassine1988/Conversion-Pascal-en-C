@@ -1,0 +1,6 @@
+Program HelloWorld;
+{ Erreur appel function inconue }
+VAR y:INTEGER; 
+BEGIN
+	foufou('coucou');
+END.

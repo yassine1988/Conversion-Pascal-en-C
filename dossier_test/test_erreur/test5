@@ -1,0 +1,11 @@
+Program HelloWorld;
+{ Erreur assignation variable mauvais type dans function }
+function f():integer;
+begin
+	f := 'coucou';
+end;
+
+VAR y:INTEGER;
+BEGIN
+	y:=f();
+END.

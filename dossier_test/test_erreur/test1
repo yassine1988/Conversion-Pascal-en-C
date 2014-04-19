@@ -1,0 +1,5 @@
+Program HelloWorld;
+{ Erreur assignation variable non déclarée }
+BEGIN
+	x := 5;
+END.

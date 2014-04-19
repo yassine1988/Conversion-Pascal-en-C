@@ -1,0 +1,11 @@
+Program HelloWorld;
+{ Erreur if boolean }
+VAR y:BOOLEAN;x:INTEGER; 
+BEGIN
+	y:=true;
+	if x then
+	begin
+		x:=x+1;
+	end;
+	
+END.
