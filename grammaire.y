@@ -1725,6 +1725,7 @@ appel_fonction:
 			if(affichage_traduction)
 			{
 				$1="srand(time(NULL))";
+				assignation_element="VOID";
 			}
 			if(affichage_grammaire) printf("Fin de reconnaissance appel_fonction (%s)\n",$1); 
 			$$=$1;
