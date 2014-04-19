@@ -2119,6 +2119,86 @@ boucle_repeat_until:
 	;
 
 condition_if:
+IF variable THEN sous_block_instruction
+	{
+		if(affichage_traduction)
+		{
+			char* chaine = strdup($2);
+			char* variable;
+			variable = strsep(&chaine, "[");
+			char * chaine2 = strdup(variable);
+			variable = strsep(&chaine2, "(");
+			element * test = rechercherElement(table,variable,"");
+			if(test==NULL)
+			{
+				printf("\nERREUR(ligne:%d) la variable %s n'est pas déclaré!",ligne_no,variable);
+				erreur=1;
+			}else
+			{
+				if(!(strcmp("BOOLEAN",test->type_valeur)==0 || strcmp("BOOLEAN",test->type_valeur_valeur)==0))
+				{
+					printf("\nERREUR(ligne:%d) if, la variable %s n'est pas de type boolean, type : %s",ligne_no,$1,test->type_valeur);
+					erreur=1;
+				}
+			}
+			$2=concatener_chaine("(",$2," ");
+			$2=concatener_chaine($2,")"," ");
+			$2=concatener_chaine($2,$4," ");
+			$1=concatener_chaine($1,$2," ");
+		}
+		else
+		{
+			$3=concatener_chaine($3,$4," ");
+			$2=concatener_chaine($2,$3," ");
+			$1=concatener_chaine($1,$2," ");
+		}
+
+		if(affichage_grammaire) printf("Fin de reconnaissance condition_if (%s)\n",$1);
+		$$=$1;
+	}
+	|
+IF variable THEN sous_block_instruction ELSE sous_block_instruction
+	{
+		if(affichage_traduction)
+		{
+			char* chaine = strdup($2);
+			char* variable;
+			variable = strsep(&chaine, "[");
+			char * chaine2 = strdup(variable);
+			variable = strsep(&chaine2, "(");
+			element * test = rechercherElement(table,variable,"");
+			if(test==NULL)
+			{
+				printf("\nERREUR(ligne:%d) la variable %s n'est pas déclaré!",ligne_no,variable);
+				erreur=1;
+			}else
+			{
+				if(!(strcmp("BOOLEAN",test->type_valeur)==0 || strcmp("BOOLEAN",test->type_valeur_valeur)==0))
+				{
+					printf("\nERREUR(ligne:%d) if, la variable %s n'est pas de type boolean, type : %s",ligne_no,$1,test->type_valeur);
+					erreur=1;
+				}
+			}
+			$5=concatener_chaine($5,$6," ");
+			$4=concatener_chaine($4,$5," ");
+			$2=concatener_chaine("(",$2," ");
+			$2=concatener_chaine($2,")"," ");
+			$2=concatener_chaine($2,$4," ");
+			$1=concatener_chaine($1,$2," ");
+		}
+		else
+		{
+			$5=concatener_chaine($5,$6," ");
+			$4=concatener_chaine($4,$5," ");
+			$3=concatener_chaine($3,$4," ");
+			$2=concatener_chaine($2,$3," ");
+			$1=concatener_chaine($1,$2," ");
+		}
+
+		if(affichage_grammaire) printf("Fin de reconnaissance condition_if (%s)\n",$1);
+		$$=$1;
+	}
+	|
 IF boolean THEN sous_block_instruction
 	{
 		if(affichage_traduction)
