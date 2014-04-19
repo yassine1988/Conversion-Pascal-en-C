@@ -156,7 +156,10 @@
 %type <type_string> declaration_variable_spe_fonction;
 %type <type_string> declaration_fonction_block;
 %type <type_string> declaration_fonction_entete;
-
+%type <type_string> boucle_while_part2;
+%type <type_string> boucle_while_part1;
+%type <type_string> boucle_repeat_until_part2;
+%type <type_string> boucle_repeat_until_part1;
 %%
 programme:
 	prog_entete declarations_globales prog_principal 
@@ -273,18 +276,26 @@ declaration_fonction_entete:
 				element * test = rechercherElement(table_fonction,$2,"");
 				if(test==NULL)
 				{
-					if(strcmp($7,"int")==0)
+					if(strcmp($7,"INTEGER")==0)
 					{
 						ajouterEnFinSimple($2,"FUNCTION","NOMBRE");
 						ajouterEnFinSimple($2,"NOMBRE","");
-					}else if(strcmp($7,"double")==0)
+						$7="int";
+					}else if(strcmp($7,"REAL")==0)
 					{
 						ajouterEnFinSimple($2,"FUNCTION","NOMBREREEL");
 						ajouterEnFinSimple($2,"NOMBREREEL","");
+						$7="double";
+					}else if(strcmp($7,"BOOLEAN")==0)
+					{
+						ajouterEnFinSimple($2,"FUNCTION","BOOLEAN");
+						ajouterEnFinSimple($2,"BOOLEAN","");
+						$7="int";
 					}else
 					{
 						ajouterEnFinSimple($2,"FUNCTION","CHAINE_DE_CARACTERE");
 						ajouterEnFinSimple($2,"CHAINE_DE_CARACTERE","");
+						$7="char *";
 					}
 				}else
 				{
@@ -423,21 +434,30 @@ declaration_variable_spe_fonction:
 			{
 				char* chaine = strdup($1);
 				char* variable;
+				char* type;
 				$1="";
+				
 				while ((variable = strsep(&chaine, ","))!=NULL)
 				{
 					element * test = rechercherElement(table,variable,"");
 					if(test==NULL)
 					{
-						if(strcmp($3,"int")==0)
+						if(strcmp($3,"INTEGER")==0)
 						{
 							ajouterEnFinSimple(variable,"NOMBRE","");
-						}else if(strcmp($3,"double")==0)
+							type="int";
+						}else if(strcmp($3,"REAL")==0)
 						{
-							ajouterEnFinSimple($3,"NOMBREREEL","");
+							ajouterEnFinSimple(variable,"NOMBREREEL","");
+							type="double";
+						}else if(strcmp($3,"BOOLEAN")==0)
+						{
+							ajouterEnFinSimple(variable,"BOOLEAN","");
+							type="int";
 						}else
 						{
 							ajouterEnFinSimple(variable,"CHAINE_DE_CARACTERE","");
+							type="char *";
 						}
 					}else
 					{
@@ -448,7 +468,7 @@ declaration_variable_spe_fonction:
 					{
 						$1=concatener_chaine($1,",","");
 					}
-					$1=concatener_chaine($1,$3," ");
+					$1=concatener_chaine($1,type," ");
 					$1=concatener_chaine($1,variable," ");
 					
 				}
@@ -468,22 +488,30 @@ declaration_variable_spe_fonction:
 			{
 				char* chaine = strdup($1);
 				char* variable;
+				char* type;
 				$1="";
 				while ((variable = strsep(&chaine, ","))!=NULL)
 				{
 					element * test = rechercherElement(table,variable,"");
 					if(test==NULL)
 					{
-						if(strcmp($6,"int")==0)
+						if(strcmp($6,"INTEGER")==0)
 						{
 							ajouterEnFinSimple(variable,"ARRAY","NOMBRE");
-						}else if(strcmp($6,"double")==0)
+							type="int";
+						}else if(strcmp($6,"REAL")==0)
 						{
 							ajouterEnFinSimple(variable,"ARRAY","NOMBREREEL");
+							type="double";
+						}else if(strcmp($6,"BOOLEAN")==0)
+						{
+							ajouterEnFinSimple(variable,"ARRAY","BOOLEAN");
+							type="int";
 						}
 						else
 						{
 							ajouterEnFinSimple(variable,"ARRAY","CHAINE_DE_CARACTERE");
+							type="char *";
 						}
 					}else
 					{
@@ -495,7 +523,7 @@ declaration_variable_spe_fonction:
 					{
 						$1=concatener_chaine($1,",","");
 					}
-					$1=concatener_chaine($1,$6," ");
+					$1=concatener_chaine($1,type," ");
 					$1=concatener_chaine($1,variable," ");
 					$1=concatener_chaine($1,$4,"");
 				}
@@ -519,21 +547,29 @@ declaration_variable:
 			{
 				char* chaine = strdup($1);
 				char* variable;
+				char* type;
 				$1="";
 				while ((variable = strsep(&chaine, ","))!=NULL)
 				{
 					element * test = rechercherElement(table,variable,"");
 					if(test==NULL)
 					{
-						if(strcmp($3,"int")==0)
+						if(strcmp($3,"INTEGER")==0)
 						{
 							ajouterEnFinSimple(variable,"NOMBRE","");
-						}else if(strcmp($3,"double")==0)
+							type="int";
+						}else if(strcmp($3,"REAL")==0)
 						{
 							ajouterEnFinSimple(variable,"NOMBREREEL","");
+							type="double";
+						}else if(strcmp($3,"BOOLEAN")==0)
+						{
+							ajouterEnFinSimple(variable,"BOOLEAN","");
+							type="int";
 						}else
 						{
 							ajouterEnFinSimple(variable,"CHAINE_DE_CARACTERE","");
+							type="char *";
 						}
 					}else
 					{
@@ -541,7 +577,7 @@ declaration_variable:
 						erreur=1;
 					}
 					
-					$1=concatener_chaine($1,$3," ");
+					$1=concatener_chaine($1,type," ");
 					$1=concatener_chaine($1,variable," ");
 					$1=concatener_chaine($1,";\n","");
 				}
@@ -561,28 +597,36 @@ declaration_variable:
 			{
 				char* chaine = strdup($1);
 				char* variable;
+				char* type;
 				$1="";
 				while ((variable = strsep(&chaine, ","))!=NULL)
 				{
 					element * test = rechercherElement(table,variable,"");
 					if(test==NULL)
 					{
-						if(strcmp($6,"int")==0)
+						if(strcmp($6,"INTEGER")==0)
 						{
 							ajouterEnFinSimple(variable,"ARRAY","NOMBRE");
-						}else if(strcmp($6,"double")==0)
+							type="int";
+						}else if(strcmp($6,"REAL")==0)
 						{
 							ajouterEnFinSimple(variable,"ARRAY","NOMBREREEL");
+							type="doule";
+						}else if(strcmp($6,"BOOLEAN")==0)
+						{
+							ajouterEnFinSimple(variable,"ARRAY","BOOLEAN");
+							type="int";
 						}else
 						{
 							ajouterEnFinSimple(variable,"ARRAY","CHAINE_DE_CARACTERE");
+							type="char *";
 						}
 					}else
 					{
 						printf("\nERREUR(ligne:%d) la variable %s a déja été déclaré! type %s",ligne_no,variable,test->type_valeur);
 						erreur=1;
 					}
-					$1=concatener_chaine($1,$6," ");
+					$1=concatener_chaine($1,type," ");
 					$1=concatener_chaine($1,variable," ");
 					$1=concatener_chaine($1,$4,"");
 					$1=concatener_chaine($1,";\n","");
@@ -1795,7 +1839,7 @@ variable_fonction:
 		{
 			if(affichage_traduction)
 			{
-				assignation_element="NOMBRE";
+				assignation_element="BOOLEAN";
 			}
 			if(affichage_grammaire) printf("Fin de reconnaissance variable_fonction (%s)\n",$1); 
 			$$=$1;
@@ -1876,32 +1920,78 @@ assignation_element:
 		{
 			if(affichage_traduction)
 			{
-				assignation_element="NOMBRE";
+				assignation_element="BOOLEAN";
 			}
 			if(affichage_grammaire) printf("Fin de reconnaissance assignation_element (%s)\n",$1); 
 			$$=$1;
 		}
 	;
 	
-boucle_while:
-	WHILE boolean DO block_instructions_global 
+boucle_while_part1:
+	WHILE variable DO 
 		{ 
 			if(affichage_traduction)
 			{
-				$4=concatener_chaine($4,"\n}\n "," ");
-				$4=concatener_chaine(" \n{\n",$4," ");
-				$2=concatener_chaine($2,")"," ");
-				$2=concatener_chaine("(",$2,"");
-				$1=concatener_chaine($1,$2," ");
-				$1=concatener_chaine($1,$4," ");
+				if(strcmp(assignation_element,"BOOLEAN")==0)
+				{
+					$2=concatener_chaine($2,")"," ");
+					$2=concatener_chaine("(",$2,"");
+					$1=concatener_chaine($1,$2," ");
+				}else
+				{
+					printf("\nERREUR(ligne:%d) while, la variable %s n'est pas de type boolean, type : %s",ligne_no,$2,assignation_element);
+					erreur=1;
+				}
 			}
 			else
 			{
-				$3=concatener_chaine($3,$4," ");
 				$2=concatener_chaine($2,$3," ");
 				$1=concatener_chaine($1,$2," ");
 			}
 			
+			if(affichage_grammaire) printf("Fin de reconnaissance boucle_while_part1 (%s)\n",$1); 
+			$$=$1;
+		}
+	|
+	WHILE boolean DO 
+		{ 
+			if(affichage_traduction)
+			{
+				$2=concatener_chaine($2,")"," ");
+				$2=concatener_chaine("(",$2,"");
+				$1=concatener_chaine($1,$2," ");
+			}
+			else
+			{
+				$2=concatener_chaine($2,$3," ");
+				$1=concatener_chaine($1,$2," ");
+			}
+			
+			if(affichage_grammaire) printf("Fin de reconnaissance boucle_while_part1 (%s)\n",$1); 
+			$$=$1;
+		}
+	;
+
+boucle_while_part2:
+		block_instructions_global
+		{
+			if(affichage_traduction)
+			{
+				$1=concatener_chaine($1,"\n}\n "," ");
+				$1=concatener_chaine(" \n{\n",$1," ");
+			}
+			if(affichage_grammaire) printf("Fin de reconnaissance boucle_while_part2 (%s)\n",$1); 
+			$$=$1;
+		}
+	;
+
+boucle_while:
+	boucle_while_part1 boucle_while_part2
+		{
+			if(affichage_traduction)
+			{
+				$1=concatener_chaine($1,$2,"");
+			}
 			if(affichage_grammaire) printf("Fin de reconnaissance boucle_while (%s)\n",$1); 
 			$$=$1;
 		}
@@ -1970,74 +2060,111 @@ boucle_for:
 		}
 	;
 
-boucle_repeat_until:
-	REPEAT block_instructions UNTIL boolean 
-		{ 
+boucle_repeat_until_part1:
+	REPEAT block_instructions UNTIL
+		{
 			if(affichage_traduction)
 			{
-				
-				$3=concatener_chaine("while (",$4," ");
-				$3=concatener_chaine($3,")"," ");
 				$2=concatener_chaine($2," \n}\n "," ");
-				$2=concatener_chaine($2,$3," ");
 				$1=concatener_chaine("do \n{\n ",$2," ");
 			}
 			else
 			{
-				$3=concatener_chaine($3,$4," ");
 				$2=concatener_chaine($2,$3," ");
 				$1=concatener_chaine($1,$2," ");
 			}
+			if(affichage_grammaire) printf("Fin de reconnaissance boucle_repeat_until_part1 (%s)\n",$1); 
+			$$=$1;
+		}
+	;
+	
+boucle_repeat_until_part2:
+	boolean
+		{
+			if(affichage_traduction)
+			{
+				$1=concatener_chaine("while(",$1,"");
+				$1=concatener_chaine($1,")","");
+			}
+			if(affichage_grammaire) printf("Fin de reconnaissance boucle_repeat_until_part2 (%s)\n",$1); 
+			$$=$1;
+		}
+	|
+	variable
+		{
+			if(affichage_traduction)
+			{
+				if(strcmp(assignation_element,"BOOLEAN")==0)
+				{
+					$1=concatener_chaine("while(",$1,"");
+				$1=concatener_chaine($1,")","");
+				}else
+				{
+					printf("\nERREUR(ligne:%d) do while, la variable %s n'est pas de type boolean, type : %s",ligne_no,$1,assignation_element);
+					erreur=1;
+				}	
+			}
+			if(affichage_grammaire) printf("Fin de reconnaissance boucle_repeat_until_part2 (%s)\n",$1); 
+			$$=$1;
+		}
+	;
+	
+boucle_repeat_until:
+	boucle_repeat_until_part1 boucle_repeat_until_part2
+		{
+			$1=concatener_chaine($1,$2,"");
 			if(affichage_grammaire) printf("Fin de reconnaissance boucle_repeat_until (%s)\n",$1); 
 			$$=$1;
 		}
 	;
 
 condition_if:
-	IF boolean THEN sous_block_instruction 
-		{ 
-			if(affichage_traduction)
-			{
-				$2=concatener_chaine("(",$2," ");
-				$2=concatener_chaine($2,")"," ");
-				$2=concatener_chaine($2,$4," ");
-				$1=concatener_chaine($1,$2," ");
-			}
-			else
-			{
-				$3=concatener_chaine($3,$4," ");
-				$2=concatener_chaine($2,$3," ");
-				$1=concatener_chaine($1,$2," ");
-			}
-			
-			if(affichage_grammaire) printf("Fin de reconnaissance condition_if (%s)\n",$1); 
-			$$=$1;
+IF boolean THEN sous_block_instruction
+	{
+		if(affichage_traduction)
+		{
+			$2=concatener_chaine("(",$2," ");
+			$2=concatener_chaine($2,")"," ");
+			$2=concatener_chaine($2,$4," ");
+			$1=concatener_chaine($1,$2," ");
 		}
+		else
+		{
+			$3=concatener_chaine($3,$4," ");
+			$2=concatener_chaine($2,$3," ");
+			$1=concatener_chaine($1,$2," ");
+		}
+
+		if(affichage_grammaire) printf("Fin de reconnaissance condition_if (%s)\n",$1);
+		$$=$1;
+	}
 	|
-	IF boolean THEN sous_block_instruction ELSE sous_block_instruction
-		{ 
-			if(affichage_traduction)
-			{
-				$5=concatener_chaine($5,$6," ");
-				$4=concatener_chaine($4,$5," ");
-				$2=concatener_chaine("(",$2," ");
-				$2=concatener_chaine($2,")"," ");
-				$2=concatener_chaine($2,$4," ");
-				$1=concatener_chaine($1,$2," ");
-			}
-			else
-			{
-				$5=concatener_chaine($5,$6," ");
-				$4=concatener_chaine($4,$5," ");
-				$3=concatener_chaine($3,$4," ");
-				$2=concatener_chaine($2,$3," ");
-				$1=concatener_chaine($1,$2," ");
-			}
-			
-			if(affichage_grammaire) printf("Fin de reconnaissance condition_if (%s)\n",$1); 
-			$$=$1;
+IF boolean THEN sous_block_instruction ELSE sous_block_instruction
+	{
+		if(affichage_traduction)
+		{
+			$5=concatener_chaine($5,$6," ");
+			$4=concatener_chaine($4,$5," ");
+			$2=concatener_chaine("(",$2," ");
+			$2=concatener_chaine($2,")"," ");
+			$2=concatener_chaine($2,$4," ");
+			$1=concatener_chaine($1,$2," ");
 		}
+		else
+		{
+			$5=concatener_chaine($5,$6," ");
+			$4=concatener_chaine($4,$5," ");
+			$3=concatener_chaine($3,$4," ");
+			$2=concatener_chaine($2,$3," ");
+			$1=concatener_chaine($1,$2," ");
+		}
+
+		if(affichage_grammaire) printf("Fin de reconnaissance condition_if (%s)\n",$1);
+		$$=$1;
+	}
 	;
+
+
 	
 sous_block_instruction:
 	block_instructions_global 
@@ -2085,6 +2212,6 @@ int main(int argc, char * argv[])
 
 void yyerror(char const *s)
 {
-	fprintf(stderr,"Erreur %s à la ligne %d\n",s,ligne_no);
+	fprintf(stderr,"Erreur %s à la ligne %d\n",s,ligne_no,"\n");
 	erreur=1;
 }

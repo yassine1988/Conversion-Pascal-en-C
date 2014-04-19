@@ -83,10 +83,10 @@ NQUOTE [^']
 {R}{E}{P}{E}{A}{T}			{ if(affichage) printf("REPEAT ");		yylval.type_string = copier_chaine(yytext); 	return(REPEAT);		}
 {U}{N}{T}{I}{L}				{ if(affichage) printf("UNTIL ");		yylval.type_string = copier_chaine(yytext); 	return(UNTIL);		}
 
-{S}{T}{R}{I}{N}{G}			{ if(affichage) printf("STRING ");		yylval.type_string = copier_chaine("char *"); 	return(TYPE);		}
-{R}{E}{A}{L}				{ if(affichage) printf("REAL ");		yylval.type_string = copier_chaine("double"); 	return(TYPE);		}
-{I}{N}{T}{E}{G}{E}{R}		{ if(affichage) printf("INTEGER ");		yylval.type_string = copier_chaine("int");  	return(TYPE);		}
-{B}{O}{O}{L}{E}{A}{N}		{ if(affichage) printf("BOOLEAN ");		yylval.type_string = copier_chaine("int");  	return(TYPE);		}
+{S}{T}{R}{I}{N}{G}			{ if(affichage) printf("STRING ");		yylval.type_string = copier_chaine("STRING"); 	return(TYPE);		}
+{R}{E}{A}{L}				{ if(affichage) printf("REAL ");		yylval.type_string = copier_chaine("REAL"); 	return(TYPE);		}
+{I}{N}{T}{E}{G}{E}{R}		{ if(affichage) printf("INTEGER ");		yylval.type_string = copier_chaine("INTEGER");  	return(TYPE);		}
+{B}{O}{O}{L}{E}{A}{N}		{ if(affichage) printf("BOOLEAN ");		yylval.type_string = copier_chaine("BOOLEAN");  	return(TYPE);		}
 {T}{R}{U}{E}				{ if(affichage) printf("TRUE ");		yylval.type_string = copier_chaine(yytext);		return(TTRUE);		}
 {F}{A}{L}{S}{E}				{ if(affichage) printf("FALSE ");		yylval.type_string = copier_chaine(yytext);		return(TFALSE);		}
 
