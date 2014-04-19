@@ -1,82 +1,9 @@
-PROGRAM prog;
-
-{ function f }
-FUNCTION f (x,y:INTEGER;test:STRING) :INTEGER;
-VAR i,ii:INTEGER;toto:STRING;names,toto:ARRAY[1..10] OF INTEGER;
-CONST truc:INTEGER;
-CONST toto:STRING;
+Program test ;
+Var i : integer ;
 BEGIN
-    i := 0;
-    f := 0;
-    f := 5*6;
-    f:= 3+(5*9.3)-(-f(3));
-    te := 'tttt';
-    tee := f(5);
-    bool := false;
-    names[1] := 3;
-    write('toto');
-    f('tot',5);
-    for w:= 1 to 10 do
-    begin
-		writeln('toto');
-		readln(marks[i]);
-    end;
-    
-    for i:=1 to 10 do
-		writeln(toto);
-	
-    
-    WHILE i < x DO
-    BEGIN
-		IF i MOD 2 = 0 THEN
-			f := f + i;
-    END;
-    
-    repeat
-		readln(pass);
-	until (pass = 'toto');
-END;
-
-PROCEDURE toto();
-begin
-	f();
-	if (n1 > n2) then
-		m:=n1
-	else
-		m:=n2;
-		
-	if(n1 < n2) then
-	begin
-		m:=1;
-	end
-	else
-	begin
-		m:=1;
-	end;
-	
-	if y = ans then
-	begin
-		writeln('incorrect answer');
-		writeln('exiting program');
-	end;
-	
-	if mark > 50 then 
-		write('pass')
-	else write ('fail');
-	
-	if temp < 15 then
-		write('cold')
-	else if (temp > 15) and (temp < 20) then
-		writeln('warm')
-	else write('hot');
-		
-end;
-
-{ main program }
-VAR x:INTEGER;
-BEGIN
-	toto;
-    READLN(x);
-    WRITELN(f(x));
-    WRITELN('HELLO WORLDssssssssssssssssssssssssssssssssssssssssssssss');
-END.
+	Randomize ;
+	i := random(100) ;
+	if i < 50 then writeln ( i, ' est inferieur a 50.')
+	else if i < 73 then writeln ( i, ' est inferieur a 73.')
+	else writeln ( i, ' est superieur ou egale a 73.');
+END. 

@@ -12,7 +12,7 @@
 	int erreur=0;
 
 	char * concatener_chaine(char * chaine1,char * chaine2, char * separateur) {
-		char * ntest= malloc((strlen(separateur)+strlen(chaine2)+strlen(chaine1)+50)*sizeof(char));
+		char * ntest= malloc((strlen(separateur)+strlen(chaine2)+strlen(chaine1)+1)*sizeof(char));
 		strcat(ntest,chaine1);
 		strcat(ntest,separateur);
 		strcat(ntest,chaine2);
